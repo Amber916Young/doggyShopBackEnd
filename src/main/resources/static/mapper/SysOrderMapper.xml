@@ -1,0 +1,84 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doggy.mapper.SysOrderMapper">
+    <insert id="insertOrderCart">
+        insert into DoggyPets.order_cart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customer_id != null">
+                customer_id,
+            </if>
+            <if test="good_id != null">
+                good_id,
+            </if>
+            <if test="good_amount != null">
+                good_amount,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="add_time != null">
+                add_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customer_id != null">
+                #{customer_id},
+            </if>
+            <if test="good_id != null">
+                #{good_id},
+            </if>
+            <if test="good_amount != null">
+                #{good_amount},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="add_time != null">
+                #{add_time},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateOrderCart">
+        update DoggyPets.order_cart
+        <set>
+            <if test="good_amount != null">
+                good_amount = #{good_amount},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+        </set>
+        where (customer_id = #{customer_id}  and good_id = #{good_id} ) or cart_id = #{cart_id}
+    </update>
+
+
+    <select id="queryOrderCart" resultType="com.doggy.entity.OrderCart">
+        select * from DoggyPets.order_cart
+        <where>
+            1=1
+            <if test="cart_id != null">
+                and  cart_id=#{cart_id}
+            </if>
+            <if test="customer_id != null">
+                and  customer_id=#{customer_id}
+            </if>
+            <if test="good_id != null">
+                and  good_id=#{good_id}
+            </if>
+        </where>
+    </select>
+    <select id="queryOrderCartList" resultType="com.doggy.entity.OrderCart">
+        select * from DoggyPets.order_cart
+        <where>
+            1=1
+            <if test="customer_id != null">
+                and  customer_id=#{customer_id}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

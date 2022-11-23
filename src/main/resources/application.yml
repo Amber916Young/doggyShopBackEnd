@@ -1,0 +1,44 @@
+server:
+  port: 8089
+  session-timeout: 60 # session 超时时间/分钟，默认是30
+  tomcat:
+    uri-encoding: utf-8 # 设置tomcat编码
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/DoggyPets?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: Yyj188706
+  mvc:
+    static-path-pattern: /static/**
+  web:
+    resources:
+      static-locations: classpath:/templates/,classpath:/static/image/,classpath:/static/,classpath:/mapper/
+
+mybatis:
+  mapper-locations: classpath:static/mapper/*.xml # The path where the configuration mapper file is located
+  type-aliases-package: com.doggy.entity # Configure all class aliases under this package
+
+Delcode:
+  key: root
+
+Alipay:
+  GATEWAY_URL: https://openapi.alipaydev.com/gateway.do
+  APP_ID: 2021000121692245
+  APP_PRIVATE_KEY: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDaEc3EK7qqbNaOTngP45kAnd0VFFXEv4X1FllC6Za6ZwdkzOrrZGjnHklQu5Apg6DU+guXH9U0TcnvEDRBJNuZHH4gBnlSHU9QDvSyZpM6+XFu05MIe4RYaGmaD2cd5ha7sQR6WJIhKSD+lezYHXYw3PyzD0DB7uPBMlzxRD2XyNLiyj272RiAXQ0Qk/Kg7EN4vH7ZxeKWok5Ba0pjJy+ejiv5qvMWjhbKWz7OrB/Z/CLzg2TevgFU2mqAfnvDt9XEFFjthMf2wasM2cYfqXQjCj0i5ZyPGckH6cNAT4x4WejKeW9Ak7ON5/zvZw0j4BBhye8LZX2KbnvvGXZcPkfLAgMBAAECggEBAItyHxZ2sCMS/hB59SST8d8HE7zLCB2MK2kSJXo4TP5dq8i1kPN9feds4o0Ro5ooZcxLKOY2oOuVYq/QuNl/bD14jt6DxUjRHUqghbEfDr8Di5nHCZq/AV5XRlAR0Wq5G4hiJe7mfGtgFY026gE4tb+BUMZf1pUs4c9FGVHexVQtFOw2kMM449JaavJaIpTD5BV08o0I5gq2UV4R3DfGvAlNL/57gqDSpuihCA/b1RxNzA70kxE3Krc6cq6edpiWDwMMMLXj2s2GTyrvYy8LHfQY9BQnb/Tu03sAcpvnW9b+wclkRqw51WynB6fmpbntr+9s/tfA5KfK3B/msoUVAeECgYEA9Q6iVSrf329KpMJWi9WMB51QAmJ1BGf729x9wT5ZKIueEsw5dZZukJbfPIndqprIt/lYx7nnF2zNSdPoIebnOYXLGG7e6NrAX2XoJFa9eoFoFkuITtbD6eqGnAEVQPAupBsOFTg2mcXq0+5IqnxwHW0uDl5spAr6bHZ2jT2fAhUCgYEA486pSHXwW+o1GLGCsSe/YGDg6prGD7BYn2AxOsv965wCADtfvng/Vuy/OVBwHE33SEzTDYHSzyLVYYRJsVHBGM2ya11Q3Bh0jHgcn6srxHd9mL9+tHC5tVIXyZynM3lYimVYiWh2HI0yYGdjKJHdgHkixDq307PkiGevoE5k+l8CgYB4EPl8XQtfP/oEi6s3zCNVv7/pyy+mPwRpjriWq+OnN/D1KNamRFRbx3ANC0duRXQ+n47eHLmbApX6rDa6FZYI2wLNL9VLpZJHq3h4BX/EvA6xjcR1TEilHWFioi01qfhQM2lNAEPQR+Zse/1ieqG76Th9lcoI/dAAwHIJdb2omQKBgQDbCKiBcEyTw8QbowmbFjGPFHcNe5U2HoOHcfDDrMHPWSgfWvc65tlX1bgi/nFc9aXukVdYJFwyJzbtVUmZwZadJ6IGUyndBXKCYTZ8WxNxCsbrKCxGiCA28+DFS+cDugfkwX74V0VBPI2UXbPcnStRTKed7ysy1UPF15Po2ZeDlwKBgB5AYZ2o70TvQmSnWy+B53XVwSo24v7OI2mAzWhI/OciqP/Qgiy3DM+2Nx7ENqMU4LJbWGMaQojCemLGM/z0csY2TIOS12s6uJbfyc80Q9ynvYnLVwADrOXrK1BHVBN4CQwfEI6c+WTeEkvc7rJ6FkQN7BvZwtYUm2TTQJW/eOB7
+  FORMAT: json
+  CHARSET: UTF-8
+  ALIPAY_PUBLIC_KEY: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2hHNxCu6qmzWjk54D+OZAJ3dFRRVxL+F9RZZQumWumcHZMzq62Ro5x5JULuQKYOg1PoLlx/VNE3J7xA0QSTbmRx+IAZ5Uh1PUA70smaTOvlxbtOTCHuEWGhpmg9nHeYWu7EEeliSISkg/pXs2B12MNz8sw9Awe7jwTJc8UQ9l8jS4so9u9kYgF0NEJPyoOxDeLx+2cXilqJOQWtKYycvno4r+arzFo4Wyls+zqwf2fwi84Nk3r4BVNpqgH57w7fVxBRY7YTH9sGrDNnGH6l0Iwo9IuWcjxnJB+nDQE+MeFnoynlvQJOzjef872cNI+AQYcnvC2V9im577xl2XD5HywIDAQAB
+  SIGN_TYPE: RSA2
+  RETURN_URL: http://127.0.0.1/returnUrl
+  NOTIFY_URL: http://127.0.0.1/notifyUrl
+
+
+fileupload:
+  path: http://fileserver.youngbird97.top/file/upload
+
+WeChat:
+  appid: wxeba0770730156a03
+  appSecret: e10db13ee4691c1a05dcab47867dbcb7
+  originalID: gh_c3fd01b681aa

@@ -1,0 +1,90 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doggy.mapper.SysGoodsMapper">
+    <insert id="insertCollection">
+        insert into ReadingLove.collection
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="openid != null">
+                openid,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="novelid != null">
+                novelid,
+            </if>
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="collection_date != null">
+                collection_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="openid != null">
+                #{openid},
+            </if>
+            <if test="username != null">
+                #{username},
+            </if>
+            <if test="novelid != null">
+                #{novelid},
+            </if>
+            <if test="uuid != null">
+                #{uuid},
+            </if>
+            <if test="collection_date != null">
+                #{collection_date},
+            </if>
+        </trim>
+    </insert>
+
+
+
+    <select id="queryAllCategory" resultType="com.doggy.entity.Category">
+        select * from DoggyPets.category
+        <where>
+             1=1
+            <if test="id != null">
+                and  id=#{id}
+            </if>
+            <if test="title != null">
+                and  title=#{title}
+            </if>
+         and flag = 1
+        </where>
+        order by order_id asc
+    </select>
+    <select id="queryAllGoods" resultType="com.doggy.entity.Goods">
+        select * from DoggyPets.goods
+        <where>
+            1=1
+            <if test="category_id != null">
+                and  category_id=#{category_id}
+            </if>
+            <if test="id != null">
+                and  id=#{id}
+            </if>
+            and flag = 1
+        </where>
+        order by id asc
+    </select>
+    <select id="queryAllImageList" resultType="com.doggy.entity.ImageRepo">
+        select * from DoggyPets.ImageRepo
+        <where>
+            1=1
+            <if test="fid != null">
+                and  fid=#{fid}
+            </if>
+        </where>
+    </select>
+    <select id="queryAllGoodsById" resultType="com.doggy.entity.Goods">
+        select * from DoggyPets.goods where id=#{id}
+    </select>
+    <select id="querycurrentCategory" resultType="com.doggy.entity.Category">
+        select * from DoggyPets.category where id=#{id}
+    </select>
+
+
+</mapper>
