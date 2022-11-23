@@ -1,0 +1,115 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doggy.mapper.SysAddressMapper">
+    <insert id="insertAddress">
+        insert into DoggyPets.Customer_Address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customer_id != null">
+                customer_id,
+            </if>
+            <if test="zip != null">
+                zip,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="district != null">
+                district,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="is_default != null">
+                is_default,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customer_id != null">
+                #{customer_id},
+            </if>
+            <if test="zip != null">
+                #{zip},
+            </if>
+            <if test="province != null">
+                #{province},
+            </if>
+            <if test="city != null">
+                #{city},
+            </if>
+            <if test="district != null">
+                #{district},
+            </if>
+            <if test="address != null">
+                #{address},
+            </if>
+            <if test="is_default != null">
+                #{is_default},
+            </if>
+            <if test="username != null">
+                #{username},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateAddress">
+        update DoggyPets.Customer_Address
+        <set>
+            <if test="province != null">
+                province = #{province},
+            </if>
+            <if test="city != null">
+                city = #{city},
+            </if>
+            <if test="district != null">
+                district = #{district},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="is_default != null">
+                is_default = #{is_default},
+            </if>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+        </set>
+        where customer_addr_id = #{customer_addr_id}
+    </update>
+    <delete id="deleteAddress">
+        delete from DoggyPets.Customer_Address
+        <where>
+            1=1
+            <if test="customer_addr_id != null">
+                and  customer_addr_id=#{customer_addr_id}
+            </if>
+        </where>
+    </delete>
+
+    <select id="queryAllAddress" resultType="com.doggy.entity.CustomerAddress">
+        select * from DoggyPets.Customer_Address
+        <where>
+            1=1
+            <if test="customer_id != null">
+                and  customer_id=#{customer_id}
+            </if>
+        </where>
+        order by customer_addr_id desc
+    </select>
+</mapper>

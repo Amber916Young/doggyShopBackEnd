@@ -52,7 +52,8 @@
             </if>
         </set>
         where (customer_id = #{customer_id}  and good_id = #{good_id} ) or cart_id = #{cart_id}
-    </update>
+
+</update>
 
 
     <select id="queryOrderCart" resultType="com.doggy.entity.OrderCart">

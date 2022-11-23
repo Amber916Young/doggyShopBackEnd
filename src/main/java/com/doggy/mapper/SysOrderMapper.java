@@ -24,6 +24,6 @@ public interface SysOrderMapper {
 
     List<OrderCart> queryOrderCartList(HashMap<String, Object> param);
 
-    @Delete("delete from Order_Cart where (customer_id = #{customer_id}  and good_id = #{good_id} ) or cart_id = #{cart_id}")
+    @Delete("delete from Order_Cart where (customer_id = #{customer_id}  and good_id = #{good_id} ) or cart_id = #{cart_id}w")
     void deleteOrderCart(HashMap<String, Object> param);
 }
