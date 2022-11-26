@@ -15,4 +15,6 @@ public interface SysAddressMapper {
     void deleteAddress(HashMap<String, Object> param);
 
     void updateAddress(HashMap<String, Object> param);
+
+    CustomerAddress queryAddressByid(int customer_addr_id);
 }

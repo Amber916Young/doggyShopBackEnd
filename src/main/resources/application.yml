@@ -39,6 +39,11 @@ fileupload:
   path: http://fileserver.youngbird97.top/file/upload
 
 WeChat:
-  appid: wxeba0770730156a03
-  appSecret: e10db13ee4691c1a05dcab47867dbcb7
-  originalID: gh_c3fd01b681aa
+  appid: wx702d1ebb3c60dca3
+  appSecret: 528289dbb271d132a17db6a598144f15
+  originalID: gh_8ccd49ff24b3
+
+
+jwt:  #jwt配置，供JWTUtils类使用
+  key: wx702d1ebb3c60dca3  #jwt生成token时的密钥
+  expiration: 86400000  #token 5秒超时

@@ -26,6 +26,18 @@ public class HttpResult {
         return r;
     }
 
+    public static HttpResult invalid( String msg) {
+        HttpResult r = new HttpResult();
+        r.setCode(-1);
+        r.setMsg(msg);
+        return r;
+    }
+
+    public static HttpResult invalid() {
+        HttpResult r = new HttpResult();
+        r.setCode(-1);
+        return r;
+    }
     public static HttpResult ok(String msg) {
         HttpResult r = new HttpResult();
         r.setMsg(msg);

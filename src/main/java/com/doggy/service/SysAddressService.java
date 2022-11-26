@@ -37,4 +37,8 @@ public class SysAddressService {
     public void updateAddress(HashMap<String, Object> param) {
         addressMapper.updateAddress(param);
     }
+
+    public CustomerAddress queryAddressByid(int customer_addr_id) {
+        return addressMapper.queryAddressByid(customer_addr_id);
+    }
 }

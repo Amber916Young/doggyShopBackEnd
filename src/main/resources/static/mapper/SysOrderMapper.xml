@@ -41,6 +41,170 @@
     </insert>
 
 
+    <insert id="insertOrderMaster"  parameterType="orderMaster" useGeneratedKeys="true" keyProperty="order_id"  >
+        insert into DoggyPets.order_master
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="order_sn != null">
+                order_sn,
+            </if>
+            <if test="customer_id != null">
+                customer_id,
+            </if>
+            <if test="payment_method != null">
+                payment_method,
+            </if>
+            <if test="order_money != null">
+                order_money,
+            </if>
+            <if test="district_money != null">
+                district_money,
+            </if>
+            <if test="payment_money != null">
+                payment_money,
+            </if>
+            <if test="shipping_comp_name != null">
+                shipping_comp_name,
+            </if>
+            <if test="shipping_sn != null">
+                shipping_sn,
+            </if>
+            <if test="create_time != null">
+                create_time,
+            </if>
+            <if test="shipping_time != null">
+                shipping_time,
+            </if>
+            <if test="pay_time != null">
+                pay_time,
+            </if>
+            <if test="receive_time != null">
+                receive_time,
+            </if>
+            <if test="order_status != null">
+                order_status,
+            </if>
+            <if test="order_point != null">
+                order_point,
+            </if>
+            <if test="invoice_time != null">
+                invoice_time,
+            </if>
+            <if test="customer_addr_id != null">
+                customer_addr_id,
+            </if>
+            <if test="memo != null">
+                memo,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="order_sn != null">
+                #{order_sn},
+            </if>
+            <if test="customer_id != null">
+                #{customer_id},
+            </if>
+            <if test="payment_method != null">
+                #{payment_method},
+            </if>
+            <if test="order_money != null">
+                #{order_money},
+            </if>
+            <if test="district_money != null">
+                #{district_money},
+            </if>
+
+            <if test="payment_money != null">
+                #{payment_money},
+            </if>
+            <if test="shipping_comp_name != null">
+                #{shipping_comp_name},
+            </if>
+            <if test="shipping_sn != null">
+                #{shipping_sn},
+            </if>
+            <if test="create_time != null">
+                #{create_time},
+            </if>
+            <if test="shipping_time != null">
+                #{shipping_time},
+            </if>
+            <if test="pay_time != null">
+                #{pay_time},
+            </if>
+            <if test="receive_time != null">
+                #{receive_time},
+            </if>
+            <if test="order_status != null">
+                #{order_status},
+            </if>
+            <if test="order_point != null">
+                #{order_point},
+            </if>
+            <if test="invoice_time != null">
+                #{invoice_time},
+            </if>
+            <if test="customer_addr_id != null">
+                #{customer_addr_id},
+            </if>
+
+            <if test="memo != null">
+                #{memo},
+            </if>
+        </trim>
+
+    </insert>
+    <insert id="insertOrderDetail">
+        insert into DoggyPets.order_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="order_id != null">
+                order_id,
+            </if>
+            <if test="good_id != null">
+                good_id,
+            </if>
+            <if test="good_amount != null">
+                good_amount,
+            </if>
+            <if test="good_price != null">
+                good_price,
+            </if>
+            <if test="average_cost != null">
+                average_cost,
+            </if>
+            <if test="weight != null">
+                weight,
+            </if>
+            <if test="fee_money != null">
+                fee_money,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="order_id != null">
+                #{order_id},
+            </if>
+            <if test="good_id != null">
+                #{good_id},
+            </if>
+            <if test="good_amount != null">
+                #{good_amount},
+            </if>
+            <if test="good_price != null">
+                #{good_price},
+            </if>
+            <if test="average_cost != null">
+                #{average_cost},
+            </if>
+            <if test="weight != null">
+                #{weight},
+            </if>
+            <if test="fee_money != null">
+                #{fee_money},
+            </if>
+        </trim>
+
+    </insert>
+
+
     <update id="updateOrderCart">
         update DoggyPets.order_cart
         <set>
@@ -79,6 +243,80 @@
                 and  customer_id=#{customer_id}
             </if>
         </where>
+    </select>
+
+
+
+<!--    pageNo
+
+SELECT * from order_detail where order_id in (
+SELECT order_id FROM order_master WHERE order_status = 4
+)
+-->
+    <select id="pageQueryOrderCount" resultType="java.lang.Integer">
+        select count(1) from DoggyPets.order_master
+        <where>
+            1=1
+            <if test="data.order_status != null">
+                and  order_status=#{data.order_status}
+            </if>
+            <if test="id != null">
+                and  customer_id=#{id}
+            </if>
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(username,'')
+                ,IFNULL(shipping_comp_name,'')
+                ,IFNULL(invoice_time,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="pageQueryOrderData" resultType="OrderMaster">
+        select * from DoggyPets.order_master
+        <where>
+            1=1
+            <if test="data.order_status != null">
+                and  order_status=#{data.order_status}
+            </if>
+            <if test="id != null">
+                and customer_id= #{id}
+            </if>
+            <if test="keyWord !=null">
+                and   concat(
+               IFNULL(username,'')
+                ,IFNULL(shipping_comp_name,'')
+                ,IFNULL(invoice_time,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+        limit #{start},#{rows}
+
+    </select>
+    <select id="queryOrderMaster" resultType="com.doggy.entity.OrderMaster">
+        select * from DoggyPets.order_master
+        <where>
+            1=1
+            <if test="order_id!= null">
+                and  order_id=#{order_id}
+            </if>
+            <if test="customer_id != null">
+                and customer_id= #{customer_id}
+            </if>
+        </where>
+    </select>
+    <select id="queryOrderDetailAll" resultType="com.doggy.entity.OrderDetail">
+        select * from DoggyPets.order_detail
+        <where>
+            1=1
+            <if test="order_id!= null">
+                and  order_id=#{order_id}
+            </if>
+
+        </where>
+
+
+
     </select>
 
 

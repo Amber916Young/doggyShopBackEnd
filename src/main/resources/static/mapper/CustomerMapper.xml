@@ -1,0 +1,99 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doggy.mapper.CustomerMapper">
+    <insert id="insertCustomerInfo"   parameterType="customerInfo" useGeneratedKeys="true" keyProperty="id" >
+        insert into DoggyPets.customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="openid != null">
+                openid,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="gender != null">
+                gender,
+            </if>
+            <if test="Token != null">
+                Token,
+            </if>
+            <if test="avatarUrl != null">
+                avatarUrl,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid},
+            </if>
+            <if test="openid != null">
+                #{openid},
+            </if>
+            <if test="username != null">
+                #{username},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="gender != null">
+                #{gender},
+            </if>
+            <if test="Token != null">
+                #{Token},
+            </if>
+            <if test="avatarUrl != null">
+                #{avatarUrl},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateCustomerInfo">
+        update DoggyPets.customer
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="Token != null">
+                Token = #{Token},
+            </if>
+            <if test="avatarUrl != null">
+                avatarUrl = #{avatarUrl},
+            </if>
+            <if test="points != null">
+                points = #{points},
+            </if>
+        </set>
+        where openid = #{openid}
+    </update>
+
+    <delete id="deleteAddress">
+        delete from DoggyPets.Customer_Address
+        <where>
+            1=1
+            <if test="customer_addr_id != null">
+                and  customer_addr_id=#{customer_addr_id}
+            </if>
+        </where>
+    </delete>
+
+    <select id="queryCustomerInfo" resultType="com.doggy.entity.CustomerInfo">
+        select * from DoggyPets.customer
+        <where>
+            1=1
+            <if test="openid != null">
+                and  openid=#{openid}
+            </if>
+        </where>
+    </select>
+</mapper>

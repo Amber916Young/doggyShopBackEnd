@@ -3,9 +3,11 @@ package com.doggy.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.doggy.entity.Goods;
 import com.doggy.entity.ImageRepo;
+import com.doggy.service.CustomerService;
 import com.doggy.utils.HttpResult;
 import com.fasterxml.uuid.Generators;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
@@ -23,12 +25,14 @@ import java.util.UUID;
 @RestController
 @RequestMapping("userInfo")
 public class UserInfoController {
+    @Autowired
+    CustomerService customerService;
 
 
     @SneakyThrows
     @ResponseBody
     @GetMapping("/generate/UUID")
-    public HttpResult GoodsDetail(){
+    public HttpResult UUID(){
         UUID uuid = Generators.timeBasedGenerator().generate();
         return HttpResult.ok("successfully",uuid.toString().replaceAll("-",""));
     }

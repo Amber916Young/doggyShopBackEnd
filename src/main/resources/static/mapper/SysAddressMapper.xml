@@ -109,7 +109,19 @@
             <if test="customer_id != null">
                 and  customer_id=#{customer_id}
             </if>
+            <if test="customer_addr_id != null">
+                and  customer_addr_id=#{customer_addr_id}
+            </if>
         </where>
         order by customer_addr_id desc
+    </select>
+    <select id="queryAddressByid" resultType="com.doggy.entity.CustomerAddress">
+        select * from DoggyPets.Customer_Address
+        <where>
+            1=1
+            <if test="customer_addr_id != null">
+                and  customer_addr_id=#{customer_addr_id}
+            </if>
+        </where>
     </select>
 </mapper>

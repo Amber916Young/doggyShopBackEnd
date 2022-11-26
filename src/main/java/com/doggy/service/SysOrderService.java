@@ -1,8 +1,11 @@
 package com.doggy.service;
 
 import com.doggy.entity.OrderCart;
+import com.doggy.entity.OrderDetail;
+import com.doggy.entity.OrderMaster;
 import com.doggy.mapper.SysGoodsMapper;
 import com.doggy.mapper.SysOrderMapper;
+import com.doggy.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +43,29 @@ public class SysOrderService {
 
     public void deleteOrderCart(HashMap<String, Object> param) {
         orderMapper.deleteOrderCart(param);
+    }
+
+    public int pageQueryOrderCount(Page page) {
+        return orderMapper.pageQueryOrderCount(page);
+    }
+
+    public List<OrderMaster> pageQueryOrderData(Page page) {
+        return orderMapper.pageQueryOrderData(page);
+    }
+
+    public OrderMaster queryOrderMaster(HashMap<String, Object> param) {
+        return orderMapper.queryOrderMaster(param);
+    }
+
+    public List<OrderDetail> queryOrderDetailAll(int order_id) {
+        return orderMapper.queryOrderDetailAll(order_id);
+    }
+
+    public int insertOrderMaster(OrderMaster master) {
+        return orderMapper.insertOrderMaster(master);
+    }
+
+    public void insertOrderDetail(OrderDetail detail) {
+        orderMapper.insertOrderDetail(detail);
     }
 }
