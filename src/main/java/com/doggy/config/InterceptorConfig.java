@@ -13,7 +13,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         //注册TestInterceptor拦截器
         registry.addInterceptor(loginInterceptor())
-                .excludePathPatterns("/wx/login")				//添加不拦截的请求路径
+                .excludePathPatterns("/wx/**")				//添加不拦截的请求路径
                 .excludePathPatterns("/error/**")				//添加不拦截的请求路径
                 .addPathPatterns("/**");						//添加需要拦截的路径
     }

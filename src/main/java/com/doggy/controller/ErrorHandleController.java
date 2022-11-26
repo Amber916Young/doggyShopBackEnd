@@ -24,8 +24,8 @@ import java.util.List;
 public class ErrorHandleController {
     @SneakyThrows
     @ResponseBody
-    @GetMapping("/invalid")
-    public HttpResult GoodsDetail(){
+    @PostMapping("/invalid")
+    public HttpResult IsValid(@RequestBody String jsonData){
         return HttpResult.invalid("登陆信息过期");
     }
 }

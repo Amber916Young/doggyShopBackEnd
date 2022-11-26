@@ -50,10 +50,26 @@ public class WxController {
     @Autowired
     CustomerService customerService;
 
+
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/usual/login")
+    public HttpResult UsualLogin(@RequestBody String jsonData) {
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        CustomerInfo customer = JSONObject.parseObject(param.get("customer").toString(),CustomerInfo.class);
+        String token =TokenUtils.refreshToken(customer);
+        customer.setToken(token);
+        customerService.updateCustomerInfo(customer);
+
+        return HttpResult.ok(customer);
+
+
+    }
+
     @SneakyThrows
     @ResponseBody
     @PostMapping("/login")
-    public HttpResult getUserInfo4(@RequestBody String jsonData){
+    public HttpResult WxLogin(@RequestBody String jsonData){
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         String code = param.get("code").toString();
         String onlinePeople = getOnlinePeople(code);
@@ -85,8 +101,7 @@ public class WxController {
             int id = customerService.insertCustomerInfo(customerInfo);
         }
         customerInfo.setAvatarUrl(avatarUrl);
-        TokenUtils tokenUtils = new TokenUtils();
-        String token =tokenUtils.genToken(customerInfo);
+        String token =TokenUtils.genToken(customerInfo);
         customerInfo.setToken(token);
         customerService.updateCustomerInfo(customerInfo);
         return HttpResult.ok(customerInfo);

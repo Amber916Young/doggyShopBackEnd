@@ -9,6 +9,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.*;
 import java.io.PrintWriter;
 
@@ -35,20 +36,21 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }
-        //验证token
-        if (null == token || "".equals(token) || TokenUtils.isTokenExpired(token)) {
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application/json; charset=utf-8");
-            try (PrintWriter writer = response.getWriter()) {
-//                writer.print(APIResult.loginFailResult());
-            } catch (Exception e) {
-                logger.error("login token error is {}", e.getMessage());
-            }
-            response.sendRedirect("/error/invalid");
 
+        RequestDispatcher redirect = request.getRequestDispatcher("/error/invalid");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
+        if (null == token || "".equals(token)) {
+            redirect.forward(request, response);
+            return false;
+        }
+        //验证token
+        if (!TokenUtils.isTokenExpired(token)) {
+            redirect.forward(request, response);
             return false;
         }
         //若token验证成功，把用户信息存储在ThreadLocal
+        // add log表
 //        CustomerInfo customer = JwtUtils.getUserByToken(token);
 //        UserUtils.setLoginUser(user);
 
