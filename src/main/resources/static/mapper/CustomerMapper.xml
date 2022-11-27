@@ -71,10 +71,10 @@
                 avatarUrl = #{avatarUrl},
             </if>
             <if test="points != null">
-                points = #{points},
+                points = points + #{points},
             </if>
         </set>
-        where openid = #{openid}
+        where openid = #{openid} or id = #{id}
     </update>
 
     <delete id="deleteAddress">
@@ -93,6 +93,15 @@
             1=1
             <if test="openid != null">
                 and  openid=#{openid}
+            </if>
+        </where>
+    </select>
+    <select id="queryCustomerByid" resultType="com.doggy.entity.CustomerInfo">
+        select * from DoggyPets.customer
+        <where>
+            1=1
+            <if test="id != null">
+                and  id=#{id}
             </if>
         </where>
     </select>

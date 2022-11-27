@@ -124,4 +124,20 @@
             </if>
         </where>
     </select>
+    <select id="queryAddressByParam" resultType="com.doggy.entity.CustomerAddress">
+        select * from DoggyPets.Customer_Address
+        <where>
+            1=1
+            <if test="customer_addr_id != null">
+                and  customer_addr_id=#{customer_addr_id}
+            </if>
+            <if test="is_default != null">
+                and  is_default=#{is_default}
+            </if>
+            <if test="customer_id != null">
+                and  customer_id=#{customer_id}
+            </if>
+        </where>
+        limit 1
+    </select>
 </mapper>

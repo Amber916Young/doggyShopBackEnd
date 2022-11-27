@@ -41,4 +41,8 @@ public class SysAddressService {
     public CustomerAddress queryAddressByid(int customer_addr_id) {
         return addressMapper.queryAddressByid(customer_addr_id);
     }
+
+    public CustomerAddress queryAddressByParam(HashMap<String, Object> param) {
+        return addressMapper.queryAddressByParam(param);
+    }
 }

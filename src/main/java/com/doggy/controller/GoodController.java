@@ -71,27 +71,26 @@ public class GoodController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         int customer_id = Integer.parseInt(param.get("customer_id").toString());
+        int index = Integer.parseInt(param.get("index").toString());
         List<Category> categoryList = goodsService.queryAllCategory(param);
         param = new HashMap<>();
-        for (Category category : categoryList) {
-            param.put("category_id", category.getId());
-            List<Goods> goodsList = goodsService.queryAllGoods(param);
-            for (Goods goods : goodsList) {
-                param.put("pid", goods.getId());
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("customer_id", customer_id);
-                map.put("good_id", goods.getId());
-                OrderCart orderCart = orderService.queryOrderCart(map);
-                if(orderCart != null){
-                    goods.setAmount(orderCart.getGood_amount());
-                }
+        Category category = categoryList.get(index);
+        param.put("category_id", category.getId());
+        List<Goods> goodsList = goodsService.queryAllGoods(param);
+        for (Goods goods : goodsList) {
+            param.put("pid", goods.getId());
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("customer_id", customer_id);
+            map.put("good_id", goods.getId());
+            OrderCart orderCart = orderService.queryOrderCart(map);
+            if(orderCart != null){
+                goods.setAmount(orderCart.getGood_amount());
+            }
 //                List<ImageRepo> imageList = goodsService.queryAllImageList(param);
 //                goods.setImg_url(imageList.get(0).getImg_url());
 //                goods.setImageList(imageList);
-            }
-            category.setGoodsList(goodsList);
-            break;
         }
+        category.setGoodsList(goodsList);
         return HttpResult.ok("successfully", categoryList);
     }
 
@@ -102,12 +101,13 @@ public class GoodController {
     public HttpResult GoodsDetail(@RequestBody String jsonData){
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
-
+        int customer_id = Integer.parseInt(param.get("customer_id").toString());
         int id = Integer.parseInt(param.get("id").toString());
         Goods goods = goodsService.queryAllGoodsById(id);
         param = new HashMap<>();
         param.put("fid",goods.getId());
         param.put("good_id",goods.getId());
+        param.put("customer_id",customer_id);
         OrderCart orderCart = orderService.queryOrderCart(param);
         if(orderCart != null){
             goods.setAmount(orderCart.getGood_amount());

@@ -15,6 +15,8 @@ public class CustomerInfo {
     private int points;
     private String uuid;
     private String openid;
+    private String create_time;
+    private String login_time;
     private String username = "微信用户";
     private String phone;
     private String gender = "0";

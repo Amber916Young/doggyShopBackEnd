@@ -30,7 +30,30 @@ public class AddressController {
     @Autowired
     private SysAddressService addressService;
 
-
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/get/unique")
+    public HttpResult GetUnqiueAddress(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        int customer_addr_id = Integer.parseInt(param.get("customer_addr_id").toString());
+        int customer_id = Integer.parseInt(param.get("customer_id").toString());
+        param = new HashMap<>();
+        if( customer_addr_id == -1){
+            param.put("customer_id",customer_id);
+            param.put("is_default",0);
+        }else {
+            param.put("customer_id",customer_id);
+            param.put("customer_addr_id",customer_addr_id);
+        }
+        CustomerAddress customerAddress = addressService.queryAddressByParam(param);
+        if(customerAddress ==null){
+            param = new HashMap<>();
+            param.put("customer_id",customer_id);
+            customerAddress = addressService.queryAddressByParam(param);
+        }
+        return HttpResult.ok("successfully", customerAddress);
+    }
     /**
      *
      * @param jsonData
@@ -75,8 +98,12 @@ public class AddressController {
     public HttpResult DeleteAddress(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        int customer_id = Integer.parseInt(param.get("customer_id").toString());
         addressService.deleteAddress(param);
-        return HttpResult.ok("successfully");
+        param = new HashMap<>();
+        param.put("customer_id",customer_id);
+        List<CustomerAddress> list = addressService.queryAllAddress(param);
+        return HttpResult.ok("successfully",list);
     }
 
     @SneakyThrows

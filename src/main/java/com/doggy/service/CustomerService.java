@@ -30,4 +30,8 @@ public class CustomerService {
     public int insertCustomerInfo(CustomerInfo customerInfo) {
         return customerMapper.insertCustomerInfo(customerInfo);
     }
+
+    public CustomerInfo queryCustomerByid(int id) {
+        return customerMapper.queryCustomerByid(id);
+    }
 }

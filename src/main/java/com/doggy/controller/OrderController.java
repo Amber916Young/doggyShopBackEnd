@@ -3,13 +3,11 @@ package com.doggy.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.doggy.entity.*;
+import com.doggy.service.CustomerService;
 import com.doggy.service.SysAddressService;
 import com.doggy.service.SysGoodsService;
 import com.doggy.service.SysOrderService;
-import com.doggy.utils.HttpResult;
-import com.doggy.utils.NumberUtil;
-import com.doggy.utils.Page;
-import com.doggy.utils.TokenUtils;
+import com.doggy.utils.*;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,26 +34,37 @@ public class OrderController {
     @Autowired
     private SysAddressService addressService;
 
+    @Autowired
+    CustomerService customerService;
+
     @SneakyThrows
     @ResponseBody
     @PostMapping("/payment/cart")
     synchronized public HttpResult MockPayment(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        OrderMaster master = new OrderMaster();
 
         int customer_id = Integer.parseInt(param.get("customer_id").toString());
         int payment_method = Integer.parseInt(param.get("payment_method").toString());
-        int customer_addr_id = Integer.parseInt(param.get("customer_addr_id").toString());
+//        int customer_addr_id = Integer.parseInt(param.get("customer_addr_id").toString());
         String memo = param.get("memo").toString();
-
+        CustomerAddress address = JsonUtils.jsonToPojo(param.get("address").toString(),CustomerAddress.class);
+        master.setUsername(address.getUsername());
+        master.setProvince(address.getProvince());
+        master.setCity(address.getCity());
+        master.setAddress(address.getAddress());
+        master.setDistrict(address.getDistrict());
+        master.setPhone(address.getPhone());
 
         // get all cart
         List<OrderCart> cartList = orderService.queryOrderCartList(param);
+        if(cartList.size() == 0)
+            return HttpResult.error("一些未知错误");
+
         String order_sn = NumberUtil.customFormatDate("yyyyMMddHHmmssSSSSSSS");
-        OrderMaster master = new OrderMaster();
         master.setOrder_sn(order_sn);
         master.setCustomer_id(customer_id);
-        master.setCustomer_addr_id(customer_addr_id);
         master.setMemo(memo);
         master.setPayment_method(payment_method);
 
@@ -90,6 +99,7 @@ public class OrderController {
         master.setShipping_sn("");
         master.setOrder_status(0);
         // 积分
+
         master.setOrder_point(order_point);
         //发票抬头
         master.setInvoice_time("");
@@ -104,10 +114,13 @@ public class OrderController {
             map.put("good_id",detail.getGood_id());
             orderService.deleteOrderCart(map);
         }
-
-
-
-        return HttpResult.ok("successfully");
+       // TODO update userinfo
+        CustomerInfo customerInfo = new CustomerInfo();
+        customerInfo.setId(customer_id);
+        customerInfo.setPoints(order_point);
+        customerService.updateCustomerInfo(customerInfo);
+        customerInfo = customerService.queryCustomerByid(customer_id);
+        return HttpResult.ok("successfully",customerInfo);
     }
 
 
@@ -125,8 +138,6 @@ public class OrderController {
             detail.setGoodObj(goods);
         }
         orderMaster.setOrderDetailList(details);
-        CustomerAddress customerAddress = addressService.queryAddressByid(orderMaster.getCustomer_addr_id());
-        orderMaster.setAddress(customerAddress);
         return  HttpResult.ok("successfully",orderMaster);
     }
 

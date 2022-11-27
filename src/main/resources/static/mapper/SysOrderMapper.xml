@@ -89,11 +89,27 @@
             <if test="invoice_time != null">
                 invoice_time,
             </if>
-            <if test="customer_addr_id != null">
-                customer_addr_id,
-            </if>
+
             <if test="memo != null">
                 memo,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="district != null">
+                district,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="phone != null">
+                phone,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -143,12 +159,28 @@
             <if test="invoice_time != null">
                 #{invoice_time},
             </if>
-            <if test="customer_addr_id != null">
-                #{customer_addr_id},
-            </if>
 
             <if test="memo != null">
                 #{memo},
+            </if>
+
+            <if test="province != null">
+                #{province},
+            </if>
+            <if test="city != null">
+                #{city},
+            </if>
+            <if test="district != null">
+                #{district},
+            </if>
+            <if test="address != null">
+                #{address},
+            </if>
+            <if test="username != null">
+                #{username},
+            </if>
+            <if test="phone != null">
+                #{phone},
             </if>
         </trim>
 

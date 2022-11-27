@@ -15,4 +15,6 @@ public interface CustomerMapper {
     void updateCustomerInfo(CustomerInfo customerInfo);
 
     int insertCustomerInfo(CustomerInfo customerInfo);
+
+    CustomerInfo queryCustomerByid(int id);
 }
