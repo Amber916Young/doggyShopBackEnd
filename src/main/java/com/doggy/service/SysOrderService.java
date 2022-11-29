@@ -68,4 +68,12 @@ public class SysOrderService {
     public void insertOrderDetail(OrderDetail detail) {
         orderMapper.insertOrderDetail(detail);
     }
+
+    public List<HashMap<String,Object>> pageQueryOrderDetailData(Page page) {
+        return orderMapper.pageQueryOrderDetailData(page);
+    }
+
+    public int pageQueryDetailCount(Page page) {
+        return orderMapper.pageQueryDetailCount(page);
+    }
 }

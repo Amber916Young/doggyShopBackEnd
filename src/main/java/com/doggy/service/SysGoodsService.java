@@ -4,6 +4,7 @@ import com.doggy.entity.Category;
 import com.doggy.entity.Goods;
 import com.doggy.entity.ImageRepo;
 import com.doggy.mapper.SysGoodsMapper;
+import com.doggy.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +42,57 @@ public class SysGoodsService {
 
     public Category querycurrentCategory(HashMap<String, Object> param) {
         return goodsMapper.querycurrentCategory(param);
+    }
+
+    public List<Goods> pageQueryGoodData(Page page) {
+        return goodsMapper.pageQueryGoodData(page);
+    }
+
+    public int pageQueryGoodCount(Page page) {
+        return goodsMapper.pageQueryGoodCount(page);
+    }
+
+    public List<Category> pageQueryCategoryData(Page page) {
+        return goodsMapper.pageQueryCategoryData(page);
+    }
+
+    public int pageQueryCategoryCount(Page page) {
+        return goodsMapper.pageQueryCategoryCount(page);
+    }
+
+    public Category queryCategoryById(int id) {
+        return goodsMapper.queryCategoryById(id);
+    }
+
+    public void updateCategory(HashMap<String, Object> param) {
+         goodsMapper.updateCategory(param);
+    }
+
+    public void insertCategory(HashMap<String, Object> param) {
+        goodsMapper.insertCategory(param);
+    }
+
+    public void deleteCategory(HashMap<String, Object> param) {
+        goodsMapper.deleteCategory(param);
+    }
+
+    public void updateGoods(HashMap<String, Object> param) {
+        goodsMapper.updateGoods(param);
+    }
+
+    public int insertGoods(Goods goods ) {
+      return   goodsMapper.insertGoods(goods);
+    }
+
+    public void deleteGoods(HashMap<String, Object> param) {
+        goodsMapper.deleteGoods(param);
+    }
+
+    public void insertImageRepo(ImageRepo imageRepo) {
+        goodsMapper.insertImageRepo(imageRepo);
+    }
+
+    public void deleteImageRepo(int fid) {
+        goodsMapper.deleteImageRepo(fid);
     }
 }

@@ -20,5 +20,6 @@ public class CustomerAddress {
     private String city;
     private String district;
     private String address;
+    private String modified_time;
     private int is_default;
 }

@@ -1,0 +1,250 @@
+
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+  img{
+    height: 150px;
+    width: auto;
+  }
+  .layui-input, .layui-textarea{
+    width: 90%;
+  }
+
+  .layui-form-label{
+    width: 100px;
+  }
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form" style="padding: 20px 30px 0 0;">
+  <input  name="category_id" id="category_id" th:value="${category_id}"  hidden>
+
+  <block  th:if="${type=='edit'} ">
+    <div class="layui-form-item">
+      <label class="layui-form-label">名称</label>
+      <div class="layui-input-block">
+        <input type="text" name="title" th:value="${item?.title}"  lay-verify="required" placeholder="大类名称" autocomplete="off" class="layui-input">
+        <input  name="id" th:value="${item?.id}"  hidden>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">商品首页图片</label>
+      <div class="layui-input-block">
+          <div id="preview_edit">
+            <img th:src="${item?.img_url}" />
+          </div>
+          <input type="text" name="img_url" th:value="${item?.img_url}"  id="edit_1" onchange="showImage('preview_edit' ,'edit_1')" placeholder="侧边图片 Url 不用本地的上传" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-carousel" id="test1" style="    margin: auto;">
+      <div carousel-item>
+        <th:block th:each="imgItem,iterStat : ${imgList}">
+          <img th:src="${imgItem?.img_url}" />
+        </th:block>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">商品详情图片</label>
+      <div class="layui-input-block">
+        <textarea placeholder="回车"  lay-verify="required" name="imgList" class="layui-textarea" th:text="${imgArea}"></textarea>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">原价格</label>
+      <div class="layui-input-block">
+        <input type="number" name="original_price" th:value="${item?.original_price}" placeholder=""
+               autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">价格</label>
+      <div class="layui-input-block">
+        <input type="number" name="price" th:value="${item?.price}" placeholder=""
+               autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">描述</label>
+      <div class="layui-input-block">
+        <textarea placeholder="请输入内容"  lay-verify="required" name="description" class="layui-textarea" th:text="${item?.description}"></textarea>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">重新分类</label>
+      <div class="layui-input-block" id="categoryList">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">规格</label>
+      <div class="layui-input-block">
+        <input type="text" name="specification" th:value="${item?.specification}" placeholder="" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+
+    <div class="layui-form-item">
+      <label class="layui-form-label"></label>
+      <div class="layui-input-inline">
+        <input type="button" lay-submit lay-filter="form-submit" value="确认" class="layui-btn">
+      </div>
+    </div>
+  </block>
+
+
+
+
+  <block  th:if="${type=='add'} ">
+    <blockquote class="layui-elem-quote">其余部分会自动更新，新增默认不上架</blockquote>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">名称</label>
+      <div class="layui-input-block">
+        <input type="text" name="title"  lay-verify="required" placeholder="大类名称" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">商品首页图片</label>
+      <div class="layui-input-block">
+        <div id="preview"></div>
+        <input type="text" name="img_url" id="add_1" onchange="showImage('preview' ,'add_1')" placeholder="商品首页图片 Url 不用本地的上传 学生服务器压力太大" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">商品详情图片</label>
+      <div class="layui-input-block">
+        <textarea placeholder="回车分割"   lay-verify="required" name="imgList" class="layui-textarea"></textarea>
+      </div>
+    </div>
+
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">原价格</label>
+      <div class="layui-input-block">
+        <input type="number" name="original_price"  placeholder="" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">价格</label>
+      <div class="layui-input-block">
+        <input type="number" name="price" placeholder="" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">描述</label>
+      <div class="layui-input-block">
+        <textarea placeholder="请输入内容"  lay-verify="required" name="description" class="layui-textarea"></textarea>
+      </div>
+    </div>
+
+
+
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">规格</label>
+      <div class="layui-input-block">
+        <input type="text" name="specification"  placeholder="" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label"></label>
+      <div class="layui-input-inline">
+        <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">
+      </div>
+    </div>
+  </block>
+  <br> <br> <br>
+</div>
+<!--<script async id="chevereto-pup-src" src="https://imgtu.com/sdk/pup.js" data-url="https://imgtu.com/upload" data-auto-insert="bbcode-embed-medium"></script>-->
+
+<script>
+  var category_id = -1;
+  var form =null;
+  layui.use(['form','carousel'], function(){
+    var $ = layui.$
+    form = layui.form
+    var carousel = layui.carousel;
+    //建造实例
+    carousel.render({
+      elem: '#test1'
+      ,width: '200px' //设置容器宽度
+      ,height:'100px'
+      ,autoplay:false
+      ,arrow: 'hover' //始终显示箭头
+    });
+    form.on('submit(form-submit)', function(data){
+      var field = data.field;
+      var url = "/web/product/goods/update"
+      console.info(field)
+      ajaxPost(url, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+    form.on('submit(form-submit-add)', function(data){
+      var field = data.field;
+      var url = "/web/product/goods/add"
+      var jsonData={};
+      var jsonGood={};
+      jsonGood.title = field.title
+      jsonGood.img_url = field.img_url
+      jsonGood.original_price = field.original_price
+      jsonGood.price = field.price
+      jsonGood.category_id = field.category_id
+      jsonGood.description = field.description
+      jsonGood.specification = field.specification
+      jsonData.goods = JSON.stringify(jsonGood)
+      jsonData.field = field
+      ajaxPost(url, JSON.stringify(jsonData), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+    category_id = $("#category_id").val();
+    loadCatrgoryList(category_id);
+    form.render('select');
+
+
+
+
+  })
+
+  function showImage(id,id2){
+    var imgDiv = "#"+id;
+    var imgStr = "#"+id2;
+    var src = $(imgStr).val();
+    var str = "<img src='"+src+"'  />"
+    $(imgDiv).html(str)
+  }
+
+
+
+  //加载课程列表
+  function loadCatrgoryList(cid){
+    var url = "/web/product/category/queryAll/option"
+    var jsonData={};
+    var params = JSON.stringify(jsonData);
+    ajaxPost(url, params, function (data) {
+      var res = data.data
+      var size = res.length;
+      var selectStr = ""
+      console.info(cid)
+       selectStr += "<select name=\"category_id\" >";
+      for(var i = 0 ;i<size;i++){
+        var node = ('<option value="'+res[i].id+'">'+res[i].title+'</option>');
+        if(parseInt(cid) === res[i].id){
+          node = ('<option value="'+res[i].id+'" selected>'+res[i].title+'</option>');
+        }
+        selectStr += node;
+      }
+      selectStr += "</select>";
+      $("#categoryList").html(selectStr)
+      form.render('select');
+
+    });
+  }
+</script>

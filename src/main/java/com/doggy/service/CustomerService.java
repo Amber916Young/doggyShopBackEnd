@@ -1,11 +1,16 @@
 package com.doggy.service;
 
+import com.doggy.entity.Category;
+import com.doggy.entity.CustomerAddress;
 import com.doggy.entity.CustomerInfo;
+import com.doggy.entity.OrderMaster;
 import com.doggy.mapper.*;
+import com.doggy.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @ClassName:CustomerService
@@ -33,5 +38,22 @@ public class CustomerService {
 
     public CustomerInfo queryCustomerByid(int id) {
         return customerMapper.queryCustomerByid(id);
+    }
+
+    public List<CustomerInfo> pageQueryUserData(Page page) {
+        return customerMapper.pageQueryUserData(page);
+    }
+
+    public int pageQueryUserCount(Page page) {
+        return customerMapper.pageQueryUserCount(page);
+    }
+
+
+    public List<CustomerAddress> pageQueryAddressData(Page page) {
+        return customerMapper.pageQueryAddressData(page);
+    }
+
+    public int pageQueryAddressCount(Page page) {
+        return customerMapper.pageQueryAddressCount(page);
     }
 }

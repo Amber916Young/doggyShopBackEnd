@@ -1,0 +1,158 @@
+/*通用*/
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "微软雅黑", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/*注脚*/
+.footer {
+    height: 50px;
+    color: #7f7f7f;
+    border-top: solid 1px #ccc;
+    position: relative;
+}
+
+.footer p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.text-require {
+    color: red;
+}
+
+/*顶部导航*/
+header.navbar {
+    margin-bottom: 0; /*清除下外边距*/
+    border-radius: 0; /*取消圆角效果*/
+}
+
+/*页面主体*/
+section.container-fluid {
+    padding: 0; /*清除内边距*/
+}
+
+/*左侧菜单*/
+#sidebar {
+    min-height: 650px; /*设置最小高度*/
+    padding: 0; /*清除内边距*/
+}
+
+#search-form {
+    margin: 15px 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid lightgrey;
+}
+
+#search-form div {
+    margin: 0 10px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "微软雅黑", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.footer {
+    height: 50px;
+    color: #000000;
+    border-top: solid 1px #ccc;
+    position: relative;
+}
+
+.footer p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* 标题 */
+.header {
+    padding: 20px;
+    text-align: center;
+    /*background: #1abc9c;*/
+    color: white;
+    background-color: #575757;
+    margin-top: 50px;
+
+}
+
+.navbar a {
+    float: left;
+    color: white;
+    padding: 14.5px 20px;
+    text-decoration: none;
+}
+
+.navbar a.right {
+    float: right;
+}
+
+/*.navbar a:hover{*/
+/*background:  #ddd;*/
+/*!*border-style:solid ;*!*/
+/*border-bottom-color: #1abc9c;*/
+/*color: black;*/
+/*}*/
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+#flip, #panel {
+    border: solid 1px black;
+    /*background-color:#e5eecc;*/
+    float: right;
+    margin-bottom: -10px;
+}
+
+#panel {
+    display: none;
+    position: relative;
+    z-index: 999;
+}
+
+ul {
+    list-style: none;
+}
+
+ul li {
+    margin: 10px 0;
+}
+
+.d1 {background: #A3D0C3;}
+.d1 input {
+    width: 100%;
+    height: 42px;
+    padding-left: 10px;
+    border: 2px solid #7BA7AB;
+    border-radius: 5px;
+    outline: none;
+    background: #F9F0DA;
+    color: #9E9C9C;
+}
+.d1 button {
+    position: absolute;
+    top: 0;
+    right: 0px;
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: #7BA7AB;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+.d1 button:before {
+    content: "\f002";
+    font-family: FontAwesome;
+    font-size: 16px;
+    color: #F9F0DA;
+}
+

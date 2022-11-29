@@ -1,0 +1,82 @@
+
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+  img{
+    height: 150px;
+    width: auto;
+  }
+
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form" style="padding: 20px 20px;">
+
+
+    <table id="tableview" lay-filter="tableview"></table>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label"></label>
+      <div class="layui-input-inline">
+        <input type="button" lay-submit lay-filter="form-submit" value="确认" class="layui-btn">
+      </div>
+    </div>
+
+  <br> <br> <br>
+</div>
+
+<script>
+  var order_id = null;
+  var type = null;
+  layui.use(['form','table'], function(){
+    var $ = layui.$
+    ,form = layui.form
+    var table = layui.table;
+    order_id = getParam('order_id');
+    type = getParam('type');
+    table.render({
+      elem: '#tableview'
+      ,url: '/web/order/detail/queryAll' //模拟接口
+      ,toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
+      ,defaultToolbar: ['filter', 'exports', 'print']
+      ,title: '订单列表'
+      ,where: {
+        'order_id': order_id
+        ,'type': type
+      }
+      ,cols: [
+        [
+          {type: 'checkbox', fixed: 'left'}
+            ,{field: 'good_id', width: 100, title: '商品Id',  align: 'center', sort: true}
+            ,{field: 'good_name', width: 200, title: '商品名称',  align: 'center', sort: true}
+          ,{field: 'good_amount', title: '购买数量', align: 'center',  width: 120}
+          ,{field: 'good_price', title: '购买单价',  align: 'center', width: 120, sort: true}
+          ,{field: 'average_cost', title: '平均价格', align: 'center', width:120, sort: true }
+          ,{field: 'weight', title: '商品重量',  align: 'center', width: 120, sort: true}
+          ,{field: 'fee_money', title: '优惠分摊金额',  align: 'center', minWidth: 130, sort: true}
+          ,{field: 'modified_time', title: '最后修改时间', align: 'center',  minWidth: 200, sort: true}
+          // ,{title: '操作', minWidth: 200, align: 'center', fixed: 'right', toolbar: '#tableTool'}
+        ]
+      ]
+      ,page: true
+      ,limit: 30
+      ,limits: [10, 20, 30, 50, 100,150,200]
+      ,text: 'error'
+    });
+
+    form.on('submit(form-submit)', function(data){
+      var field = data.field;
+      var url = "/web/order/detail/update"
+      ajaxPost(url, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+    form.on('submit(form-submit-add)', function(data){
+      var field = data.field;
+      var url = "/web/order/detail/add"
+      ajaxPost(url, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+      console.info(field)
+    });
+
+  })
+</script>

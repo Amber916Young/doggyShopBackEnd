@@ -2,43 +2,196 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.doggy.mapper.SysGoodsMapper">
-    <insert id="insertCollection">
-        insert into ReadingLove.collection
+
+    <insert id="insertGoods" parameterType="Goods" useGeneratedKeys="true" keyProperty="id">
+        insert into DoggyPets.Goods
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="openid != null">
-                openid,
+            <if test="title != null">
+                title,
             </if>
-            <if test="username != null">
-                username,
+            <if test="description != null">
+                description,
             </if>
-            <if test="novelid != null">
-                novelid,
+            <if test="label_id != null">
+                label_id,
             </if>
-            <if test="uuid != null">
-                uuid,
+            <if test="price != null">
+                price,
             </if>
-            <if test="collection_date != null">
-                collection_date,
+            <if test="original_price != null">
+                original_price,
             </if>
+
+            <if test="img_url != null">
+                img_url,
+            </if>
+            <if test="total_number != null">
+                total_number,
+            </if>
+            <if test="sale_number != null">
+                sale_number,
+            </if>
+
+            <if test="category_id != null">
+                category_id,
+            </if>
+            <if test="specification != null">
+                specification,
+            </if>
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="openid != null">
-                #{openid},
+            <if test="title != null">
+                #{title},
             </if>
-            <if test="username != null">
-                #{username},
+            <if test="description != null">
+                #{description},
             </if>
-            <if test="novelid != null">
-                #{novelid},
+            <if test="label_id != null">
+                #{label_id},
             </if>
-            <if test="uuid != null">
-                #{uuid},
+            <if test="price != null">
+                #{price},
             </if>
-            <if test="collection_date != null">
-                #{collection_date},
+            <if test="original_price != null">
+                #{original_price},
+            </if>
+            <if test="img_url != null">
+                #{img_url},
+            </if>
+            <if test="total_number != null">
+                #{total_number},
+            </if>
+            <if test="sale_number != null">
+                #{sale_number},
+            </if>
+            <if test="category_id != null">
+                #{category_id},
+            </if>
+
+            <if test="specification != null">
+                #{specification},
             </if>
         </trim>
     </insert>
+
+
+    <update id="updateGoods">
+        update DoggyPets.Goods
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="label_id != null">
+                label_id = #{label_id},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="original_price != null">
+                original_price = #{original_price},
+            </if>
+            <if test="img_url != null">
+                img_url = #{img_url},
+            </if>
+            <if test="total_number != null">
+                total_number = #{total_number},
+            </if>
+            <if test="sale_number != null">
+                sale_number = #{sale_number},
+            </if>
+            <if test="category_id != null">
+                category_id = #{category_id},
+            </if>
+            <if test="flag != null">
+                flag = #{flag},
+            </if>
+            <if test="specification != null">
+                specification = #{specification},
+            </if>
+        </set>
+        where  id = #{id}
+    </update>
+
+    <insert id="insertCategory">
+        insert into DoggyPets.category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                title,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="order_id != null">
+                order_id,
+            </if>
+            <if test="img_url != null">
+                img_url,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="order_id != null">
+                #{order_id},
+            </if>
+            <if test="img_url != null">
+                #{img_url},
+            </if>
+
+        </trim>
+    </insert>
+    <insert id="insertImageRepo">
+        insert into DoggyPets.imagerepo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="img_url != null">
+                img_url,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fid != null">
+                #{fid},
+            </if>
+            <if test="img_url != null">
+                #{img_url},
+            </if>
+
+        </trim>
+    </insert>
+    <update id="updateCategory">
+        update DoggyPets.category
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="order_id != null">
+                order_id = #{order_id},
+            </if>
+            <if test="img_url != null">
+                img_url = #{img_url},
+            </if>
+            <if test="flag != null">
+                flag = #{flag},
+            </if>
+        </set>
+        where  id = #{id}
+    </update>
+
 
     <select id="queryAllCategory" resultType="com.doggy.entity.Category">
         select * from DoggyPets.category
@@ -54,6 +207,8 @@
         </where>
         order by order_id asc
     </select>
+
+
     <select id="queryAllGoods" resultType="com.doggy.entity.Goods">
         select * from DoggyPets.goods
         <where>
@@ -82,6 +237,68 @@
     </select>
     <select id="querycurrentCategory" resultType="com.doggy.entity.Category">
         select * from DoggyPets.category where id=#{id}
+    </select>
+
+
+<!--    分页查询-->
+    <select id="pageQueryGoodData" resultType="com.doggy.entity.Goods">
+        select * from DoggyPets.goods
+        <where>
+            1=1
+            <if test="id !=null">
+                and  category_id = #{id}
+            </if>
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(description,'')
+                ,IFNULL(specification,'')
+                ,IFNULL(title,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+        limit #{start},#{rows}
+    </select>
+    <select id="pageQueryGoodCount" resultType="java.lang.Integer">
+        select count(1) from DoggyPets.goods
+        <where>
+            1=1
+            <if test="id !=null">
+                and  category_id = #{id}
+            </if>
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(description,'')
+                ,IFNULL(specification,'')
+                ,IFNULL(title,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="pageQueryCategoryCount" resultType="java.lang.Integer">
+        select count(1) from DoggyPets.Category
+        <where>
+            1=1
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(description,'')
+                ,IFNULL(title,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="pageQueryCategoryData" resultType="com.doggy.entity.Category">
+        select * from DoggyPets.Category
+        <where>
+            1=1
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(description,'')
+                ,IFNULL(title,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+        limit #{start},#{rows}
     </select>
 
 

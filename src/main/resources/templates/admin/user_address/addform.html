@@ -1,0 +1,158 @@
+
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+  img{
+    height: 150px;
+    width: 150px;
+  }
+  .main{
+      margin: 1rem 2rem;
+      display: flex;
+      justify-content: center;
+  }
+
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form" >
+    <div class="main" >
+        <div id="Info"> </div>
+
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">用户id</label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input readonly type="text" name="username"  value="'+data.customer_id+'"   placeholder="openid" autocomplete="off" class="layui-input">-->
+<!--                    <input name="customer_addr_id" hidden>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">用户名</label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input type="text" name="username"  placeholder="username" autocomplete="off" class="layui-input">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">联系电话</label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input type="text" name="phone" placeholder="phone" autocomplete="off" class="layui-input">-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">电话</label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input type="text" name="phone"  placeholder="phone" autocomplete="off" class="layui-input">-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">邮政编号</label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input type="text" name="zip"  placeholder="zip" autocomplete="off" class="layui-input">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">省 市 区</label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input type="text" name="province"  placeholder="province" autocomplete="off" class="layui-input">-->
+<!--                    <input type="text" name="city"  placeholder="city" autocomplete="off" class="layui-input">-->
+<!--                    <input type="text" name="district"  placeholder="district" autocomplete="off" class="layui-input">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">地址</label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <textarea placeholder="地址"  ay-verify="required" name="address" class="layui-textarea" ></textarea>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--        -->
+<!--            <div class="layui-form-item">-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input type="button" lay-submit lay-filter="form-submit-edit" value="新增" class="layui-btn">-->
+<!--                </div>-->
+<!--            </div>-->
+    </div>
+  <br> <br> <br>
+</div>
+
+<script>
+  var customer_addr_id = null;
+  var form = null;
+  layui.use(['form','table'], function(){
+        var $ = layui.$
+        form = layui.form
+      customer_addr_id = getParam('customer_addr_id');
+
+      console.info(customer_addr_id)
+        loadInfo(customer_addr_id)
+
+
+    form.on('submit(form-submit-edit)', function(data){
+      var field = data.field;
+
+        ajaxPost(user_address_update, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+
+  })
+
+  function loadInfo(id){
+      var jsonData={}
+      jsonData.customer_addr_id= id;
+      var params = JSON.stringify(jsonData);
+      ajaxPost(user_address_detail, params, function (data) {
+          var str = '';
+          var data = data.data
+          if( data===null ||data==="") return
+          str =' <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">用户id</label>\n' +
+              '                <div class="layui-input-inline">\n' +
+              '                    <input readonly type="text" name="username"  value="'+data.customer_id+'"   placeholder="openid" autocomplete="off" class="layui-input">\n' +
+              '                    <input name="customer_addr_id"  value="'+data.customer_addr_id+'"hidden>\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">用户名</label>\n' +
+              '                <div class="layui-input-inline">\n' +
+              '                    <input type="text" name="username"   value="'+data.username+'"  placeholder="username" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">联系电话</label>\n' +
+              '                <div class="layui-input-inline">\n' +
+              '                    <input type="text" name="phone"  value="'+data.phone+'"  placeholder="phone" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">邮政编号</label>\n' +
+              '                <div class="layui-input-inline">\n' +
+              '                    <input type="text" name="zip"  placeholder="zip"  value="'+data.zip+'" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">省 市 区</label>\n' +
+              '                <div class="layui-input-inline">\n' +
+              '                    <input type="text" name="province"   value="'+data.province+'"   placeholder="province" autocomplete="off" class="layui-input">\n' +
+              '                    <input type="text" name="city"   value="'+data.city+'"   placeholder="city" autocomplete="off" class="layui-input">\n' +
+              '                    <input type="text" name="district"   value="'+data.district+'"  placeholder="district" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">地址</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <textarea placeholder="地址"  ay-verify="required" name="address" class="layui-textarea" >'+data.address+'</textarea>\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <input type="button" lay-submit lay-filter="form-submit-edit" value="新增" class="layui-btn">\n' +
+              '                </div>\n' +
+              '            </div> '
+
+          $("#Info").html(str)
+      });
+
+
+  }
+</script>

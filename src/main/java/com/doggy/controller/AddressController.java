@@ -36,6 +36,7 @@ public class AddressController {
     public HttpResult GetUnqiueAddress(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+
         int customer_addr_id = Integer.parseInt(param.get("customer_addr_id").toString());
         int customer_id = Integer.parseInt(param.get("customer_id").toString());
         param = new HashMap<>();

@@ -42,4 +42,8 @@ public interface SysOrderMapper {
     int insertOrderMaster(OrderMaster master);
 
     void insertOrderDetail(OrderDetail detail);
+
+    List<HashMap<String,Object>> pageQueryOrderDetailData(Page page);
+
+    int pageQueryDetailCount(Page page);
 }

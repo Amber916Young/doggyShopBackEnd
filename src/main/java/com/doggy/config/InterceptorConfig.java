@@ -15,6 +15,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor())
                 .excludePathPatterns("/wx/**")				//添加不拦截的请求路径
                 .excludePathPatterns("/error/**")				//添加不拦截的请求路径
+                .excludePathPatterns("/static/**")				//添加不拦截的请求路径
+                .excludePathPatterns("/web/**")				//添加不拦截的请求路径
+                .excludePathPatterns("/view/**")				//添加不拦截的请求路径
                 .addPathPatterns("/**");						//添加需要拦截的路径
     }
 

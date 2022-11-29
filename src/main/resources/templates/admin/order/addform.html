@@ -1,0 +1,363 @@
+
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+  img{
+    height: 150px;
+    width: auto;
+  }
+  .layui-form-label{
+      width: 100px;
+  }
+  .center{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+  }
+  .layui-input, .layui-textarea {
+      width: 70%;
+  }
+
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form" style="padding: 20px 20px;">
+    <div id="Info">
+        <div class="layui-collapse">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">订单信息</h2>
+                <div class="layui-colla-content layui-show">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">订单编号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="order_sn"  value="'+data.order_sn+'"   placeholder="openid" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">下单人ID</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="customer_id"  placeholder="下单人ID" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">支付方式</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="payment_method"    placeholder="支付方式" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">订单金额</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="order_money"    placeholder="订单金额" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">优惠金额</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="district_money"    placeholder="优惠金额" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">下单时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="create_time"    placeholder="下单时间" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">支付时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="pay_time"    placeholder="支付时间" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">发货时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="pay_time"    placeholder="发货时间" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">收货时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="receive_time"    placeholder="收货时间" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">订单状态</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="order_status"    placeholder="订单状态" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">订单积分</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="order_point"    placeholder="订单积分" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <input type="button" lay-submit lay-filter="form-submit-add" value="更新订单信息" class="layui-btn layui-btn-warm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">快递信息</h2>
+                <div class="layui-colla-content ">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">快递公司名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="shipping_comp_name"  placeholder="快递公司名称" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">快递单号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="shipping_sn"  placeholder="快递单号" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <input type="button" lay-submit lay-filter="form-submit-update-shipping" value="更新快递信息" class="layui-btn layui-btn-warm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">地址信息</h2>
+                <div class="layui-colla-content ">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">省 市 区</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="province"  placeholder="省" autocomplete="off" class="layui-input">
+                            <input type="text" name="city"  placeholder="市" autocomplete="off" class="layui-input">
+                            <input type="text" name="district"  placeholder="区" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">地址</label>
+                        <div class="layui-input-block">
+                            <textarea placeholder="地址"  ay-verify="required" name="address" class="layui-textarea" ></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">收货人</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="username"  placeholder="收货人" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">电话</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="phone"  placeholder="电话" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            <textarea placeholder="备注"  ay-verify="required" name="memo" class="layui-textarea" ></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <input type="button" lay-submit lay-filter="form-submit-update-address" value="更新地址信息" class="layui-btn layui-btn-warm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="center">
+
+    </div>
+
+
+    <br> <br> <br>
+</div>
+
+<script>
+  var order_id = null;
+  var type = null;
+  var  element
+  layui.use(['form','table','element'], function(){
+    var $ = layui.$
+    ,form = layui.form
+
+    var table = layui.table;
+    element = layui.element;
+    order_id = getParam('order_id');
+    type = getParam('type');
+    loadData(order_id)
+
+    form.on('submit(form-submit)', function(data){
+      var field = data.field;
+      var url = "/web/order/detail/update"
+      ajaxPost(url, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+    form.on('submit(form-submit-add)', function(data){
+      var field = data.field;
+      var url = "/web/order/detail/add"
+      ajaxPost(url, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+
+
+  })
+
+
+
+  function loadData(id){
+      var jsonData={}
+      jsonData.order_id= id;
+      var params = JSON.stringify(jsonData);
+      ajaxPost(order_master_detail, params, function (data) {
+          var str = '';
+          var data = data.data
+          str = '<div class="layui-collapse">\n' +
+              '            <div class="layui-colla-item">\n' +
+              '                <h2 class="layui-colla-title">订单【'+data.order_sn+'】信息</h2>\n' +
+              '                <div class="layui-colla-content layui-show">\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">下单人ID</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="customer_id"  value="'+data.customer_id+'"   placeholder="下单人ID" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">支付方式</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="payment_method"  value="'+data.payment_method+'"     placeholder="支付方式" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">订单金额</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="order_money"   value="'+data.order_money+'"    placeholder="订单金额" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">优惠金额</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="district_money"   value="'+data.district_money+'"      placeholder="优惠金额" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">下单时间</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="create_time"    value="'+data.create_time+'"   placeholder="下单时间" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">支付时间</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="pay_time"  value="'+data.pay_time+'"      placeholder="支付时间" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">发货时间</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="shipping_time"    value="'+data.shipping_time+'"       placeholder="发货时间" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">收货时间</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="receive_time"   value="'+data.receive_time+'"  placeholder="收货时间" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">订单状态</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="order_status"     value="'+data.order_status+'"   placeholder="订单状态" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">订单积分</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="number" name="order_point"     value="'+data.order_point+'"  placeholder="订单积分" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="button" lay-submit lay-filter="form-submit-update-order" value="更新订单信息" class="layui-btn layui-btn-warm">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-colla-item">\n' +
+              '                <h2 class="layui-colla-title">快递信息</h2>\n' +
+              '                <div class="layui-colla-content ">\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">快递公司名称</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="shipping_comp_name"    value="'+data.shipping_comp_name+'"  placeholder="快递公司名称" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">快递单号</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="shipping_sn"  value="'+data.shipping_sn+'" placeholder="快递单号" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="button" lay-submit  lay-filter="form-submit-update-shipping" value="更新快递信息" class="layui-btn layui-btn-warm">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-colla-item">\n' +
+              '                <h2 class="layui-colla-title">地址信息</h2>\n' +
+              '                <div class="layui-colla-content ">\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">省 市 区</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="province"   value="'+data.province+data.city+data.district+'"  placeholder="省" autocomplete="off" class="layui-input">\n' +
+              // '                            <input type="text" name="city"   value="'+data.city+'"  placeholder="市" autocomplete="off" class="layui-input">\n' +
+              // '                            <input type="text" name="district"  value="'+data.district+'"  placeholder="区" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">地址</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <textarea placeholder="地址"  ay-verify="required" name="address" class="layui-textarea" >'+data.address+'</textarea>\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">收货人</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="username"   value="'+data.username+'"  placeholder="收货人" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">电话</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="phone"    value="'+data.phone+'" placeholder="电话" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">备注</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <textarea placeholder="备注"  ay-verify="required" name="memo" class="layui-textarea" >'+data.memo+'</textarea>\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="button" lay-submit lay-filter="form-submit-update-address" value="更新地址信息" class="layui-btn layui-btn-warm">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '        </div>\n'
+          $("#Info").html(str)
+          element.render();
+      });
+  }
+</script>

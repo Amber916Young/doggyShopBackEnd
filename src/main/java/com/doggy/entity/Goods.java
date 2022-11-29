@@ -27,7 +27,8 @@ public class Goods {
     private int category_id;  //类别
     private String create_time;
     private String modify_time;
-    private String flag; // 0 下架 1 上新
+    private int flag; // 0 下架 1 上新
+    private String specification; // 0 下架 1 上新
 
 }
 

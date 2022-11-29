@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/headerPage :: headerPage"></div>
+<title>Jobs Info</title>
+<style>
+
+</style>
+<body >
+<div >
+    <div >
+        <div th:replace="fragments/headerSide :: headerSide"></div>
+    </div>
+    <div class="col col-lg-2">
+        <div th:replace="fragments/sidebarPage :: sidebarPage"></div>
+    </div>
+    <div class="col col-lg-10">
+        <div class="layui-card " style="margin-top: 2em">
+            <div class="layui-breadcrumb" lay-filter="breadcrumb">
+                <a lay-href="">Dashboard</a>
+                <a><cite>主页</cite></a>
+            </div>
+        </div>
+        <div class="layui-fluid">
+            <div class="layui-card">
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-userfront-formlist">
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <input type="text" name="keyword" placeholder="input keyword to query" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-user-front-search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                            </button>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn  layui-btn-danger btn-batch" data-type="batchdel">Batch delete</button>
+                        </div>
+                    </div>
+                </div>
+
+                <table id="LAY-app-content-tags" lay-filter="LAY-app-content-tags"></table>
+                <script type="text/html" id="table-content-com">
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>delete</a>
+                </script>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<div th:replace="fragments/footerPage :: footerPage"></div>
+
+<script type="text/javascript">
+    var ItemId = "Item3_2";
+    /*<![CDATA[*/
+    layui.use(['table'], function(){
+        var table = layui.table;
+        var form = layui.form;
+        form.on('submit(LAY-user-front-search)', function(data){
+            var field = data.field;
+            table.reload('LAY-app-content-tags', {
+                page:1
+                ,where: field
+            });
+        });
+
+
+
+        table.render({
+            elem: '#LAY-app-content-tags'
+            ,url: '/MANET/queryAll' //模拟接口
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar: ['filter', 'exports', 'print']
+            ,title: 'MANETs List'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field: 'MANET_SSID', width: 150, title: 'MANET_SSID', sort: true}
+                    ,{field: 'ownerID', title: 'ownerID', minWidth: 100}
+                    ,{field: 'capacity', title: 'capacity', minWidth: 100, sort: true}
+                    ,{field: 'MANET_range', title: 'MANET_range', minWidth: 100, sort: true}
+                    ,{field: 'number', title: 'number', width: 100}
+                    ,{field: 'createTime', title: 'createTime', minWidth: 100, templet: function (d) {
+                        if(d.createTime==null) return "" ;
+                        var createTime = layui.util.toDateString(d.createTime, "yyyy-MM-dd HH:mm:ss");
+                        return "<label id='" + d.LAY_INDEX + "'  >" + createTime + "</label>";
+                    }}
+                    ,{title: 'operation', width: 150, align: 'center', fixed: 'right', toolbar: '#table-content-com'}
+                ]
+            ]
+            ,page: true
+            ,limit: 30
+            ,limits: [10, 20, 30, 50, 100,150,200]
+            ,text: 'error'
+        });
+
+        table.on('tool(LAY-app-content-tags)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.prompt({
+                    formType: 1
+                    ,title: 'Sensitive operation, please verify password'
+                }, function(value, index){
+                    layer.close(index);
+                    layer.confirm('Really delete it?', function(index){
+                        var ids=new Array(),jsonData={};
+                        ids.push(data.id);
+                        jsonData["ids"] = ids;
+                        jsonData["code"] = value;
+                        var params = JSON.stringify(jsonData);
+                        var url = "/MANET/deletes"
+                        ajaxPost(url, params, function (data) {
+                            if (data.code == 0) {
+                                layer.msg(data.msg, {time: 3000, icon: 1});
+                                layui.table.reload('LAY-app-content-tags'); //重载表格
+                            } else {
+                                layer.open({
+                                    title: 'del fail!'
+                                    ,content:data.msg
+                                });return;
+                            }
+                        });
+                        layer.close(index);
+                    });
+                });
+            }
+        });
+
+
+        var active = {
+            batchdel: function () {
+                var checkStatus = table.checkStatus('LAY-app-content-tags')
+                    , checkData = checkStatus.data;
+                var ids = new Array(), jsonData = {};
+                if (checkData.length === 0) {
+                    return layer.msg('Please select data');
+                } else {
+                    for (var i = 0; i < checkData.length; i++) {
+                        ids.push(checkData[i].id);
+                    }
+                    jsonData["ids"] = ids;
+                }
+                layer.prompt({
+                    formType: 1
+                    ,title: 'Sensitive operation, please verify password'
+                }, function (value, index) {
+                    layer.close(index);
+                    layer.confirm('Really delete it?', function(index){
+                        layer.close(index);
+                        jsonData["code"] = value;
+                        var url = "/MANET/deletes"
+                        var params = JSON.stringify(jsonData);
+                        ajaxPost(url, params, function (data) {
+                            if (data.code == 0) {
+                                layer.msg(data.msg, {time: 3000, icon: 1});
+                                layui.table.reload('LAY-app-content-tags'); //重载表格
+                            } else {
+                                layer.open({
+                                    title: 'del fail!'
+                                    ,content:data.msg
+                                });return;
+                            }
+                        });
+                        table.reload('LAY-app-content-tags');
+                    });
+                });
+            }
+        }
+
+        $('.layui-btn.btn-batch').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    })
+    /*]]>*/
+
+
+
+</script>
+</html>

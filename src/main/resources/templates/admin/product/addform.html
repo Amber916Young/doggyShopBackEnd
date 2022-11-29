@@ -1,0 +1,103 @@
+
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+  img{
+    height: 150px;
+    width: auto;
+  }
+
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form" style="padding: 20px 30px 0 0;">
+  <block  th:if="${type=='edit'} ">
+    <div class="layui-form-item">
+      <label class="layui-form-label">名称</label>
+      <div class="layui-input-block">
+        <input type="text" name="title" th:value="${item?.title}"  lay-verify="required" placeholder="大类名称" autocomplete="off" class="layui-input">
+        <input  name="id" th:value="${item?.id}"  hidden>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">侧边图片</label>
+      <div class="layui-input-block">
+        <img th:src="${item?.img_url}" />
+        <input type="text" name="img_url" th:value="${item?.img_url}" placeholder="侧边图片 Url 不用本地的上传" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">描述</label>
+      <div class="layui-input-block">
+        <textarea placeholder="请输入内容"  ay-verify="required" name="description" class="layui-textarea" th:text="${item?.description}"></textarea>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label"></label>
+      <div class="layui-input-inline">
+        <input type="button" lay-submit lay-filter="form-submit" value="确认" class="layui-btn">
+      </div>
+    </div>
+  </block>
+
+  <block  th:if="${type=='add'} ">
+    <blockquote class="layui-elem-quote">其余部分会自动更新，新增默认不上架</blockquote>
+    <div class="layui-form-item">
+      <label class="layui-form-label">名称</label>
+      <div class="layui-input-block">
+        <input type="text" name="title"   lay-verify="required" placeholder="大类名称" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">侧边图片</label>
+      <div class="layui-input-block">
+
+        <input type="text" name="img_url"  placeholder="侧边图片 Url 不用本地的上传" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">描述</label>
+      <div class="layui-input-block">
+        <textarea placeholder="请输入内容"  ay-verify="required" name="description" class="layui-textarea" ></textarea>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">上架顺序</label>
+      <div class="layui-input-block">
+        <input type="text" name="order_id"  placeholder="上架顺序" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label"></label>
+      <div class="layui-input-inline">
+        <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">
+      </div>
+    </div>
+  </block>
+  <br> <br> <br>
+</div>
+
+<script async id="chevereto-pup-src" src="https://imgtu.com/sdk/pup.js" data-url="https://imgtu.com/upload" data-auto-insert="bbcode-embed-medium"></script>
+<script>
+  var id = -1;
+  layui.use(['form'], function(){
+    var $ = layui.$
+    ,form = layui.form
+    form.on('submit(form-submit)', function(data){
+      var field = data.field;
+      var url = "/web/product/category/update"
+      ajaxPost(url, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+    form.on('submit(form-submit-add)', function(data){
+      var field = data.field;
+      var url = "/web/product/category/add"
+      ajaxPost(url, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+      console.info(field)
+    });
+
+  })
+</script>

@@ -289,11 +289,11 @@ SELECT order_id FROM order_master WHERE order_status = 4
         select count(1) from DoggyPets.order_master
         <where>
             1=1
-            <if test="data.order_status != null">
-                and  order_status=#{data.order_status}
+            <if test="data.order_status !=null">
+                and order_status = #{data.order_status}
             </if>
-            <if test="id != null">
-                and  customer_id=#{id}
+            <if test="data.payment_method !=null">
+                and payment_method = #{data.payment_method}
             </if>
             <if test="keyWord !=null">
                 and   concat(
@@ -308,11 +308,11 @@ SELECT order_id FROM order_master WHERE order_status = 4
         select * from DoggyPets.order_master
         <where>
             1=1
-            <if test="data.order_status != null">
-                and  order_status=#{data.order_status}
+            <if test="data.order_status !=null">
+                and order_status = #{data.order_status}
             </if>
-            <if test="id != null">
-                and customer_id= #{id}
+            <if test="data.payment_method !=null">
+                and payment_method = #{data.payment_method}
             </if>
             <if test="keyWord !=null">
                 and   concat(
@@ -346,9 +346,27 @@ SELECT order_id FROM order_master WHERE order_status = 4
             </if>
 
         </where>
+    </select>
+    <select id="pageQueryOrderDetailData" resultType="hashmap">
+        select * from DoggyPets.order_detail
+        <where>
+            1=1
+            <if test="data.order_id !=null">
+                and order_id = #{data.order_id}
+            </if>
+        </where>
+        limit #{start},#{rows}
 
+    </select>
+    <select id="pageQueryDetailCount" resultType="java.lang.Integer">
+        select count(1) from DoggyPets.order_detail
+        <where>
+            1=1
+            <if test="data.order_id !=null">
+                and order_id = #{data.order_id}
+            </if>
 
-
+        </where>
     </select>
 
 

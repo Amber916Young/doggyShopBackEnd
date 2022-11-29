@@ -1,0 +1,75 @@
+<footer  th:fragment="footerPage"  xmlns:th="http://www.thymeleaf.org"  >
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script type="text/javascript" th:href="@{/static/js/jquery-2.1.4.min.js}"  src="/static/js/jquery-2.1.4.min.js"></script>
+<!--    弹出层-->
+    <script type="text/javascript" src="/static/layer/layer.js" th:href="@{/static/layer/layer.js}"></script>
+
+    <script src="/static/layui/layui.js" th:href="@{/static/layui/layui.js}"></script>
+    <!-- Bootstrap 核心 JavaScript 文件 -->
+    <script type="text/javascript" src="/static/css/bootstrap/js/bootstrap.min.js"  th:href="@{/static/css/bootstrap/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" src="/static/js/ajaxHandle.js" th:href="@{/static/js/ajaxHandle.js}" ></script>
+    <script type="text/javascript" src="/static/js/requestUrl.js" th:href="@{/static/js/requestUrl.js}" ></script>
+    <!-- metisMenu -->
+    <script type="text/javascript" src="/static/metismenu/metisMenu.min.js"></script>
+
+<!--    <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>-->
+
+    <script>
+        function LogOut(){
+            var url="/permission/web/logout"
+            ajaxPost(url, {}, function (data) {
+                if (data.code == 0) {
+                    layer.msg(data.msg, {time: 3000, icon: 1});
+                    setTimeout(() => {
+                        window.location.href="/index/login";
+                    }, 3000);
+                } else {
+                    layer.msg(data.msg, {time: 3000, icon: 5});
+                    return;
+                }
+            });
+        }
+        $(function () {
+
+            $('#menu').metisMenu();
+            //根据页面传进来的ItemId设置菜单状态
+            // var url = window.location;
+            //获取Id对应的菜单
+            console.log("ItemId=" + ItemId);
+            if(ItemId==null){
+                return;
+            }
+            var element = $('#' + ItemId);
+
+            console.log(element.html());
+
+            if (element.is(':empty')) {
+                return;
+            }
+
+            //如果以0结尾，对应菜单项标题菜单
+            if (ItemId.charAt(ItemId.length - 1) == '0') {
+                element.addClass('menuItemColor');
+                element.css('color', 'white');
+                //展开菜单
+                element.parent().addClass("mm-active");
+                element.next().addClass("mm-show");
+                return;
+            }
+            //处理非第一个节点
+            //获取<a></a>当前菜单项对应的父元素
+            var currentItemLi = element.parent();
+            //设置li的样式,高亮当前选项
+            currentItemLi.addClass('active');
+            //获取上一级ul元素
+            var parentItemUl = currentItemLi.parent();
+            //展开菜单
+            parentItemUl.addClass("mm-show");
+            var parentItemLi = parentItemUl.parent();
+            // console.log("元素的html内容:"+parentItemLi.html());
+            //设置父菜单项为active 状态
+            parentItemLi.addClass("mm-active");
+        });
+        //根据
+    </script>
+</footer>

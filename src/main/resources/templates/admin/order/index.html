@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/headerPage :: headerPage"></div>
+<title>订单管理</title>
+<style>
+  img{
+    height: 100px;
+    width: auto;
+  }
+</style>
+<body >
+<div >
+  <div >
+    <div th:replace="fragments/headerSide :: headerSide"></div>
+  </div>
+  <div class="col col-lg-2">
+    <div th:replace="fragments/sidebarPage :: sidebarPage"></div>
+  </div>
+  <div class="col col-lg-10">
+    <div class="layui-card">
+      <div class="layui-card-header">
+        <div class="layui-breadcrumb" lay-filter="breadcrumb">
+          <a lay-href="">产品</a>
+          <a><cite>订单管理</cite></a>
+        </div>
+      </div>
+      <div class="layui-card-body">
+          <div class="layui-fluid">
+              <div class="layui-form  layuiadmin-card-header-auto">
+                  <div class="layui-form-item">
+                      <div class="layui-inline">
+                          <input type="text" name="keyword" placeholder="模糊查询" autocomplete="off" class="layui-input">
+                      </div>
+                      <div class="layui-inline">
+                          <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="searchBtn">
+                              <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                          </button>
+                      </div>
+                      <div class="layui-inline">
+                          <button class="layui-btn btn-batch layui-btn-danger " data-type="batchdel">批量删除</button>
+                          <button class="layui-btn btn-batch" data-type="add">新增</button>
+                      </div>
+                      <div class="layui-inline"  >
+                          <select name="payment_method"  lay-filter="payment_method_select">
+                              <option value="" >请选择支付方式</option>
+                              <option  value="0">微信支付</option>
+                              <option   value="1">支付宝支付</option>
+                          </select>
+                      </div>
+
+                  </div>
+                  <div class="layui-form-item">
+                      <div class="layui-input-block"   >
+                          <input type="radio" name="key" lay-filter="orderKey"  value="全部订单" title="全部订单" checked>
+                          <input type="radio" name="key" lay-filter="orderKey"  value="未发货" title="未发货">
+                          <input type="radio" name="key" lay-filter="orderKey"  value="已发货" title="已发货">
+                          <input type="radio" name="key" lay-filter="orderKey" value="已完成" title="已完成">
+                      </div>
+
+
+                  </div>
+              </div>
+
+              <table id="tableview" lay-filter="tableview"></table>
+              <script type="text/html" id="toolbar">
+                  <div class="layui-btn-container"></div>
+              </script>
+
+              <script type="text/html" id="checkOrderDetail">
+                  <a  href="javascript:;"  onclick="checkOrderDetail('{{d.order_id}}' ,'{{d.order_sn}}'  )" class="layui-table-link" >{{ d.order_sn }}</a>
+              </script>
+              <script type="text/html" id="checkCustomer">
+                  <a  href="javascript:;"  onclick="checkCustomer('{{d.customer_id}}'  )" class="layui-table-link" >{{ d.customer_id }}</a>
+              </script>
+              <script type="text/html" id="paymentLabel">
+                  {{#  if(d.payment_method === 0){ }}
+                  <span style="color: #F581B1;">微信支付</span>
+                  {{#  } else { }}
+                  <span style="color: #4190e5;">支付宝支付</span>
+                  {{#  } }}
+              </script>
+
+              <script type="text/html" id="tableTool">
+<!--                  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
+                  <a class="layui-btn layui-btn-xs" lay-event="edit">更新</a>
+                  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+              </script>
+
+          </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  </div>
+</div>
+
+
+</body>
+<div th:replace="fragments/footerPage :: footerPage"></div>
+
+<script type="text/javascript">
+  var ItemId = "Item2_2";
+
+
+  var payment_method = null
+  var order_status = null
+  /*<![CDATA[*/
+  layui.use(['table','layer'], function(){
+    var table = layui.table;
+    var form = layui.form;
+    form.on('submit(searchBtn)', function(data){
+      var field = data.field;
+        field.payment_method = payment_method
+        field.order_status = order_status
+      table.reload('tableview', {
+        page:1
+        ,where: field
+      });
+    });
+
+      form.on('select(payment_method_select)', function(data){
+          var jsonData={}
+          payment_method = data.value
+          jsonData.payment_method = payment_method
+          jsonData.order_status = order_status
+          table.reload('tableview', {
+              page:1
+              ,where: jsonData
+          });
+      });
+
+      //触发radio单选
+      form.on('radio(orderKey)', function(data){
+          var jsonData={}
+          order_status = data.value
+          jsonData.order_status = order_status
+          jsonData.payment_method = payment_method
+          table.reload('tableview', {
+              page:1
+              ,where: jsonData
+          });
+      });
+
+
+      table.render({
+           elem: '#tableview'
+          ,url: order_master_queryAll //模拟接口
+          ,toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
+          ,defaultToolbar: ['filter', 'exports', 'print']
+          ,title: '订单列表'
+          ,where:{
+              "order_status":order_status,
+              "payment_method":payment_method,
+          }
+          ,cols: [
+            [
+                 {type: 'checkbox', fixed: 'left'}
+                ,{field: 'order_id', width: 80, title: 'id',  align: 'center', sort: true}
+                ,{field: 'order_sn', title: '订单编号', align: 'center',  minWidth: 200,templet: '#checkOrderDetail'}
+                ,{field: 'customer_id', title: '下单人ID',  align: 'center',templet: '#checkCustomer', minWidth: 120, sort: true}
+                ,{field: 'payment_method', title: '支付方式', align: 'center', width:150, sort: true ,templet: '#paymentLabel'}
+                ,{field: 'order_money', title: '订单金额',  align: 'center', minWidth: 130, sort: true}
+                ,{field: 'district_money', title: '优惠金额',  align: 'center', minWidth: 130, sort: true}
+                ,{field: 'shipping_money', title: '运费金额', align: 'center',  minWidth: 130, sort: true}
+                ,{field: 'payment_money', title: '支付金额', align: 'center',  minWidth: 130, sort: true}
+                ,{field: 'shipping_comp_name', title: '快递公司名称', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'shipping_sn', title: '快递单号', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'create_time', title: '下单时间',  align: 'center', minWidth: 200, sort: true}
+                ,{field: 'pay_time', title: '支付时间', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'shipping_time', title: '发货时间', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'receive_time', title: '收货时间', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'order_status', title: '订单状态', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'order_point', title: '订单积分', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'invoice_time', title: '发票抬头', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'memo', title: '备注', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'province', title: '省', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'city', title: '市', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'district', title: '区', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'address', title: '地址', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'username', title: '收货人', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'phone', title: '电话', align: 'center',  minWidth: 200, sort: true}
+              ,{field: 'modified_time', title: '最新修改时间', align: 'center',  minWidth: 200, sort: true}
+              ,{title: '操作', minWidth: 200, align: 'center', fixed: 'right', toolbar: '#tableTool'}
+            ]
+          ]
+          ,page: true
+          ,limit: 30
+          ,limits: [10, 20, 30, 50, 100,150,200]
+          ,text: '暂无数据'
+    });
+
+
+
+
+    table.on('tool(tableview)', function(obj){
+      var data = obj.data;
+      var id = data.order_id
+      if(obj.event === 'del'){
+        layer.prompt({
+          formType: 1
+          ,title: '敏感操作，请验证密码'
+        }, function(value, index){
+          layer.close(index);
+          layer.confirm('确定删除?', function(index){
+            var ids=new Array(),jsonData={};
+            ids.push(id);
+            jsonData["ids"] = ids;
+            jsonData["code"] = value;
+            var params = JSON.stringify(jsonData);
+            ajaxPost(order_master_delete, params, function (data) {
+                layer.msg(data.msg, {time: 3000, icon: 1});
+                layui.table.reload('tableview'); //重载表格
+            });
+            layer.close(index);
+          });
+        });
+      }else  if(obj.event === 'edit'){
+          layer.open({
+              type: 2
+              ,area: ['50%', '80%']
+              ,title: '订单【'+data.order_sn+'】详情'
+              ,shade: 0.6 //遮罩透明度
+              ,maxmin: true //允许全屏最小化
+              ,anim: 0 //0-6的动画形式，-1不开启
+              ,content: 'order/addform?order_id='+id+'&type=edit'
+              ,success: function(layero, index){
+              }
+              ,cancel: function(){
+                  layui.table.reload('tableview'); //重载表格
+              }
+              ,end : function(){
+              }
+          });
+
+      } else  if(obj.event === 'detail'){
+          layer.open({
+              type: 2
+              ,area: ['50%', '80%']
+              ,title: '订单【'+data.order_sn+'】详情'
+              ,shade: 0.6 //遮罩透明度
+              ,maxmin: true //允许全屏最小化
+              ,anim: 0 //0-6的动画形式，-1不开启
+              ,content: order_master_form_view+'?order_id='+id+'&type=view'
+          });
+
+      }
+    });
+
+
+    var active = {
+      batchdel: function () {
+        var checkStatus = table.checkStatus('tableview')
+                , checkData = checkStatus.data;
+        var ids = new Array(), jsonData = {};
+        if (checkData.length === 0) {
+          return layer.msg('Please select data');
+        } else {
+          for (var i = 0; i < checkData.length; i++) {
+            ids.push(checkData[i].id);
+          }
+          jsonData["ids"] = ids;
+        }
+        layer.prompt({
+          formType: 1
+          ,title: '敏感操作，请验证密码'
+        }, function (value, index) {
+          layer.close(index);
+          layer.confirm('确定删除?', function(index){
+            layer.close(index);
+            jsonData["code"] = value;
+            var params = JSON.stringify(jsonData);
+            ajaxPost(order_master_delete, params, function (data) {
+                layer.msg(data.msg, {time: 3000, icon: 1});
+                layui.table.reload('tableview'); //重载表格
+            });
+          });
+        });
+      }
+    }
+
+    $('.layui-btn.btn-batch').on('click', function(){
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+    });
+  })
+  /*]]>*/
+
+  function checkCustomer(customer_id){
+      layer.open({
+          type: 2
+          ,area: ['50%', '50%']
+          ,title: '用户【'+customer_id+'】详情'
+          ,shade: 0.6 //遮罩透明度
+          ,maxmin: true //允许全屏最小化
+          ,anim: 0 //0-6的动画形式，-1不开启
+          ,content: 'user/detail/addform?customer_id='+customer_id+'&type=view'
+      });
+  }
+
+  function checkOrderDetail(order_id,order_sn){
+      layer.open({
+          type: 2
+          ,area: ['90%', '80%']
+          ,title: '订单【'+order_sn+'】详情'
+          ,shade: 0.6 //遮罩透明度
+          ,maxmin: true //允许全屏最小化
+          ,anim: 0 //0-6的动画形式，-1不开启
+          ,content: 'order/detail/addform?order_id='+order_id+'&type=edit'
+      });
+
+  }
+
+
+</script>
+</html>

@@ -1,0 +1,37 @@
+<div  th:fragment="sidebarPage"  xmlns:th="http://www.thymeleaf.org">
+  <aside id="sidebar" class="sidebar-nav " style="font-size: 1.2em;">
+    <nav class="sidebar-nav">
+      <ul class="metismenu" id="menu">
+        <li style="height: 2.2em;font-size: 1.3em;line-height: 2.2em;text-align: center">
+          <span  class="layui-icon  layui-icon-console"  style="font-size: 25px;">小程序后台</span>
+        </li>
+        <li>
+          <a href="###" id="Item1_0"><span  class="layui-icon layui-icon-chart-screen"  style="font-size: 20px;">数据监控</span></a>
+          <ul class="mm-collapse">
+            <li><a href="/view/dashboard" id="Item1_1">每日访问记录</a></li>
+            <li><a href="###" id="Item1_2"></a></li>
+          </ul>
+        </li>
+        <li class="">
+          <a href="###" id="Item2_0"><span  class="layui-icon layui-icon-website"  style="font-size: 20px;">商品管理</span></a>
+          <ul class="mm-collapse">
+            <li><a href="/view/product" id="Item2_1">商品主页</a></li>
+            <li><a href="/view/order"  id="Item2_2">订单管理</a></li>
+            <li><a href="/view/order/deliver" id="Item2_3">快递信息管理</a></li>
+            <li><a href="/view/comment" id="Item2_4">评论管理</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="###" id="Item3_0"><span  class="layui-icon layui-icon-group"  style="font-size: 20px;">用户管理</span></a>
+          <ul class="mm-collapse">
+            <li><a href="/view/user" id="Item3_1">小程序用户</a></li>
+            <li><a href="/view/user/address" id="Item3_2">用户地址信息</a></li>
+
+          </ul>
+        </li>
+
+
+      </ul>
+    </nav>
+  </aside>
+</div>

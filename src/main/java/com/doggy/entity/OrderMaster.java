@@ -32,7 +32,7 @@ public class OrderMaster {
 
     private int order_point; //订单积分
     private String invoice_time; //发票抬头
-    private String modified_time; //订单状态
+    private String modified_time; //
 
     private List<OrderDetail> OrderDetailList; //订单详细ID
     private String memo; // 备注

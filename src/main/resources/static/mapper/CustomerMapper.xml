@@ -105,4 +105,69 @@
             </if>
         </where>
     </select>
+
+
+    <select id="pageQueryUserData" resultType="com.doggy.entity.CustomerInfo">
+        select * from DoggyPets.customer
+        <where>
+            1=1
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(username,'')
+               , IFNULL(phone,'')
+                ,IFNULL(uuid,'')
+                ,IFNULL(gender,'')
+                ,IFNULL(points,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+        limit #{start},#{rows}
+    </select>
+    <select id="pageQueryUserCount" resultType="java.lang.Integer">
+        select count(1) from DoggyPets.customer
+        <where>
+            1=1
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(username,'')
+                ,IFNULL(phone,'')
+                ,IFNULL(uuid,'')
+                ,IFNULL(gender,'')
+                ,IFNULL(points,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="pageQueryAddressCount" resultType="java.lang.Integer">
+        select count(1) from DoggyPets.Customer_Address
+        <where>
+            1=1
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(username,'')
+                , IFNULL(phone,'')
+                ,IFNULL(province,'')
+                ,IFNULL(city,'')
+                ,IFNULL(district,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="pageQueryAddressData" resultType="com.doggy.entity.CustomerAddress">
+        select * from DoggyPets.Customer_Address
+        <where>
+            1=1
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(username,'')
+                , IFNULL(phone,'')
+                ,IFNULL(province,'')
+                ,IFNULL(city,'')
+                ,IFNULL(district,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+        limit #{start},#{rows}
+    </select>
 </mapper>
