@@ -3,10 +3,7 @@ package com.doggy.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.doggy.entity.*;
-import com.doggy.service.CustomerService;
-import com.doggy.service.SysAddressService;
-import com.doggy.service.SysGoodsService;
-import com.doggy.service.SysOrderService;
+import com.doggy.service.*;
 import com.doggy.utils.*;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,7 +148,7 @@ public class OrderController {
         Page page = new Page();
         int limit = 20;
         int curr = Integer.parseInt(param.get("currNo").toString());
-        int id = Integer.parseInt(param.get("customer_id").toString());
+        int customer_id = Integer.parseInt(param.get("customer_id").toString());
         limit = Integer.parseInt(param.get("limit").toString());
         page.setKeyWord(null);
         if(param.containsKey("keyWord")){
@@ -165,7 +162,7 @@ public class OrderController {
         page.setPage(curr);
         int start = page.getStart();
         page.setStart(start);
-        page.setId(id);
+        page.setId(customer_id);
 
         int totals=orderService.pageQueryOrderCount(page);
         List<OrderMaster> lists = orderService.pageQueryOrderData(page);
@@ -176,14 +173,62 @@ public class OrderController {
                 detail.setGoodObj(goods);
             }
             orderMaster.setOrderDetailList(details);
-
-
         }
         HashMap<String, Object> res = new HashMap<>();
         res.put("orderList",lists);
         res.put("count",totals);
         return  HttpResult.ok("successfully",res);
     }
+
+    @Autowired
+    private SysCommentService commentService;
+    /**
+     * get all order which need to comment
+     * @param jsonData
+     * @return
+     */
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/get/goods/comment")
+    public HttpResult GetOrder_needComment(@RequestBody String jsonData){
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        int customer_id = Integer.parseInt(param.get("customer_id").toString());
+        int curr = Integer.parseInt(param.get("currNo").toString());
+        int type = Integer.parseInt(param.get("type").toString());
+        param.put("order_status",4); // 已签收
+        Page page = new Page();
+        int limit = 20;
+        page.setData(param);
+        page.setRows(limit);
+        page.setPage(curr);
+        int start = page.getStart();
+        page.setStart(start);
+        page.setId(customer_id);
+        List<OrderMaster> masters = orderService.pageQueryOrderData(page);
+        List<HashMap<String, Object>> list = new ArrayList<>();
+        for( OrderMaster item : masters){
+            int order_id = item.getOrder_id();
+            HashMap<String, Object> query = new HashMap<>();
+            query.put("order_id",order_id);
+            query.put("is_comment",type);
+            List<OrderDetail> details = orderService.queryOrderDetailMap(query);
+            for(OrderDetail detail : details){
+                Goods goodObj = goodsService.queryAllGoodsById(detail.getGood_id());
+                HashMap<String,Object> map = new HashMap<>();
+                map.put("order_detail_id",detail.getOrder_detail_id());
+                map.put("id",goodObj.getId());
+                map.put("title",goodObj.getTitle());
+                map.put("description",goodObj.getDescription());
+                map.put("img_url",goodObj.getImg_url());
+                list.add(map);
+            }
+        }
+        return  HttpResult.ok("查询成功",list);
+    }
+
+
+
 
 
 

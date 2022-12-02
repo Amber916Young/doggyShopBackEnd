@@ -78,7 +78,10 @@ public class WxController {
         String session_key = object.getString("session_key");
         String encryptedData = param.get("encryptedData").toString();
         String signature = param.get("signature").toString();
-        String avatarUrl = param.get("avatarUrl").toString();
+        String avatarUrl = "";
+        if(param.containsKey("avatarUrl")){
+            avatarUrl = param.get("avatarUrl").toString();
+        }
         String iv = param.get("iv").toString();
 //        String phone = getPhoneNumber(encryptedData,session_key,iv);
         // 自动登录

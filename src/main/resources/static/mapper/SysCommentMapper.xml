@@ -1,0 +1,126 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doggy.mapper.SysCommentMapper">
+    <insert id="insertBatchComments_ImageRepo">
+        insert into
+        DoggyPets.ImageRepo (
+        fid ,
+        customer_id,
+        img_url,
+        type
+        )values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (
+            #{item.fid},
+            #{item.customer_id},
+            #{item.img_url},
+            #{item.type}
+            )
+        </foreach>
+    </insert>
+    <insert id="insertComments">
+        insert into DoggyPets.comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customer_id != null">
+                customer_id,
+            </if>
+            <if test="good_id != null">
+                good_id,
+            </if>
+            <if test="rate != null">
+                rate,
+            </if>
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="order_detail_id != null">
+                order_detail_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customer_id != null">
+                #{customer_id},
+            </if>
+            <if test="good_id != null">
+                #{good_id},
+            </if>
+            <if test="rate != null">
+                #{rate},
+            </if>
+            <if test="fid != null">
+                #{fid},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="order_detail_id != null">
+                #{order_detail_id},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="queryAllComments" resultType="com.doggy.entity.Comment">
+        select * from DoggyPets.comment
+        <where>
+            1=1
+            <if test="good_id != null">
+                and  good_id=#{good_id}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+    <select id="queryAllCommentsDFS" resultType="com.doggy.entity.Comment">
+        select * from DoggyPets.comment
+        <where>
+            1=1
+            <if test="good_id != null">
+                and  good_id=#{good_id}
+            </if>
+            <if test="fid != null">
+                and  fid=#{fid}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="pageQueryCommentData" resultType="com.doggy.entity.Comment">
+        select * from DoggyPets.comment
+        <where>
+            1=1
+            <if test="data.rateHigh !=null " >
+                and  rate &lt;= #{data.rateHigh}
+            </if>
+            <if test="data.rateLow != null">
+                and  rate &gt;= #{data.rateLow}
+            </if>
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(content,'') )
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+        order by create_time desc
+        limit #{start},#{rows}
+    </select>
+    <select id="pageQueryCommentCount" resultType="java.lang.Integer">
+        select count(1) from DoggyPets.comment
+        <where>
+            1=1
+            <if test="data.rateHigh !=null " >
+                and  rate &lt;= #{data.rateHigh}
+            </if>
+            <if test="data.rateLow != null">
+                and  rate &gt;= #{data.rateLow}
+            </if>
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(content,'') )
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

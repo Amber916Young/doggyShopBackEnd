@@ -7,6 +7,15 @@
     height: 100px;
     width: auto;
   }
+  .layui-hide {
+      display: none!important;
+  }
+  .layui-table-fixed .layui-table-body {
+      height: auto!important;
+  }
+  .layui-table-fixed.layui-hide {
+      display: block!important;
+  }
 </style>
 <body >
 <div >
@@ -69,23 +78,16 @@
                       </script>
                   </div>
                   <div class="layui-tab-item">
-
-
                       <div class="layui-card" style="    padding-bottom: 200px;">
                           <div class="layui-form layui-card-header " id="category_title">
                               <div class="layui-form-item">
-                                  <!--                <div class="layui-inline">-->
-                                  <!--                    <input type="text" name="keyword" placeholder="input keyword to query" autocomplete="off" class="layui-input">-->
-                                  <!--                </div>-->
-                                  <!--                <div class="layui-inline">-->
-                                  <!--                    <button class="layui-btn  btn-batch" lay-submit lay-filter="searchBtn">-->
-                                  <!--                        <i class="layui-icon layui-icon-search "></i>-->
-                                  <!--                    </button>-->
-                                  <!--                </div>-->
-
+                                  <div class="layui-inline">
+                                      <button class="layui-btn btn-batch-goods layui-btn-danger " data-type="batchdel">批量删除</button>
+                                      <button class="layui-btn  btn-batch-goods" data-type="add">新增</button>
+                                  </div>
                               </div>
                           </div>
-                          <div class="layui-card-body layui-fluid">
+                          <div class="layui-card-body ">
                               <table id="tableviewProduct" lay-filter="tableviewProduct"></table>
                               <script type="text/html" id="toolbarProduct">
                                   <div class="layui-btn-container"></div>
@@ -146,7 +148,7 @@
 
     table.render({
       elem: '#tableview'
-      ,url: '/web/product/category/queryAll' //模拟接口
+      ,url: product_category_queryAll //模拟接口
       ,toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
       ,defaultToolbar: ['filter', 'exports', 'print']
       ,title: '产品列表'
@@ -180,8 +182,7 @@
       jsonData.id = data.id
       jsonData.order_id = util.escape(value)
       var params = JSON.stringify(jsonData);
-      var url = "/web/product/category/update"
-      ajaxPost(url, params, function (data) {
+      ajaxPost(product_category_update, params, function (data) {
         layer.msg(data.msg, {time: 3000, icon: 1});
         layui.table.reload('tableview'); //重载表格
       });
@@ -196,8 +197,7 @@
         jsonData.id = id
         jsonData.flag = flag
         var params = JSON.stringify(jsonData);
-        var url = "/web/product/category/update"
-        ajaxPost(url, params, function (data) {
+        ajaxPost(product_category_update, params, function (data) {
             layer.msg(data.msg, {time: 3000, icon: 1});
             layui.table.reload('tableview'); //重载表格
         });
@@ -219,8 +219,7 @@
             jsonData["ids"] = ids;
             jsonData["code"] = value;
             var params = JSON.stringify(jsonData);
-            var url = "/web/product/category/deletes"
-            ajaxPost(url, params, function (data) {
+            ajaxPost(product_category_delete, params, function (data) {
                 layer.msg(data.msg, {time: 3000, icon: 1});
                 layui.table.reload('tableview'); //重载表格
             });
@@ -230,12 +229,12 @@
       }else if(obj.event === 'edit'){
         layer.open({
           type: 2
-          ,area: ['500px', '400px']
+          ,area: ['500px', '500px']
           ,title: '编辑商品大类信息'
           ,shade: 0.6 //遮罩透明度
           ,maxmin: true //允许全屏最小化
           ,anim: 0 //0-6的动画形式，-1不开启
-          ,content: 'product/addform/id/'+ data.id+"/type/edit"
+          ,content: product_category_form+'?id='+ data.id+"&type=edit"
           ,success: function(layero, index){
           }
           ,cancel: function(){
@@ -252,12 +251,12 @@
       add: function () {
         layer.open({
           type: 2
-          ,area: ['500px', '400px']
+          ,area: ['500px', '500px']
           ,title: '新增商品大类信息'
           ,shade: 0.6 //遮罩透明度
           ,maxmin: true //允许全屏最小化
           ,anim: 0 //0-6的动画形式，-1不开启
-          ,content: "product/addform/id/-1/type/add"
+          ,content: product_category_form+"?id=-1&type=add"
           ,success: function(layero, index){
           }
           ,cancel: function(){
@@ -287,9 +286,8 @@
           layer.confirm('确定删除?', function(index){
             layer.close(index);
             jsonData["code"] = value;
-            var url = "/web/product/category/deletes"
             var params = JSON.stringify(jsonData);
-            ajaxPost(url, params, function (data) {
+            ajaxPost(product_category_delete, params, function (data) {
               layer.msg(data.msg, {time: 3000, icon: 1});
               layui.table.reload('tableview'); //重载表格
             });
@@ -316,8 +314,7 @@
         jsonData.id = id
         jsonData.flag = flag
         var params = JSON.stringify(jsonData);
-        var url = "/web/product/goods/update/flag"
-        ajaxPost(url, params, function (data) {
+        ajaxPost(product_goods_update_flag, params, function (data) {
           layer.msg(data.msg, {time: 3000, icon: 1});
           layui.table.reload('tableviewProduct'); //重载表格
         });
@@ -340,8 +337,7 @@
             jsonData["ids"] = ids;
             jsonData["code"] = value;
             var params = JSON.stringify(jsonData);
-            var url = "/web/product/goods/deletes"
-            ajaxPost(url, params, function (data) {
+            ajaxPost(product_goods_delete, params, function (data) {
               layer.msg(data.msg, {time: 3000, icon: 1});
               layui.table.reload('tableviewProduct'); //重载表格
             });
@@ -355,7 +351,7 @@
           ,shade: 0.6 //遮罩透明度
           ,maxmin: true //允许全屏最小化
           ,anim: 0 //0-6的动画形式，-1不开启
-          ,content: 'product/good/addform/id/'+ data.id+'/type/edit/cid/'+category_id
+          ,content: product_goods_form_view+'?id='+ data.id+'&type=edit&cid='+category_id
           ,success: function(layero, index){
           }
           ,cancel: function(){
@@ -377,7 +373,7 @@
                   ,shade: 0.6 //遮罩透明度
                   ,maxmin: true //允许全屏最小化
                   ,anim: 0 //0-6的动画形式，-1不开启
-                  ,content: 'product/good/addform/id/-1/type/add/cid/'+category_id
+                  ,content: product_goods_form_view+'?id=-1&type=add&cid='+category_id
                   ,success: function(layero, index){
                   }
                   ,cancel: function(){
@@ -407,9 +403,8 @@
                   layer.confirm('确定删除?', function(index){
                       layer.close(index);
                       jsonData["code"] = value;
-                      var url = "/web/product/goods/deletes"
                       var params = JSON.stringify(jsonData);
-                      ajaxPost(url, params, function (data) {
+                      ajaxPost(product_goods_delete, params, function (data) {
                           layer.msg(data.msg, {time: 3000, icon: 1});
                           layui.table.reload('tableviewProduct'); //重载表格
                       });
@@ -418,7 +413,10 @@
           }
       }
 
-
+      $('.layui-btn.btn-batch-goods').on('click', function(){
+          var type = $(this).data('type');
+          active_good[type] ? active_good[type].call(this) : '';
+      });
   })
 
 
@@ -426,27 +424,14 @@
 
     var category_id = -1
 
-    function reloadTable() {
-        layui.table.reload('tableviewProduct'); //重载表格
-    }
-
   function getProductList(id,name){
       category_id = id
-      var str = "<div class=\"layui-inline\">\n" +
-          "                <button class='layui-btn layui-btn-warm onclick='reloadTable()' >"+name+" </button>" +
-          "                <button class=\"layui-btn btn-batch-goods layui-btn-danger \" data-type=\"batchdel\">批量删除</button>\n" +
-          "                <button class=\"layui-btn  btn-batch-goods\" data-type=\"add\">新增</button>\n" +
-          "      </div>"
-      $("#category_title").html(str)
-      $('.layui-btn.btn-batch-goods').on('click', function(){
-          var type = $(this).data('type');
-          active_good[type] ? active_good[type].call(this) : '';
-      });
-    console.info(id)
-    console.info(name)
+
+    // console.info(id)
+    // console.info(name)
     table.render({
       elem: '#tableviewProduct'
-      ,url: '/web/product/good/queryAll' //模拟接口
+      ,url: product_goods_queryAll //模拟接口
       ,where: { id: id}
       ,toolbar: '#toolbarProduct' //开启头部工具栏，并为其绑定左侧模板
       ,defaultToolbar: ['filter', 'exports', 'print']
@@ -476,6 +461,7 @@
       ,limits: [10, 20, 30, 50, 100,150,200]
       ,text: 'error'
     });
+      table.render()
   }
 
 

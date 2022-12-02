@@ -12,6 +12,13 @@
 
     <table id="tableview" lay-filter="tableview"></table>
 
+    <script type="text/html" id="is_commentTpl">
+        {{#  if(d.is_comment === 0){ }}
+        <span style="color: #ff6e26;">未评价</span>
+        {{#  } else { }}
+        <span style="color: #0567b4;">已评价</span>
+        {{#  } }}
+    </script>
     <div class="layui-form-item">
       <label class="layui-form-label"></label>
       <div class="layui-input-inline">
@@ -33,7 +40,7 @@
     type = getParam('type');
     table.render({
       elem: '#tableview'
-      ,url: '/web/order/detail/queryAll' //模拟接口
+      ,url: order_detail_form_view
       ,toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
       ,defaultToolbar: ['filter', 'exports', 'print']
       ,title: '订单列表'
@@ -46,7 +53,8 @@
           {type: 'checkbox', fixed: 'left'}
             ,{field: 'good_id', width: 100, title: '商品Id',  align: 'center', sort: true}
             ,{field: 'good_name', width: 200, title: '商品名称',  align: 'center', sort: true}
-          ,{field: 'good_amount', title: '购买数量', align: 'center',  width: 120}
+            ,{field: 'good_amount', title: '购买数量', align: 'center',  width: 120}
+            ,{field: 'is_comment', title: '是否评价', align: 'center',  width: 120,templet: '#is_commentTpl'}
           ,{field: 'good_price', title: '购买单价',  align: 'center', width: 120, sort: true}
           ,{field: 'average_cost', title: '平均价格', align: 'center', width:120, sort: true }
           ,{field: 'weight', title: '商品重量',  align: 'center', width: 120, sort: true}

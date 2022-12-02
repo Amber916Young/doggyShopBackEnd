@@ -110,7 +110,7 @@
       var jsonData={}
       jsonData.customer_id= id;
       var params = JSON.stringify(jsonData);
-      ajaxPost(user_user_detail, params, function (data) {
+      ajaxPost(user_detail, params, function (data) {
           var str = '';
           var data = data.data
           if( data===null ||data==="") return

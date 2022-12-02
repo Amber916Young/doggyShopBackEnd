@@ -50,8 +50,8 @@ public class GoodController {
             if(orderCart != null){
                 goods.setAmount(orderCart.getGood_amount());
             }
+            param.put("type","goods");
             List<ImageRepo> imageList = goodsService.queryAllImageList(param);
-            goods.setImg_url(imageList.get(0).getImg_url());
             goods.setImageList(imageList);
         }
         param = new HashMap<>();
@@ -86,9 +86,6 @@ public class GoodController {
             if(orderCart != null){
                 goods.setAmount(orderCart.getGood_amount());
             }
-//                List<ImageRepo> imageList = goodsService.queryAllImageList(param);
-//                goods.setImg_url(imageList.get(0).getImg_url());
-//                goods.setImageList(imageList);
         }
         category.setGoodsList(goodsList);
         return HttpResult.ok("successfully", categoryList);
@@ -112,8 +109,20 @@ public class GoodController {
         if(orderCart != null){
             goods.setAmount(orderCart.getGood_amount());
         }
+        param.put("type","goods");
         List<ImageRepo> imageList = goodsService.queryAllImageList(param);
         goods.setImageList(imageList);
+        return HttpResult.ok("successfully",goods);
+    }
+
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/detail/single")
+    public HttpResult GoodsDetailsingle(@RequestBody String jsonData){
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        int id = Integer.parseInt(param.get("id").toString());
+        Goods goods = goodsService.queryAllGoodsById(id);
         return HttpResult.ok("successfully",goods);
     }
 

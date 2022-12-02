@@ -46,4 +46,8 @@ public interface SysOrderMapper {
     List<HashMap<String,Object>> pageQueryOrderDetailData(Page page);
 
     int pageQueryDetailCount(Page page);
+
+    List<OrderDetail> queryOrderDetailMap(HashMap<String, Object> query);
+
+    void updateOrderDetail(HashMap<String, Object> map);
 }

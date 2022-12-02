@@ -158,6 +158,10 @@
             <if test="img_url != null">
                 img_url,
             </if>
+            <if test="type != null">
+                type,
+            </if>
+
 
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -167,6 +171,10 @@
             <if test="img_url != null">
                 #{img_url},
             </if>
+            <if test="type != null">
+                #{type},
+            </if>
+
 
         </trim>
     </insert>
@@ -229,6 +237,12 @@
             1=1
             <if test="fid != null">
                 and  fid=#{fid}
+            </if>
+            <if test="type != null">
+                and  type=#{type}
+            </if>
+            <if test="customer_id != null">
+                and  customer_id=#{customer_id}
             </if>
         </where>
     </select>

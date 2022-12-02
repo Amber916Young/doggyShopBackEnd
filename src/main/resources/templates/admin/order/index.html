@@ -296,7 +296,7 @@
           ,shade: 0.6 //遮罩透明度
           ,maxmin: true //允许全屏最小化
           ,anim: 0 //0-6的动画形式，-1不开启
-          ,content: 'user/detail/addform?customer_id='+customer_id+'&type=view'
+          ,content: user_form_view+'?customer_id='+customer_id+'&type=view'
       });
   }
 
@@ -308,7 +308,7 @@
           ,shade: 0.6 //遮罩透明度
           ,maxmin: true //允许全屏最小化
           ,anim: 0 //0-6的动画形式，-1不开启
-          ,content: 'order/detail/addform?order_id='+order_id+'&type=edit'
+          ,content:order_detail_form+ '?order_id='+order_id+'&type=edit'
       });
 
   }

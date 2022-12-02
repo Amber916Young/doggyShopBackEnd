@@ -15,6 +15,7 @@ public class OrderDetail {
     private int order_detail_id;
     private int good_id;
     private int good_amount;
+    private int is_comment;
     private double good_price;
     private double average_cost; //平均成本价格
     private float weight;

@@ -17,8 +17,10 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/error/**")				//添加不拦截的请求路径
                 .excludePathPatterns("/static/**")				//添加不拦截的请求路径
                 .excludePathPatterns("/web/**")				//添加不拦截的请求路径
-                .excludePathPatterns("/view/**")				//添加不拦截的请求路径
-                .addPathPatterns("/**");						//添加需要拦截的路径
+                .excludePathPatterns("/comment/**")				//添加不拦截的请求路径
+                .excludePathPatterns("/**")				//添加不拦截的请求路径
+                .excludePathPatterns("/view/**");				//添加不拦截的请求路径
+//                .addPathPatterns("/**");						//添加需要拦截的路径
     }
 
     @Bean

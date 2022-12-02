@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:replace="fragments/headerPage :: headerPage"></div>
-<title>用户地址管理</title>
+<title>评论管理</title>
 <style>
   img{
     height: 100px;
@@ -20,8 +20,8 @@
     <div class="layui-card">
       <div class="layui-card-header">
         <div class="layui-breadcrumb" lay-filter="breadcrumb">
-          <a lay-href="">用户管理</a>
-          <a><cite>所有用户地址</cite></a>
+          <a lay-href="">产品</a>
+          <a><cite>评论管理</cite></a>
         </div>
       </div>
       <div class="layui-card-body">
@@ -38,7 +38,18 @@
                       </div>
                       <div class="layui-inline">
                           <button class="layui-btn btn-batch layui-btn-danger " data-type="batchdel">批量删除</button>
+                          <button class="layui-btn btn-batch" data-type="add">新增</button>
                       </div>
+                  </div>
+                  <div class="layui-form-item">
+                      <div class="layui-input-block"   >
+                          <input type="radio" name="key" lay-filter="radioKey"  value="-1" title="全部评论" checked>
+                          <input type="radio" name="key" lay-filter="radioKey"  value="4" title="好评">
+                          <input type="radio" name="key" lay-filter="radioKey"  value="3" title="中评">
+                          <input type="radio" name="key" lay-filter="radioKey" value="2" title="差评">
+                      </div>
+
+
                   </div>
               </div>
 
@@ -46,23 +57,26 @@
               <script type="text/html" id="toolbar">
                   <div class="layui-btn-container"></div>
               </script>
+
+              <script type="text/html" id="checkOrderDetail">
+                  <a  href="javascript:;"  onclick="checkOrderDetail('{{d.order_id}}' ,'{{d.order_sn}}'  )" class="layui-table-link" >{{ d.order_sn }}</a>
+              </script>
               <script type="text/html" id="checkCustomer">
                   <a  href="javascript:;"  onclick="checkCustomer('{{d.customer_id}}'  )" class="layui-table-link" >{{ d.customer_id }}</a>
               </script>
-
-              <script type="text/html" id="is_defaultLabel">
-                  <input type="checkbox" name="is_default" value="{{d.customer_addr_id}}" lay-skin="switch" lay-text="非默认|默认地址" lay-filter="switchDemo" {{ d.is_default == 0 ? 'checked' : '' }} >
+              <script type="text/html" id="rateLabel">
+                  {{#  if(d.rate <= 2.0){ }}
+                  <span style="color: #fc2712;">{{d.rate}}</span>
+                  {{#  } else if(d.rate > 2.0 && d.rate <4){ }}
+                  <span style="color: #ff8318;">{{d.rate}}</span>
+                  {{#  } else { }}
+                  <span style="color: #43892a;">{{d.rate}}</span>
+                  {{#  } }}
               </script>
-<!--              <script type="text/html" id="is_defaultLabel">-->
-<!--                  {{#  if(d.is_default === 0){ }}-->
-<!--                  <span style="color: #F581B1;">默认地址</span>-->
-<!--                  {{#  } else { }}-->
-<!--                  <span style="color: #4190e5;">非默认地址</span>-->
-<!--                  {{#  } }}-->
-<!--              </script>-->
 
               <script type="text/html" id="tableTool">
-                  <a class="layui-btn layui-btn-xs" lay-event="edit">更新</a>
+                  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">回复</a>
+                  <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
                   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
               </script>
 
@@ -82,43 +96,56 @@
 <div th:replace="fragments/footerPage :: footerPage"></div>
 
 <script type="text/javascript">
-  var ItemId = "Item3_2";
+  var ItemId = "Item2_4";
 
 
+  var rate = -1
   /*<![CDATA[*/
   layui.use(['table','layer'], function(){
     var table = layui.table;
     var form = layui.form;
     form.on('submit(searchBtn)', function(data){
       var field = data.field;
+        field.rate = rate
       table.reload('tableview', {
         page:1
         ,where: field
       });
     });
 
+      //触发radio单选
+      form.on('radio(radioKey)', function(data){
+          var jsonData={}
+          rate = data.value
+          jsonData.rate = rate
+          table.reload('tableview', {
+              page:1
+              ,where: jsonData
+          });
+      });
+
 
       table.render({
            elem: '#tableview'
-          ,url: user_address_queryAll //模拟接口
+          ,url: comment_queryAll //模拟接口
           ,toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
           ,defaultToolbar: ['filter', 'exports', 'print']
-          ,title: '地址列表'
+          ,title: '评论管理'
+          ,where:{
+              "rate":rate,
+          }
           ,cols: [
             [
                  {type: 'checkbox', fixed: 'left'}
-                ,{field: 'customer_addr_id', width: 80, title: 'id',  align: 'center', sort: true}
-                ,{field: 'customer_id', title: '用户id', align: 'center',  minWidth: 150,templet: '#checkCustomer'}
-                ,{field: 'username', title: '用户名', align: 'center', width:150, sort: true }
-                ,{field: 'phone', title: '联系电话',  align: 'center', minWidth: 130, sort: true}
-                ,{field: 'zip', title: '邮政编号',  align: 'center', minWidth: 120, sort: true}
-                ,{field: 'province', title: '省',  align: 'center', minWidth: 130, sort: true}
-                ,{field: 'city', title: '市', align: 'center',  minWidth: 130, sort: true}
-                ,{field: 'district', title: '区', align: 'center',  minWidth: 130, sort: true}
-                ,{field: 'address', title: '地址', align: 'center',  minWidth: 200, sort: true}
-                ,{field: 'is_default', title: '是否默认地址', align: 'center',  minWidth: 200, sort: true,templet: '#is_defaultLabel'}
-              ,{field: 'modified_time', title: '最新修改时间', align: 'center',  minWidth: 200, sort: true}
-              ,{title: '操作', minWidth: 150, align: 'center', fixed: 'right', toolbar: '#tableTool'}
+                ,{field: 'comment_id', width: 100, title: 'id',  align: 'center', sort: true}
+                ,{field: 'good_id', title: '商品id', align: 'center',  minWidth: 130}
+                ,{field: 'content', title: '评论内容',  align: 'center', minWidth: 200, sort: true}
+                ,{field: 'customer_id', title: '客户id', align: 'center', width:130, sort: true ,templet: '#checkCustomer'}
+                ,{field: 'order_detail_id', title: '订单详细id',  align: 'center', minWidth: 130, sort: true,templet: '#checkOrderDetail'}
+                ,{field: 'fid', title: '根评论', align: 'center',  minWidth: 80, sort: true}
+                ,{field: 'rate', title: '评分', align: 'center',  minWidth: 80, sort: true,templet: '#rateLabel'}
+              ,{field: 'create_time', title: '评论时间', align: 'center',  minWidth: 200, sort: true}
+              ,{title: '操作', minWidth: 200, align: 'center', fixed: 'right', toolbar: '#tableTool'}
             ]
           ]
           ,page: true
@@ -127,28 +154,12 @@
           ,text: '暂无数据'
     });
 
-      form.on('switch(switchDemo)', function(obj){
-          let id = this.value
-          let flag = obj.elem.checked === true ? 0:1
-          let info = obj.elem.checked === true ? "确定修改为默认地址？" : "确定修改为非默认地址？"
-          layer.confirm(info, function(index){
-              var jsonData={};
-              jsonData.customer_addr_id = id
-              jsonData.is_default = flag
-              var params = JSON.stringify(jsonData);
-              var url = user_address_update_flag
-              ajaxPost(url, params, function (data) {
-                  layer.msg(data.msg, {time: 3000, icon: 1});
-                  layui.table.reload('tableview'); //重载表格
-              });
-              layer.close(index);
-          });
-      });
+
 
 
     table.on('tool(tableview)', function(obj){
       var data = obj.data;
-      var id = data.customer_addr_id
+      var id = data.order_id
       if(obj.event === 'del'){
         layer.prompt({
           formType: 1
@@ -161,8 +172,7 @@
             jsonData["ids"] = ids;
             jsonData["code"] = value;
             var params = JSON.stringify(jsonData);
-            var url = user_address_delete
-            ajaxPost(url, params, function (data) {
+            ajaxPost(comment_delete, params, function (data) {
                 layer.msg(data.msg, {time: 3000, icon: 1});
                 layui.table.reload('tableview'); //重载表格
             });
@@ -172,20 +182,30 @@
       }else  if(obj.event === 'edit'){
           layer.open({
               type: 2
-              ,area: ['30%', '70%']
-              ,title: '地址【'+id+'】详情'
+              ,area: ['50%', '80%']
+              ,title: '订单【'+data.order_sn+'】详情'
               ,shade: 0.6 //遮罩透明度
               ,maxmin: true //允许全屏最小化
               ,anim: 0 //0-6的动画形式，-1不开启
-              ,content: user_address_form_view+'?customer_addr_id='+id+'&type=edit'
+              ,content: 'order/addform?order_id='+id+'&type=edit'
               ,success: function(layero, index){
               }
               ,cancel: function(){
                   layui.table.reload('tableview'); //重载表格
               }
               ,end : function(){
-
               }
+          });
+
+      } else  if(obj.event === 'detail'){
+          layer.open({
+              type: 2
+              ,area: ['50%', '80%']
+              ,title: '订单【'+data.order_sn+'】详情'
+              ,shade: 0.6 //遮罩透明度
+              ,maxmin: true //允许全屏最小化
+              ,anim: 0 //0-6的动画形式，-1不开启
+              ,content: order_master_form_view+'?order_id='+id+'&type=view'
           });
 
       }
@@ -213,9 +233,8 @@
           layer.confirm('确定删除?', function(index){
             layer.close(index);
             jsonData["code"] = value;
-            var url = user_address_delete
             var params = JSON.stringify(jsonData);
-            ajaxPost(url, params, function (data) {
+            ajaxPost(comment_delete, params, function (data) {
                 layer.msg(data.msg, {time: 3000, icon: 1});
                 layui.table.reload('tableview'); //重载表格
             });
@@ -230,7 +249,6 @@
     });
   })
   /*]]>*/
-
   function checkCustomer(customer_id){
       layer.open({
           type: 2
@@ -243,7 +261,17 @@
       });
   }
 
-
+  function checkOrderDetail(order_id,order_sn){
+      layer.open({
+          type: 2
+          ,area: ['90%', '80%']
+          ,title: '订单【'+order_sn+'】详情'
+          ,shade: 0.6 //遮罩透明度
+          ,maxmin: true //允许全屏最小化
+          ,anim: 0 //0-6的动画形式，-1不开启
+          ,content:order_detail_form+ '?order_id='+order_id+'&type=edit'
+      });
+  }
 
 </script>
 </html>

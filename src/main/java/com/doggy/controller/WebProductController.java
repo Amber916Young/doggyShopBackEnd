@@ -41,7 +41,7 @@ public class WebProductController {
 
     @SneakyThrows
     @ResponseBody
-    @GetMapping("/good/queryAll")
+    @GetMapping("/goods/queryAll")
     public HttpResult good_queryAll(Page page, @RequestParam("limit") int limit, @RequestParam("id") int id, HttpServletRequest request) {
         String keyword = request.getParameter("keyword");
         page.setRows(limit);
@@ -50,6 +50,32 @@ public class WebProductController {
         List<Goods> lists = goodsService.pageQueryGoodData(page);
         int totals=goodsService.pageQueryGoodCount(page);
         return HttpResult.ok(0,"查询成功", lists,totals);
+    }
+
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/goods/detail")
+    public HttpResult good_detail(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        try {
+            int id = Integer.parseInt(param.get("id").toString());
+            Goods goods = goodsService.queryAllGoodsById(id);
+            param.put("fid",id);
+            param.put("type","goods");
+            List<ImageRepo> imgList = goodsService.queryAllImageList(param);
+            StringBuilder sb = new StringBuilder();
+            for (ImageRepo imageRepo : imgList){
+                sb.append(imageRepo.getImg_url()+"\r");
+            }
+            param = new HashMap<>();
+            param.put("item",goods);
+            param.put("imgList",imgList);
+            param.put("imgArea",sb.toString());
+            return HttpResult.ok("查询成功",param);
+        }catch (Exception e){
+            return HttpResult.error(e.getMessage());
+        }
     }
 
     @SneakyThrows
@@ -133,7 +159,8 @@ public class WebProductController {
                 goodsService.deleteGoods(param);
             }
             return HttpResult.ok("successfully");
-        } else return  HttpResult.error("Code is wrong，delete fail!");
+        }
+        return  HttpResult.error("Code is wrong，delete fail!");
     }
 
     @SneakyThrows
@@ -209,9 +236,23 @@ public class WebProductController {
                 goodsService.deleteCategory(param);
             }
             return HttpResult.ok("successfully");
-        } else return  HttpResult.error("Code is wrong，delete fail!");
+        }
+        return  HttpResult.error("Code is wrong，delete fail!");
     }
 
-
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/category/detail")
+    public HttpResult category_detail(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        try {
+            int id = Integer.parseInt(param.get("id").toString());
+            Category category = goodsService.queryCategoryById(id);
+            return HttpResult.ok("查询成功",category);
+        }catch (Exception e){
+            return HttpResult.error(e.getMessage());
+        }
+    }
 
 }

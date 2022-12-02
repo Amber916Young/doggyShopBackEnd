@@ -250,6 +250,17 @@
         where (customer_id = #{customer_id}  and good_id = #{good_id} ) or cart_id = #{cart_id}
 
 </update>
+    <update id="updateOrderDetail">
+        update DoggyPets.order_detail
+        <set>
+            <if test="is_comment != null">
+                is_comment = #{is_comment},
+            </if>
+
+        </set>
+        where order_detail_id = #{order_detail_id}
+
+    </update>
 
 
     <select id="queryOrderCart" resultType="com.doggy.entity.OrderCart">
@@ -335,6 +346,9 @@ SELECT order_id FROM order_master WHERE order_status = 4
             <if test="customer_id != null">
                 and customer_id= #{customer_id}
             </if>
+            <if test="order_status != null">
+                and order_status= #{order_status}
+            </if>
         </where>
     </select>
     <select id="queryOrderDetailAll" resultType="com.doggy.entity.OrderDetail">
@@ -347,6 +361,22 @@ SELECT order_id FROM order_master WHERE order_status = 4
 
         </where>
     </select>
+    <select id="queryOrderDetailMap" resultType="com.doggy.entity.OrderDetail">
+        select * from DoggyPets.order_detail
+        <where>
+            1=1
+            <if test="order_id!= null">
+                and  order_id=#{order_id}
+            </if>
+            <if test="is_comment!= null">
+                and  is_comment=#{is_comment}
+            </if>
+        </where>
+        order by modified_time desc
+
+    </select>
+
+
     <select id="pageQueryOrderDetailData" resultType="hashmap">
         select * from DoggyPets.order_detail
         <where>
@@ -368,6 +398,5 @@ SELECT order_id FROM order_master WHERE order_status = 4
 
         </where>
     </select>
-
 
 </mapper>

@@ -76,4 +76,14 @@ public class SysOrderService {
     public int pageQueryDetailCount(Page page) {
         return orderMapper.pageQueryDetailCount(page);
     }
+
+
+    public List<OrderDetail> queryOrderDetailMap(HashMap<String, Object> query) {
+        return orderMapper.queryOrderDetailMap(query);
+    }
+
+    public void updateOrderDetail(HashMap<String, Object> map) {
+         orderMapper.updateOrderDetail(map);
+    }
+
 }

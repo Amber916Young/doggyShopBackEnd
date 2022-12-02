@@ -44,6 +44,11 @@ public class ViewController {
     synchronized public String page2() {
         return "/admin/product/index";
     }
+    @SneakyThrows
+    @GetMapping("/comment")
+    synchronized public String comment_index() {
+        return "/admin/comment/index";
+    }
 
     @SneakyThrows
     @GetMapping("/order")
@@ -61,7 +66,7 @@ public class ViewController {
 
     @SneakyThrows
     @GetMapping("/user/detail/addform")
-    synchronized public String user_form(HttpServletRequest request, Model model) {
+    synchronized public String user_form() {
         return "/admin/user/addform";
     }
 
@@ -69,50 +74,28 @@ public class ViewController {
 
     @SneakyThrows
     @GetMapping("/order/detail/addform")
-    synchronized public String order_detail_form(HttpServletRequest request, Model model) {
+    synchronized public String order_detail_form() {
         return "/admin/order_detail/addform";
     }
 
     @SneakyThrows
     @GetMapping("/order/addform")
-    synchronized public String order_form(HttpServletRequest request, Model model) {
+    synchronized public String order_form() {
         return "/admin/order/addform";
     }
 
 
 
     @SneakyThrows
-    @GetMapping("/product/addform/id/{id}/type/{type}")
-    synchronized public String page2_1(@PathVariable("id") int id,@PathVariable("type") String type ,Model model) {
-        if(type.equals("add")) return "/admin/product/addform";
-
-        Category category = goodsService.queryCategoryById(id);
-        model.addAttribute("item",category);
-        model.addAttribute("type",type);
+    @GetMapping("/product/addform")
+    synchronized public String page2_1() {
         return "/admin/product/addform";
     }
 
 
     @SneakyThrows
-    @GetMapping("/product/good/addform/id/{id}/type/{type}/cid/{cid}")
-    synchronized public String good_Page(@PathVariable("cid") int cid,@PathVariable("id") int id,@PathVariable("type") String type ,Model model) {
-        if(type.equals("add")) {
-            model.addAttribute("category_id",cid);
-            return "/admin/product/goodaddform";
-        }
-        Goods goods = goodsService.queryAllGoodsById(id);
-        HashMap<String, Object> param = new HashMap<>();
-        param.put("fid",id);
-        List<ImageRepo> imgList = goodsService.queryAllImageList(param);
-        StringBuilder sb = new StringBuilder();
-        for (ImageRepo imageRepo : imgList){
-            sb.append(imageRepo.getImg_url()+"\r");
-        }
-        model.addAttribute("item",goods);
-        model.addAttribute("imgList",imgList);
-        model.addAttribute("imgArea",sb.toString());
-        model.addAttribute("type",type);
-        model.addAttribute("category_id",cid);
+    @GetMapping("/product/goods/addform")
+    synchronized public String good_Page() {
         return "/admin/product/goodaddform";
     }
 

@@ -13,6 +13,8 @@ import lombok.Data;
 public class ImageRepo {
     private int id;
     private int fid;
+    private int customer_id;
     private String img_url;
+    private String type = "goods";
 }
 
