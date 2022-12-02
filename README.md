@@ -1,20 +1,20 @@
-# doggyShopBackEnd
-# Pets' Scarf shop
-# 文档说明
+## 文档说明
 
 ## BUG 日记 02/12/2022
 
+### 新增功能 
+
 - 后台评论管理
-
-
-
-
-
-
 
 - 接口统一管理
 
 [<img src="https://s1.ax1x.com/2022/12/02/zDVmX6.png" alt="zDVmX6.png" style="zoom:50%;" />](https://imgse.com/i/zDVmX6)
+
+### BUG 修复
+
+- 默认地址只允许存在一个
+- 限制最大添加地址数量5个
+- 删除商品的时候，客户的订单也会被删除，因为商品和订单里的字段关联
 
 
 
