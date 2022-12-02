@@ -49,4 +49,8 @@ public class SysCommentService {
     public int pageQueryCommentCount(Page page) {
         return commentMapper.pageQueryCommentCount(page);
     }
+
+    public void deleteComment(HashMap<String, Object> param) {
+         commentMapper.deleteComment(param);
+    }
 }
