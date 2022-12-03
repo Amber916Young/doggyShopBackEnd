@@ -320,6 +320,9 @@
             <if test="coupon_id !=null">
                 and  coupon_id=#{coupon_id}
             </if>
+            <if test="customer_id !=null">
+                and  customer_id=#{customer_id}
+            </if>
         </where>
     </select>
 
