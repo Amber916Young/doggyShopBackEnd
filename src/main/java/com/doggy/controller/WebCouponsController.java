@@ -61,6 +61,27 @@ public class WebCouponsController {
 
     @SneakyThrows
     @ResponseBody
+    @PostMapping("/batch/detail")
+    public HttpResult detailCoupon_batch(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        Coupon_batch batch = couponService.queryCouponBatch(param);
+        return HttpResult.ok("查询成功", batch);
+    }
+
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/rule/detail")
+    public HttpResult detailRule(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        Rule rule = couponService.queryRule(param);
+        return HttpResult.ok("查询成功", rule);
+    }
+
+
+    @SneakyThrows
+    @ResponseBody
     @PostMapping("/detail")
     public HttpResult detailCoupon(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
@@ -200,7 +221,6 @@ public class WebCouponsController {
         JSONObject json = JSONObject.parseObject(jsonData);
         JSONArray ids = json.getJSONArray("ids");
         String code = json.getString("code");
-        HashMap<String,Object> map = new HashMap<>();
         if (code.equals(Delcode)) {
             for (int i = 0; i < ids.size(); i++) {
                 int rule_id = Integer.parseInt(ids.get(i).toString());

@@ -11,8 +11,8 @@
       display: flex;
       justify-content: center;
   }
-  .layui-input, .layui-textarea {
-      width: 70%;
+  .layui-form-label {
+      width: 130px;
   }
 
 </style>
@@ -92,29 +92,30 @@
 </div>
 
 <script>
-  var batch_id = null;
+  var batch_id = -1;
   var type = null;
   var  element
   var form
   var laydate
+
   layui.use(['form','table','element','laydate'], function(){
     var $ = layui.$
       form = layui.form
       laydate = layui.laydate;
 
     element = layui.element;
-      batch_id = getParam('batch_id');
+    batch_id = getParam('batch_id');
     type = getParam('type');
     if(type === "edit")
-        loadData(coupon_id)
-      else{
-        loadData()
+        loadData(batch_id)
+    else
+        loadDataAdd()
 
-    }
 
     form.on('submit(form-submit-edit)', function(data){
       var field = data.field;
         field.batch_id = batch_id
+
         ajaxPost(coupon_batch_form_update, JSON.stringify(field), function (data) {
           layer.msg(data.msg, {time: 3000, icon: 1});
       });
@@ -130,14 +131,9 @@
 
   })
 
-  function loadData(){
+  function loadDataAdd(){
       var str = ''
-      str ='  <div class="layui-form-item">\n' +
-          '                        <label class="layui-form-label">批次ID</label>\n' +
-          '                        <div class="layui-input-block">\n' +
-          '                            <input type="text" name="batch_id"   placeholder="openid" autocomplete="off" class="layui-input">\n' +
-          '                        </div>\n' +
-          '                    </div>\n' +
+      str =
           '                    <div class="layui-form-item">\n' +
           '                        <label class="layui-form-label">规则ID</label>\n' +
           '                        <div class="layui-input-block">\n' +
@@ -175,88 +171,65 @@
           '                        </div>\n' +
           '                    </div>\n' +
           '                    <div class="layui-form-item">\n' +
-          '                        <label class="layui-form-label">使用时间</label>\n' +
-          '                        <div class="layui-input-block">\n' +
-          '                            <input type="text" name="used_time"  id="used_time"  placeholder="使用时间" autocomplete="off" class="layui-input">\n' +
-          '                        </div>\n' +
-          '                    </div>\n' +
-          '                    <div class="layui-form-item">\n' +
           '                        <div class="layui-input-block">\n' +
           '                            <input type="button" lay-submit lay-filter="form-submit-add" value="确认" class="layui-btn">\n' +
           '                        </div>\n' +
           '                    </div>'
       $("#coupon_batch_show").html(str)
       element.render();
-      laydate.render({
-          elem: '#used_time' //指定元素
-      });
   }
 
   function loadData(id){
       var jsonData={}
       jsonData.order_id= id;
       var params = JSON.stringify(jsonData);
-      ajaxPost(coupon_detail, params, function (data) {
+      ajaxPost(coupon_batch_detail, params, function (data) {
           var str = '';
           var batch = data.data
-          str = '<div class="layui-form-item">\n' +
-              '                        <label class="layui-form-label">批次ID</label>\n' +
-              '                        <div class="layui-input-block">\n' +
-              '                            <input type="text" name="batch_id"  value="'+data.batch_id+'"   placeholder="openid" autocomplete="off" class="layui-input">\n' +
-              '                        </div>\n' +
-              '                    </div>\n' +
+          str =
               '                    <div class="layui-form-item">\n' +
               '                        <label class="layui-form-label">规则ID</label>\n' +
               '                        <div class="layui-input-block">\n' +
-              '                            <input type="text" name="rule_id"  value="'+data.rule_id+'"    placeholder="规则ID" autocomplete="off" class="layui-input">\n' +
+              '                            <input type="text" name="rule_id"  value="'+batch.rule_id+'"    placeholder="规则ID" autocomplete="off" class="layui-input">\n' +
               '                        </div>\n' +
               '                    </div>\n' +
               '                    <div class="layui-form-item">\n' +
               '                        <label class="layui-form-label">总数量</label>\n' +
               '                        <div class="layui-input-block">\n' +
-              '                            <input type="number" name="total_count" value="'+data.total_count+'"      placeholder="total_count" autocomplete="off" class="layui-input">\n' +
+              '                            <input type="number" name="total_count" value="'+batch.total_count+'"      placeholder="total_count" autocomplete="off" class="layui-input">\n' +
               '                        </div>\n' +
               '                    </div>\n' +
               '                    <div class="layui-form-item">\n' +
               '                        <label class="layui-form-label">已发放劵数量</label>\n' +
               '                        <div class="layui-input-block">\n' +
-              '                            <input type="number" name="assign_count" value="'+data.assign_count+'"       placeholder="assign_count" autocomplete="off" class="layui-input">\n' +
+              '                            <input type="number" name="assign_count" value="'+batch.assign_count+'"       placeholder="assign_count" autocomplete="off" class="layui-input">\n' +
               '                        </div>\n' +
               '                    </div>\n' +
               '                    <div class="layui-form-item">\n' +
               '                        <label class="layui-form-label">已使用劵数量</label>\n' +
               '                        <div class="layui-input-block">\n' +
-              '                            <input type="number" name="used_count" value="'+data.used_count+'"     placeholder="used_count" autocomplete="off" class="layui-input">\n' +
+              '                            <input type="number" name="used_count" value="'+batch.used_count+'"     placeholder="used_count" autocomplete="off" class="layui-input">\n' +
               '                        </div>\n' +
               '                    </div>\n' +
               '                    <div class="layui-form-item">\n' +
               '                        <label class="layui-form-label">批次名称</label>\n' +
               '                        <div class="layui-input-block">\n' +
-              '                            <input type="text" name="batch_name"  value="'+data.batch_name+'"      placeholder="batch_name" autocomplete="off" class="layui-input">\n' +
+              '                            <input type="text" name="batch_name"  value="'+batch.batch_name+'"      placeholder="batch_name" autocomplete="off" class="layui-input">\n' +
               '                        </div>\n' +
               '                    </div>\n' +
               '                    <div class="layui-form-item">\n' +
               '                        <label class="layui-form-label">劵名称</label>\n' +
               '                        <div class="layui-input-block">\n' +
-              '                            <input type="text" name="coupon_name" value="'+data.coupon_name+'"     placeholder="coupon_name" autocomplete="off" class="layui-input">\n' +
-              '                        </div>\n' +
-              '                    </div>\n' +
-              '                    <div class="layui-form-item">\n' +
-              '                        <label class="layui-form-label">使用时间</label>\n' +
-              '                        <div class="layui-input-block">\n' +
-              '                            <input type="text" name="used_time"  value="'+data.used_time+'"      placeholder="used_time" autocomplete="off" class="layui-input">\n' +
+              '                            <input type="text" name="coupon_name" value="'+batch.coupon_name+'"     placeholder="coupon_name" autocomplete="off" class="layui-input">\n' +
               '                        </div>\n' +
               '                    </div>\n' +
               '                    <div class="layui-form-item">\n' +
               '                        <div class="layui-input-block">\n' +
-              '                            <input type="button"  id="used_time"  lay-submit lay-filter="form-submit-add" value="确认" class="layui-btn">\n' +
+              '                            <input type="button"   lay-submit lay-filter="form-submit-edit" value="确认" class="layui-btn">\n' +
               '                        </div>\n' +
               '                    </div>'
           $("#coupon_batch_show").html(str)
           element.render();
-          laydate.render({
-              elem: '#used_time' //指定元素
-          });
       });
   }
 </script>

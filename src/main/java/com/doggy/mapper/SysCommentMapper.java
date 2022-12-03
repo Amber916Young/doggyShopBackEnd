@@ -23,4 +23,6 @@ public interface SysCommentMapper {
 
     @Delete("delete from DoggyPets.comment where comment_id = #{id} ")
     void deleteComment(HashMap<String, Object> param);
+
+    void updateComment(HashMap<String, Object> param);
 }

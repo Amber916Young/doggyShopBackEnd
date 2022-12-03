@@ -53,4 +53,9 @@ public class SysCommentService {
     public void deleteComment(HashMap<String, Object> param) {
          commentMapper.deleteComment(param);
     }
+
+    public void updateComment(HashMap<String, Object> param) {
+        commentMapper.updateComment(param);
+    }
+
 }

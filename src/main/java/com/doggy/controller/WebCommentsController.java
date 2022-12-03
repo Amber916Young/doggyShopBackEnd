@@ -95,5 +95,45 @@ public class WebCommentsController {
     }
 
 
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/updates")
+    public HttpResult update(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
+        JSONObject json = JSONObject.parseObject(jsonData);
+        String id = json.getString("id");
+        String code = json.getString("code");
+        String content = json.getString("content");
+        int fid = Integer.parseInt(json.getString("fid"));
+        if (code.equals(Delcode)) {
+            HashMap<String, Object> param1 = new HashMap<>();
+            param1.put("comment_id",id);
+            param1.put("content",content);
+            param1.put("fid",fid);
+            commentService.updateComment(param1);
+            return HttpResult.ok("successfully");
+        }
+        return  HttpResult.error("Code is wrong，delete fail!");
+    }
+
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/replies")
+    public HttpResult reply(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        JSONObject json = JSONObject.parseObject(jsonData);
+        String fid = json.getString("fid");
+        String content = json.getString("content");
+        Comment comment = new Comment();
+        comment.setFid(Integer.parseInt(fid));
+        comment.setContent(content);
+        try{
+            commentService.insertComments(comment);
+            return HttpResult.ok("successfully");
+        }catch (Exception e){
+            return HttpResult.error(e.getMessage());
+        }
+    }
+
 
 }

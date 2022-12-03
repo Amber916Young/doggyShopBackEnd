@@ -45,11 +45,32 @@ public class ViewController {
         return "/admin/coupons/index";
     }
 
+    @GetMapping("/coupons/batch")
+    synchronized public String coupons_batch_index() {
+        return "/admin/coupons_batch/index";
+    }
+
+
+
+
 
     @GetMapping("/coupon/batch/addform")
     synchronized public String coupons_Batch() {
         return "/admin/coupons_batch/addform_coupons_batch";
     }
+
+    @GetMapping("/coupons/rule")
+    synchronized public String rule_index() {
+        return "/admin/coupons_rule/index";
+    }
+
+    @GetMapping("/coupons/rule/addform")
+    synchronized public String coupon_rule_form() {
+        return "/admin/coupons_rule/addform";
+    }
+
+
+
 
     @SneakyThrows
     @GetMapping("/coupon/addform")

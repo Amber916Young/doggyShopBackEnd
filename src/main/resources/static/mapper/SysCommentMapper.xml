@@ -123,4 +123,13 @@
             </if>
         </where>
     </select>
+
+    <update id="updateComment">
+        update DoggyPets.comment
+        <set>
+            <if test="fid != null"> fid = #{fid}, </if>
+            <if test="content != null"> content = #{content}, </if>
+        </set>
+        where comment_id = #{comment_id}
+    </update>
 </mapper>

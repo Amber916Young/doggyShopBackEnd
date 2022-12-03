@@ -49,9 +49,7 @@
             <if test="coupon_name != null">
                 coupon_name,
             </if>
-            <if test="used_time != null">
-                used_time,
-            </if>
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="rule_id != null">
@@ -71,9 +69,6 @@
             </if>
             <if test="coupon_name != null">
                 #{coupon_name},
-            </if>
-            <if test="used_time != null">
-                #{used_time},
             </if>
         </trim>
 
@@ -135,10 +130,10 @@
         <where>
             1=1
             <if test="coupon_id !=null">
-               and coupon_id #{coupon_id}
+               and coupon_id = #{coupon_id}
             </if>
             <if test="batch_id !=null">
-                and batch_id #{batch_id}
+                and batch_id = #{batch_id}
             </if>
         </where>
     </delete>

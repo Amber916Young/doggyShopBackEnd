@@ -3,10 +3,7 @@
 <div th:replace="fragments/headerPage :: headerPage"></div>
 <title>优惠券发放管理</title>
 <style>
-  img{
-    height: 100px;
-    width: auto;
-  }
+
 </style>
 <body >
 <div >
@@ -28,9 +25,9 @@
 
           <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
               <ul class="layui-tab-title">
-                  <li>用户优惠券领取</li>
-                  <li  class="layui-this">优惠券发放</li>
-                  <li>优惠规则</li>
+                  <li onClick="window.location.href='/view/coupons'">用户优惠券领取</li>
+                  <li  class="layui-this" >优惠券发放</li>
+                  <li onClick="window.location.href='/view/coupons/rule'" >优惠规则</li>
               </ul>
               <div class="layui-tab-content">
                   <div class="layui-tab-item">
@@ -123,12 +120,12 @@
                 ,{field: 'batch_id', width: 100, title: 'id',  align: 'center', sort: true}
                 ,{field: 'batch_name', title: '批次名称', align: 'center', width:130}
                 ,{field: 'coupon_name', title: '劵名称', align: 'center',  minWidth: 130}
-                ,{field: 'rule_id', title: '规则ID',  align: 'center', minWidth: 200, sort: true}
+                ,{field: 'rule_id', title: '规则ID',  align: 'center', minWidth: 130, sort: true}
                 ,{field: 'total_count', title: '总数量',  align: 'center', minWidth: 130, sort: true}
-                ,{field: 'assign_count', title: '已发放劵数量', align: 'center',  minWidth: 80, sort: true}
-                ,{field: 'used_count', title: '已使用劵数量', align: 'center',  minWidth: 80, sort: true}
+                ,{field: 'assign_count', title: '已发放劵数量', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'used_count', title: '已使用劵数量', align: 'center',  minWidth: 200, sort: true}
                 ,{field: 'create_time', title: '创建时间', align: 'center',  minWidth: 200, sort: true}
-                ,{field: 'modified_time', title: '修改时间', align: 'center',  minWidth: 80, sort: true}
+                ,{field: 'modified_time', title: '修改时间', align: 'center',  minWidth: 200, sort: true}
                 ,{title: '操作', minWidth: 200, align: 'center', fixed: 'right', toolbar: '#tableTool'}
             ]
           ]
@@ -143,7 +140,7 @@
 
     table.on('tool(tableview)', function(obj){
       var data = obj.data;
-      var id = data.order_id
+      var id = data.batch_id
       if(obj.event === 'del'){
         layer.prompt({
           formType: 1
@@ -171,7 +168,7 @@
               ,shade: 0.6 //遮罩透明度
               ,maxmin: true //允许全屏最小化
               ,anim: 0 //0-6的动画形式，-1不开启
-              ,content: coupon_batch_form_view+'?coupon_id='+id+'&type=edit'
+              ,content: coupon_batch_form_view+'?batch_id='+id+'&type=edit'
               ,success: function(layero, index){
               }
               ,cancel: function(){
@@ -185,6 +182,24 @@
 
 
     var active = {
+        add: function () {
+            layer.open({
+                type: 2
+                ,area: ['500px', '400px']
+                ,title: '新增商品大类信息'
+                ,shade: 0.6 //遮罩透明度
+                ,maxmin: true //允许全屏最小化
+                ,anim: 0 //0-6的动画形式，-1不开启
+                ,content: coupon_batch_form_view+'?batch_id=-1&type=view'
+                ,success: function(layero, index){
+                }
+                ,cancel: function(){
+                    layui.table.reload('tableview'); //重载表格
+                }
+                ,end : function(){
+                }
+            });
+        },
       batchdel: function () {
         var checkStatus = table.checkStatus('tableview')
                 , checkData = checkStatus.data;
@@ -193,7 +208,7 @@
           return layer.msg('Please select data');
         } else {
           for (var i = 0; i < checkData.length; i++) {
-            ids.push(checkData[i].id);
+            ids.push(checkData[i].batch_id);
           }
           jsonData["ids"] = ids;
         }

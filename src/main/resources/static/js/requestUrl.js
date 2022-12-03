@@ -77,8 +77,16 @@ var coupon_form_add = "/web/coupon/add"
 var coupon_form_update = "/web/coupon/edit"
 
 // coupon batch
-var coupon_batch_form_view = "/view/coupon/batch/addform"
+var coupon_batch_view = "/view/coupon/batch/index"
 
+var coupon_batch_form_view = "/view/coupon/batch/addform"
+var coupon_batch_detail = "/web/coupon/batch/detail"
 var coupon_batch_delete = "/web/coupon/batch/deletes"
 var coupon_batch_form_add = "/web/coupon/batch/add"
 var coupon_batch_form_update = "/web/coupon/batch/edit"
+
+var coupon_rule_detail = "/web/coupon/rule/detail"
+var coupon_rule_form_view = "/view/coupons/rule/addform"
+var coupon_rule_delete = "/web/coupon/rule/deletes"
+var coupon_rule_form_add = "/web/coupon/rule/add"
+var coupon_rule_form_update = "/web/coupon/rule/edit"

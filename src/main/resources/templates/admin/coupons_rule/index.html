@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:replace="fragments/headerPage :: headerPage"></div>
-<title>优惠券管理</title>
+<title>优惠券发放管理</title>
 <style>
-  img{
-    height: 100px;
-    width: auto;
-  }
+
 </style>
 <body >
 <div >
@@ -21,18 +18,20 @@
       <div class="layui-card-header">
         <div class="layui-breadcrumb" lay-filter="breadcrumb">
           <a lay-href="">产品</a>
-          <a><cite>优惠券管理</cite></a>
+          <a><cite>优惠券规则管理</cite></a>
         </div>
       </div>
       <div class="layui-card-body">
 
-          <div class="layui-tab layui-tab-brief" >
+          <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
               <ul class="layui-tab-title">
-                  <li class="layui-this" >用户优惠券领取</li>
+                  <li onClick="window.location.href='/view/coupons'">用户优惠券领取</li>
                   <li  onClick="window.location.href='/view/coupons/batch'" >优惠券发放</li>
-                  <li onClick="window.location.href='/view/coupons/rule'" >优惠规则</li>
+                  <li  class="layui-this"  onClick="window.location.href='/view/coupons/rule'" >优惠规则</li>
               </ul>
               <div class="layui-tab-content">
+                  <div class="layui-tab-item"></div>
+                  <div class="layui-tab-item"></div>
                   <div class="layui-tab-item layui-show">
                       <div class="layui-fluid">
                           <div class="layui-form    layuiadmin-card-header-auto">
@@ -55,29 +54,6 @@
                           <script type="text/html" id="toolbar">
                               <div class="layui-btn-container"></div>
                           </script>
-
-                          <script type="text/html" id="checkOrderDetail">
-                              <a  href="javascript:;"  onclick="checkOrderDetail('{{d.order_id}}' ,'{{d.order_sn}}'  )" class="layui-table-link" >{{ d.order_sn }}</a>
-                          </script>
-                          <script type="text/html" id="checkCustomer">
-                              <a  href="javascript:;"  onclick="checkCustomer('{{d.customer_id}}'  )" class="layui-table-link" >{{ d.customer_id }}</a>
-                          </script>
-
-                          <script type="text/html" id="checkCouponBatch">
-                              <a  href="javascript:;"  onclick="checkCouponBatch('{{d.batch_id}}'  )" class="layui-table-link" >{{ d.customer_id }}</a>
-                          </script>
-                          <script type="text/html" id="statusLabel">
-                              {{#  if(d.status == 2){ }}
-                              <span class="layui-badge">已过期</span>
-                              {{#  } else if(d.status == 1){ }}
-                              <span class="layui-badge layui-bg-orange">橙</span>
-                              {{#  } else if(d.status == 0){ }}
-                              <span class="layui-badge layui-bg-blue">未使用</span>
-                              {{#  } else { }}
-                              <span class="layui-badge layui-bg-black">黑</span>
-                              {{#  } }}
-                          </script>
-
                           <script type="text/html" id="tableTool">
                               <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
                               <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -85,13 +61,6 @@
 
                       </div>
                   </div>
-                  <div class="layui-tab-item">
-
-
-
-
-                  </div>
-                  <div class="layui-tab-item"></div>
               </div>
           </div>
 
@@ -113,17 +82,14 @@
 <script type="text/javascript">
   var ItemId = "Item3_1";
 
-  var status = -1
   var table
   var form
   /*<![CDATA[*/
-  layui.use(['table','layer','element'], function(){
+  layui.use(['table','layer'], function(){
       table = layui.table;
       form = layui.form;
-      var element = layui.element;
       form.on('submit(searchBtn)', function(data){
           var field = data.field;
-            field.status = status
           table.reload('tableview', {
             page:1
             ,where: field
@@ -132,37 +98,27 @@
 
 
 
-      //触发radio单选
-      form.on('radio(statusKey)', function(data){
-          var jsonData={}
-          status = data.value
-          jsonData.status = status
-          table.reload('tableview', {
-              page:1
-              ,where: jsonData
-          });
-      });
-
       table.render({
            elem: '#tableview'
-          ,url: coupon_queryAll //模拟接口
+          ,url: coupon_rule_queryAll //模拟接口
           ,toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
           ,defaultToolbar: ['filter', 'exports', 'print']
-          ,title: '优惠券管理'
-          ,where:{
-              "status":status,
-          }
+          ,title: '优惠券规则管理'
           ,cols: [
             [
                  {type: 'checkbox', fixed: 'left'}
                 ,{field: 'rule_id', width: 100, title: 'id',  align: 'center', sort: true}
-                ,{field: 'customer_id', title: '客户id', align: 'center', width:130,templet: '#checkCustomer'}
-                ,{field: 'batch_id', title: '批次ID', align: 'center',  minWidth: 130,templet: '#checkCouponBatch'}
-                ,{field: 'status', title: '使用状态',  align: 'center', minWidth: 130, sort: true, templet: '#statusLabel'}
-                ,{field: 'order_id', title: '订单id',  align: 'center', minWidth: 130, sort: true,templet: '#checkOrderDetail'}
-                ,{field: 'received_time', title: '领取时间', align: 'center',  minWidth: 200, sort: true}
-                ,{field: 'validate_time', title: '有效日期', align: 'center',  minWidth: 200, sort: true}
-                ,{field: 'used_time', title: '使用时间', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'name', title: '规则名称', align: 'center', width:130}
+                ,{field: 'type', title: '优惠卷类型', align: 'center',  minWidth: 130}
+                ,{field: 'receive_started_at', title: '领取开始时间', align: 'center',  minWidth: 200}
+                ,{field: 'receive_ended_at', title: '领取结束时间', align: 'center',  minWidth: 200}
+                ,{field: 'use_started_at', title: '使用开始时间', align: 'center',  minWidth: 200}
+                ,{field: 'use_ended_at', title: '使用结束时间', align: 'center',  minWidth: 200}
+                ,{field: 'amount', title: '优惠金额', align: 'center',  minWidth: 200}
+                ,{field: 'threshold', title: '门槛金额', align: 'center',  minWidth: 200}
+                ,{field: 'receive_count', title: '用户可以领取数量', align: 'center',  minWidth: 350}
+                ,{field: 'use_range', title: '使用范围(0—全场，1—商品)', align: 'center',  minWidth: 350}
+                ,{field: 'create_time', title: '创建时间', align: 'center',  minWidth: 200, sort: true}
                 ,{field: 'modified_time', title: '修改时间', align: 'center',  minWidth: 200, sort: true}
                 ,{title: '操作', minWidth: 200, align: 'center', fixed: 'right', toolbar: '#tableTool'}
             ]
@@ -178,7 +134,7 @@
 
     table.on('tool(tableview)', function(obj){
       var data = obj.data;
-      var id = data.coupon_id
+      var id = data.rule_id
       if(obj.event === 'del'){
         layer.prompt({
           formType: 1
@@ -191,7 +147,7 @@
             jsonData["ids"] = ids;
             jsonData["code"] = value;
             var params = JSON.stringify(jsonData);
-            ajaxPost(coupon_delete, params, function (data) {
+            ajaxPost(coupon_rule_delete, params, function (data) {
                 layer.msg(data.msg, {time: 3000, icon: 1});
                 layui.table.reload('tableview'); //重载表格
             });
@@ -201,12 +157,12 @@
       }else  if(obj.event === 'edit'){
           layer.open({
               type: 2
-              ,area: ['50%', '80%']
-              ,title: '优惠券【'+id+'】详情'
+              ,area: ['70%', '80%']
+              ,title: '优惠规则【'+data.name+'】详情'
               ,shade: 0.6 //遮罩透明度
               ,maxmin: true //允许全屏最小化
               ,anim: 0 //0-6的动画形式，-1不开启
-              ,content: coupon_form_view+'?coupon_id='+id+'&type=edit'
+              ,content: coupon_rule_form_view+'?rule_id='+id+'&type=edit'
               ,success: function(layero, index){
               }
               ,cancel: function(){
@@ -223,12 +179,12 @@
         add: function () {
             layer.open({
                 type: 2
-                ,area: ['500px', '400px']
-                ,title: '新增商品大类信息'
+                ,area: ['70%', '80%']
+                ,title: '新增规则信息'
                 ,shade: 0.6 //遮罩透明度
                 ,maxmin: true //允许全屏最小化
                 ,anim: 0 //0-6的动画形式，-1不开启
-                ,content: coupon_form_view+'?coupon_id=-1&type=view'
+                ,content: coupon_rule_form_view+'?rule_id=-1&type=view'
                 ,success: function(layero, index){
                 }
                 ,cancel: function(){
@@ -246,7 +202,7 @@
           return layer.msg('Please select data');
         } else {
           for (var i = 0; i < checkData.length; i++) {
-            ids.push(checkData[i].coupon_id);
+            ids.push(checkData[i].rule_id);
           }
           jsonData["ids"] = ids;
         }
@@ -259,7 +215,7 @@
             layer.close(index);
             jsonData["code"] = value;
             var params = JSON.stringify(jsonData);
-            ajaxPost(coupon_delete, params, function (data) {
+            ajaxPost(coupon_rule_delete, params, function (data) {
                 layer.msg(data.msg, {time: 3000, icon: 1});
                 layui.table.reload('tableview'); //重载表格
             });
@@ -274,40 +230,7 @@
     });
   })
   /*]]>*/
-  function checkCouponBatch(batch_id){
-      layer.open({
-          type: 2
-          ,area: ['50%', '50%']
-          ,title: '优惠券批次【'+batch_id+'】详情'
-          ,shade: 0.6 //遮罩透明度
-          ,maxmin: true //允许全屏最小化
-          ,anim: 0 //0-6的动画形式，-1不开启
-          ,content: coupon_batch_form_view+'?batch_id='+id+'&type=edit'
-      });
-  }
-  function checkCustomer(customer_id){
-      layer.open({
-          type: 2
-          ,area: ['50%', '50%']
-          ,title: '用户【'+customer_id+'】详情'
-          ,shade: 0.6 //遮罩透明度
-          ,maxmin: true //允许全屏最小化
-          ,anim: 0 //0-6的动画形式，-1不开启
-          ,content: user_form_view+'?customer_id='+customer_id+'&type=view'
-      });
-  }
 
-  function checkOrderDetail(order_id,order_sn){
-      layer.open({
-          type: 2
-          ,area: ['90%', '80%']
-          ,title: '订单【'+order_sn+'】详情'
-          ,shade: 0.6 //遮罩透明度
-          ,maxmin: true //允许全屏最小化
-          ,anim: 0 //0-6的动画形式，-1不开启
-          ,content:order_detail_form+ '?order_id='+order_id+'&type=edit'
-      });
-  }
 
 </script>
 </html>
