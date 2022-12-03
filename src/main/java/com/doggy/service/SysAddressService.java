@@ -45,4 +45,8 @@ public class SysAddressService {
     public CustomerAddress queryAddressByParam(HashMap<String, Object> param) {
         return addressMapper.queryAddressByParam(param);
     }
+
+    public void updateIsDefault(HashMap<String, Object> param) {
+        addressMapper.updateIsDefault(param);
+    }
 }

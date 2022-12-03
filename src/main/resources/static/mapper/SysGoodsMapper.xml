@@ -200,7 +200,6 @@
         where  id = #{id}
     </update>
 
-
     <select id="queryAllCategory" resultType="com.doggy.entity.Category">
         select * from DoggyPets.category
         <where>

@@ -60,3 +60,10 @@ var product_goods_detail = "/web/product/goods/detail"
 // comment index
 var comment_queryAll = "/web/comment/queryAll"
 var comment_delete = "/web/comment/deletes"
+
+
+// coupon
+var coupon_queryAll = "/web/coupon/queryAll"
+var coupon_batch_queryAll = "/web/coupon/batch/queryAll"
+var coupon_rule_queryAll = "/web/coupon/rule/queryAll"
+

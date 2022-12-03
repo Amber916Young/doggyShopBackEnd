@@ -2,6 +2,7 @@ package com.doggy.mapper;
 
 
 import com.doggy.entity.CustomerAddress;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,4 +20,7 @@ public interface SysAddressMapper {
     CustomerAddress queryAddressByid(int customer_addr_id);
 
     CustomerAddress queryAddressByParam(HashMap<String, Object> param);
+
+    @Update(" update DoggyPets.Customer_Address set is_default=1 where customer_id = #{customer_id}")
+    void updateIsDefault(HashMap<String, Object> param);
 }

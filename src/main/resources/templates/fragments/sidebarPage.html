@@ -1,5 +1,5 @@
 <div  th:fragment="sidebarPage"  xmlns:th="http://www.thymeleaf.org">
-  <aside id="sidebar" class="sidebar-nav " style="font-size: 1.2em;">
+  <aside id="sidebar" class="sidebar-nav " >
     <nav class="sidebar-nav">
       <ul class="metismenu" id="menu">
         <li style="height: 2.2em;font-size: 1.3em;line-height: 2.2em;text-align: center">
@@ -22,11 +22,17 @@
           </ul>
         </li>
         <li>
-          <a href="###" id="Item3_0"><span  class="layui-icon layui-icon-group"  style="font-size: 20px;">用户管理</span></a>
+        <li class="">
+          <a href="###" id="Item3_0"><span  class="layui-icon layui-icon-star"  style="font-size: 20px;">优惠券管理</span></a>
           <ul class="mm-collapse">
-            <li><a href="/view/user" id="Item3_1">小程序用户</a></li>
-            <li><a href="/view/user/address" id="Item3_2">用户地址信息</a></li>
-
+            <li><a href="/view/coupons" id="Item3_1">优惠券主页</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="###" id="Item4_0"><span  class="layui-icon layui-icon-group"  style="font-size: 20px;">用户管理</span></a>
+          <ul class="mm-collapse">
+            <li><a href="/view/user" id="Item4_1">小程序用户</a></li>
+            <li><a href="/view/user/address" id="Item4_2">用户地址信息</a></li>
           </ul>
         </li>
 

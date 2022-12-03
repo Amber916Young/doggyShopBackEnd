@@ -1,0 +1,319 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doggy.mapper.SysCouponMapper">
+
+    <insert id="insertRule">
+        insert into DoggyPets.rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="rule_content != null">
+                rule_content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="rule_content != null">
+                #{rule_content},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertCouponBatch">
+        insert into DoggyPets.Coupon_Batch
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rule_id != null">
+                rule_id,
+            </if>
+            <if test="total_count != null">
+                total_count,
+            </if>
+            <if test="assign_count != null">
+                assign_count,
+            </if>
+            <if test="used_count != null">
+                used_count,
+            </if>
+            <if test="batch_name != null">
+                batch_name,
+            </if>
+            <if test="coupon_name != null">
+                coupon_name,
+            </if>
+            <if test="used_time != null">
+                used_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rule_id != null">
+                #{rule_id},
+            </if>
+            <if test="total_count != null">
+                #{total_count},
+            </if>
+            <if test="assign_count != null">
+                #{assign_count},
+            </if>
+            <if test="used_count != null">
+                #{used_count},
+            </if>
+            <if test="batch_name != null">
+                #{batch_name},
+            </if>
+            <if test="coupon_name != null">
+                #{coupon_name},
+            </if>
+            <if test="used_time != null">
+                #{used_time},
+            </if>
+        </trim>
+
+    </insert>
+    <insert id="insertCoupon">
+        insert into DoggyPets.Coupon
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customer_id != null">
+                customer_id,
+            </if>
+            <if test="batch_id != null">
+                batch_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="order_id != null">
+                order_id,
+            </if>
+            <if test="received_time != null">
+                received_time,
+            </if>
+            <if test="validate_time != null">
+                validate_time,
+            </if>
+            <if test="used_time != null">
+                used_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customer_id != null">
+                #{customer_id},
+            </if>
+            <if test="batch_id != null">
+                #{batch_id},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="order_id != null">
+                #{order_id},
+            </if>
+            <if test="received_time != null">
+                #{received_time},
+            </if>
+            <if test="validate_time != null">
+                #{validate_time},
+            </if>
+            <if test="used_time != null">
+                #{used_time},
+            </if>
+        </trim>
+
+
+    </insert>
+
+    <delete id="deleteCoupons">
+       delete from DoggyPets.Coupon
+        <where>
+            1=1
+            <if test="coupon_id !=null">
+               and coupon_id #{coupon_id}
+            </if>
+            <if test="batch_id !=null">
+                and batch_id #{batch_id}
+            </if>
+        </where>
+    </delete>
+
+    <delete id="deleteCouponsBatch">
+        delete from DoggyPets.Coupon_Batch where batch_id = #{batch_id}
+    </delete>
+    <delete id="deleteRule">
+        delete from DoggyPets.rule where rule_id = #{rule_id}
+    </delete>
+
+
+    <select id="pageQuerycCouponData" resultType="com.doggy.entity.Coupon">
+        select * from DoggyPets.Coupon
+        <where>
+            1=1
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(customer_id,'')
+                , IFNULL(status,'')
+                , IFNULL(order_id,'') )
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+        order by validate_time asc
+        limit #{start},#{rows}
+    </select>
+    <select id="pageQueryCouponCount" resultType="java.lang.Integer">
+        select count(1) from DoggyPets.Coupon
+        <where>
+            1=1
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(customer_id,'')
+                 , IFNULL(status,'')
+                , IFNULL(order_id,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+    </select>
+
+
+
+
+    <select id="pageQueryCouponBatchData" resultType="com.doggy.entity.Coupon_batch">
+        select * from DoggyPets.Coupon_Batch
+        <where>
+            1=1
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(batch_name,'')
+                , IFNULL(coupon_name,'')
+                , IFNULL(total_count,'')
+                , IFNULL(total_count,'')
+                , IFNULL(assign_count,'') )
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+        order by create_time desc
+        limit #{start},#{rows}
+    </select>
+    <select id="pageQueryCouponBatchCount" resultType="java.lang.Integer">
+        select count(1) from DoggyPets.Coupon_Batch
+        <where>
+            1=1
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(batch_name,'')
+                , IFNULL(coupon_name,'')
+                , IFNULL(total_count,'')
+                , IFNULL(total_count,'')
+                , IFNULL(assign_count,'') )
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+    </select>
+
+    <update id="updateRule">
+        update DoggyPets.rule
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="rule_content != null">
+                rule_content = #{rule_content},
+            </if>
+        </set>
+        where rule_id = #{rule_id}
+    </update>
+    <update id="updateCouponBatch">
+        update DoggyPets.Coupon_Batch
+        <set>
+            <if test="rule_id != null">
+                rule_id = #{rule_id},
+            </if>
+            <if test="total_count != null">
+                total_count = #{total_count},
+            </if>
+            <if test="assign_count != null">
+                assign_count = #{assign_count},
+            </if>
+            <if test="used_count != null">
+                used_count = #{used_count},
+            </if>
+            <if test="batch_name != null">
+                batch_name = #{batch_name},
+            </if>
+            <if test="coupon_name != null">
+                coupon_name = #{coupon_name},
+            </if>
+            <if test="used_time != null">
+                used_time = #{used_time},
+            </if>
+        </set>
+        where batch_id = #{batch_id}
+    </update>
+    <update id="updateCoupon">
+        update DoggyPets.Coupon
+        <set>
+            <if test="customer_id != null">
+                customer_id = #{customer_id},
+            </if>
+            <if test="batch_id != null">
+                batch_id = #{batch_id},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="order_id != null">
+                order_id = #{order_id},
+            </if>
+            <if test="received_time != null">
+                received_time = #{received_time},
+            </if>
+            <if test="validate_time != null">
+                validate_time = #{validate_time},
+            </if>
+            <if test="used_time != null">
+                used_time = #{used_time},
+            </if>
+        </set>
+        where coupon_id = #{coupon_id}
+    </update>
+
+
+    <select id="pageQueryRuleData" resultType="com.doggy.entity.Rule">
+        select * from DoggyPets.Rule
+        <where>
+            1=1
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(name,'')
+                , IFNULL(type,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+        order by create_time desc
+        limit #{start},#{rows}
+    </select>
+    <select id="pageQueryRuleCount" resultType="java.lang.Integer">
+        select count(1) from DoggyPets.Rule
+        <where>
+            1=1
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(name,'')
+                , IFNULL(type,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+    </select>
+
+
+
+</mapper>

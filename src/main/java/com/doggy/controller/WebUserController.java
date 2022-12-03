@@ -128,7 +128,9 @@ public class WebUserController {
                 addressService.deleteAddress(param);
             }
             return HttpResult.ok("successfully");
-        } else return  HttpResult.error("Code is wrong，delete fail!");
+        } else {
+            return  HttpResult.error("Code is wrong，delete fail!");
+        }
     }
 
 

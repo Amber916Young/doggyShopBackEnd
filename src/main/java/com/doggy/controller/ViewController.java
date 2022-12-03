@@ -50,6 +50,11 @@ public class ViewController {
         return "/admin/comment/index";
     }
 
+    @GetMapping("/coupons")
+    synchronized public String coupons_index() {
+        return "/admin/coupons/index";
+    }
+
     @SneakyThrows
     @GetMapping("/order")
     synchronized public String page_order() {

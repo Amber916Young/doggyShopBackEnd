@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/headerPage :: headerPage"></div>
+<title>优惠券管理</title>
+<style>
+  img{
+    height: 100px;
+    width: auto;
+  }
+</style>
+<body >
+<div >
+  <div >
+    <div th:replace="fragments/headerSide :: headerSide"></div>
+  </div>
+  <div class="col col-lg-2" style="    background: white;">
+    <div th:replace="fragments/sidebarPage :: sidebarPage"></div>
+  </div>
+  <div class="col col-lg-10">
+    <div class="layui-card">
+      <div class="layui-card-header">
+        <div class="layui-breadcrumb" lay-filter="breadcrumb">
+          <a lay-href="">产品</a>
+          <a><cite>优惠券管理</cite></a>
+        </div>
+      </div>
+      <div class="layui-card-body">
+
+          <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+              <ul class="layui-tab-title">
+                  <li class="layui-this">用户优惠券领取</li>
+                  <li>优惠券发放</li>
+                  <li>优惠规则</li>
+              </ul>
+              <div class="layui-tab-content">
+                  <div class="layui-tab-item layui-show">
+                      <div class="layui-fluid">
+                          <div class="layui-form    layuiadmin-card-header-auto">
+                              <div class="layui-form-item">
+                                  <div class="layui-inline">
+                                      <input type="text" name="keyword" placeholder="模糊查询" autocomplete="off" class="layui-input">
+                                  </div>
+                                  <div class="layui-inline">
+                                      <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="searchBtn">
+                                          <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                                      </button>
+                                  </div>
+                                  <div class="layui-inline">
+                                      <button class="layui-btn btn-batch layui-btn-danger " data-type="batchdel">批量删除</button>
+                                      <button class="layui-btn btn-batch" data-type="add">新增</button>
+                                  </div>
+                              </div>
+                              <div class="layui-form-item">
+                                  <div class="layui-input-block"   >
+                                      <input type="radio" name="key" lay-filter="statusKey"  value="-1" title="全部" checked>
+                                      <input type="radio" name="key" lay-filter="statusKey"  value="0" title="未使用">
+                                      <input type="radio" name="key" lay-filter="statusKey"  value="1" title="已使用">
+                                      <input type="radio" name="key" lay-filter="statusKey" value="2" title="已过期">
+                                      <input type="radio" name="key" lay-filter="statusKey" value="3" title="冻结">
+                                  </div>
+
+
+                              </div>
+                          </div>
+                          <table id="tableview" lay-filter="tableview"></table>
+                          <script type="text/html" id="toolbar">
+                              <div class="layui-btn-container"></div>
+                          </script>
+
+                          <script type="text/html" id="checkOrderDetail">
+                              <a  href="javascript:;"  onclick="checkOrderDetail('{{d.order_id}}' ,'{{d.order_sn}}'  )" class="layui-table-link" >{{ d.order_sn }}</a>
+                          </script>
+                          <script type="text/html" id="checkCustomer">
+                              <a  href="javascript:;"  onclick="checkCustomer('{{d.customer_id}}'  )" class="layui-table-link" >{{ d.customer_id }}</a>
+                          </script>
+                          <script type="text/html" id="rateLabel">
+                              {{#  if(d.rate <= 2.0){ }}
+                              <span class="layui-badge">赤</span>
+                              {{#  } else if(d.rate > 2.0 && d.rate <4){ }}
+                              <span class="layui-badge layui-bg-orange">橙</span>
+                              {{#  } else if(d.rate > 2.0 && d.rate <4){ }}
+                              <span class="layui-badge layui-bg-blue">蓝</span>
+                              {{#  } else { }}
+                              <span class="layui-badge layui-bg-black">黑</span>
+                              {{#  } }}
+                          </script>
+
+                          <script type="text/html" id="tableTool">
+                              <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">回复</a>
+                              <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+                              <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                          </script>
+
+                      </div>
+                  </div>
+                  <div class="layui-tab-item">
+
+
+
+
+                  </div>
+                  <div class="layui-tab-item"></div>
+              </div>
+          </div>
+
+
+      </div>
+
+    </div>
+  </div>
+
+
+
+  </div>
+</div>
+
+
+</body>
+<div th:replace="fragments/footerPage :: footerPage"></div>
+
+<script type="text/javascript">
+  var ItemId = "Item3_1";
+
+
+  /*<![CDATA[*/
+  layui.use(['table','layer'], function(){
+    var table = layui.table;
+    var form = layui.form;
+    form.on('submit(searchBtn)', function(data){
+      var field = data.field;
+        field.rate = rate
+      table.reload('tableview', {
+        page:1
+        ,where: field
+      });
+    });
+
+      //触发radio单选
+      form.on('radio(statusKey)', function(data){
+          var jsonData={}
+          rate = data.value
+          jsonData.rate = rate
+          table.reload('tableview', {
+              page:1
+              ,where: jsonData
+          });
+      });
+
+  // ,where:{
+  //     "rate":rate,
+  // }
+      table.render({
+           elem: '#tableview'
+          ,url: coupon_queryAll //模拟接口
+          ,toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
+          ,defaultToolbar: ['filter', 'exports', 'print']
+          ,title: '评论管理'
+
+          ,cols: [
+            [
+                 {type: 'checkbox', fixed: 'left'}
+                ,{field: 'coupon_id', width: 100, title: 'id',  align: 'center', sort: true}
+                ,{field: 'customer_id', title: '客户id', align: 'center', width:130,templet: '#checkCustomer'}
+                ,{field: 'batch_id', title: '批次ID', align: 'center',  minWidth: 130}
+                ,{field: 'status', title: '使用状态',  align: 'center', minWidth: 200, sort: true}
+                ,{field: 'order_id', title: '订单id',  align: 'center', minWidth: 130, sort: true,templet: '#checkOrderDetail'}
+                ,{field: 'received_time', title: '领取时间', align: 'center',  minWidth: 80, sort: true}
+                ,{field: 'validate_time', title: '有效日期', align: 'center',  minWidth: 80, sort: true}
+                ,{field: 'used_time', title: '使用时间', align: 'center',  minWidth: 80, sort: true}
+                ,{field: 'create_time', title: '创建时间', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'modified_time', title: '修改时间', align: 'center',  minWidth: 80, sort: true}
+                ,{title: '操作', minWidth: 200, align: 'center', fixed: 'right', toolbar: '#tableTool'}
+            ]
+          ]
+          ,page: true
+          ,limit: 30
+          ,limits: [10, 20, 30, 50, 100,150,200]
+          ,text: '暂无数据'
+    });
+
+
+
+
+    table.on('tool(tableview)', function(obj){
+      var data = obj.data;
+      var id = data.order_id
+      if(obj.event === 'del'){
+        layer.prompt({
+          formType: 1
+          ,title: '敏感操作，请验证密码'
+        }, function(value, index){
+          layer.close(index);
+          layer.confirm('确定删除?', function(index){
+            var ids=new Array(),jsonData={};
+            ids.push(id);
+            jsonData["ids"] = ids;
+            jsonData["code"] = value;
+            var params = JSON.stringify(jsonData);
+            ajaxPost(comment_delete, params, function (data) {
+                layer.msg(data.msg, {time: 3000, icon: 1});
+                layui.table.reload('tableview'); //重载表格
+            });
+            layer.close(index);
+          });
+        });
+      }else  if(obj.event === 'edit'){
+          layer.open({
+              type: 2
+              ,area: ['50%', '80%']
+              ,title: '订单【'+data.order_sn+'】详情'
+              ,shade: 0.6 //遮罩透明度
+              ,maxmin: true //允许全屏最小化
+              ,anim: 0 //0-6的动画形式，-1不开启
+              ,content: 'order/addform?order_id='+id+'&type=edit'
+              ,success: function(layero, index){
+              }
+              ,cancel: function(){
+                  layui.table.reload('tableview'); //重载表格
+              }
+              ,end : function(){
+              }
+          });
+
+      } else  if(obj.event === 'detail'){
+          layer.open({
+              type: 2
+              ,area: ['50%', '80%']
+              ,title: '订单【'+data.order_sn+'】详情'
+              ,shade: 0.6 //遮罩透明度
+              ,maxmin: true //允许全屏最小化
+              ,anim: 0 //0-6的动画形式，-1不开启
+              ,content: order_master_form_view+'?order_id='+id+'&type=view'
+          });
+
+      }
+    });
+
+
+    var active = {
+      batchdel: function () {
+        var checkStatus = table.checkStatus('tableview')
+                , checkData = checkStatus.data;
+        var ids = new Array(), jsonData = {};
+        if (checkData.length === 0) {
+          return layer.msg('Please select data');
+        } else {
+          for (var i = 0; i < checkData.length; i++) {
+            ids.push(checkData[i].id);
+          }
+          jsonData["ids"] = ids;
+        }
+        layer.prompt({
+          formType: 1
+          ,title: '敏感操作，请验证密码'
+        }, function (value, index) {
+          layer.close(index);
+          layer.confirm('确定删除?', function(index){
+            layer.close(index);
+            jsonData["code"] = value;
+            var params = JSON.stringify(jsonData);
+            ajaxPost(comment_delete, params, function (data) {
+                layer.msg(data.msg, {time: 3000, icon: 1});
+                layui.table.reload('tableview'); //重载表格
+            });
+          });
+        });
+      }
+    }
+
+    $('.layui-btn.btn-batch').on('click', function(){
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+    });
+  })
+  /*]]>*/
+  function checkCustomer(customer_id){
+      layer.open({
+          type: 2
+          ,area: ['50%', '50%']
+          ,title: '用户【'+customer_id+'】详情'
+          ,shade: 0.6 //遮罩透明度
+          ,maxmin: true //允许全屏最小化
+          ,anim: 0 //0-6的动画形式，-1不开启
+          ,content: user_form_view+'?customer_id='+customer_id+'&type=view'
+      });
+  }
+
+  function checkOrderDetail(order_id,order_sn){
+      layer.open({
+          type: 2
+          ,area: ['90%', '80%']
+          ,title: '订单【'+order_sn+'】详情'
+          ,shade: 0.6 //遮罩透明度
+          ,maxmin: true //允许全屏最小化
+          ,anim: 0 //0-6的动画形式，-1不开启
+          ,content:order_detail_form+ '?order_id='+order_id+'&type=edit'
+      });
+  }
+
+</script>
+</html>

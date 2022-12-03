@@ -92,6 +92,7 @@
         </set>
         where customer_addr_id = #{customer_addr_id}
     </update>
+
     <delete id="deleteAddress">
         delete from DoggyPets.Customer_Address
         <where>

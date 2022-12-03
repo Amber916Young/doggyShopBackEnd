@@ -59,7 +59,9 @@ public class CommentsController {
                 customer.setUuid(null);
                 tmp.setCustomer(customer);
                 List<String> list = new ArrayList<>();
-                for (ImageRepo img :commentImage ) list.add(img.getImg_url());
+                for (ImageRepo img :commentImage ) {
+                    list.add(img.getImg_url());
+                }
                 tmp.setCommentImage(list);
             }
             queryComment(tmp,good_id);

@@ -61,9 +61,7 @@ public class WebOrderController {
     @SneakyThrows
     @ResponseBody
     @GetMapping("/detail/queryAll")
-    public HttpResult detailqueryAll(Page page,
-                                     @RequestParam("limit") int limit,
-                                     HttpServletRequest request) {
+    public HttpResult detailqueryAll(Page page, @RequestParam("limit") int limit, HttpServletRequest request) {
         String keyword = request.getParameter("keyword");
         HashMap<String,Object> map = new HashMap<>();
         String order_id = request.getParameter("order_id");
