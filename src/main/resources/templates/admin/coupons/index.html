@@ -73,13 +73,13 @@
                           <script type="text/html" id="checkCustomer">
                               <a  href="javascript:;"  onclick="checkCustomer('{{d.customer_id}}'  )" class="layui-table-link" >{{ d.customer_id }}</a>
                           </script>
-                          <script type="text/html" id="rateLabel">
-                              {{#  if(d.rate <= 2.0){ }}
-                              <span class="layui-badge">赤</span>
-                              {{#  } else if(d.rate > 2.0 && d.rate <4){ }}
+                          <script type="text/html" id="statusLabel">
+                              {{#  if(d.status == 2){ }}
+                              <span class="layui-badge">已过期</span>
+                              {{#  } else if(d.status == 1){ }}
                               <span class="layui-badge layui-bg-orange">橙</span>
-                              {{#  } else if(d.rate > 2.0 && d.rate <4){ }}
-                              <span class="layui-badge layui-bg-blue">蓝</span>
+                              {{#  } else if(d.status == 0){ }}
+                              <span class="layui-badge layui-bg-blue">未使用</span>
                               {{#  } else { }}
                               <span class="layui-badge layui-bg-black">黑</span>
                               {{#  } }}
@@ -121,6 +121,7 @@
 <script type="text/javascript">
   var ItemId = "Item3_1";
 
+  var status = -1
 
   /*<![CDATA[*/
   layui.use(['table','layer'], function(){
@@ -128,7 +129,7 @@
     var form = layui.form;
     form.on('submit(searchBtn)', function(data){
       var field = data.field;
-        field.rate = rate
+        field.status = status
       table.reload('tableview', {
         page:1
         ,where: field
@@ -139,30 +140,29 @@
       form.on('radio(statusKey)', function(data){
           var jsonData={}
           rate = data.value
-          jsonData.rate = rate
+          jsonData.status = status
           table.reload('tableview', {
               page:1
               ,where: jsonData
           });
       });
 
-  // ,where:{
-  //     "rate":rate,
-  // }
       table.render({
            elem: '#tableview'
           ,url: coupon_queryAll //模拟接口
           ,toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
           ,defaultToolbar: ['filter', 'exports', 'print']
           ,title: '评论管理'
-
+          ,where:{
+              "status":status,
+          }
           ,cols: [
             [
                  {type: 'checkbox', fixed: 'left'}
                 ,{field: 'coupon_id', width: 100, title: 'id',  align: 'center', sort: true}
                 ,{field: 'customer_id', title: '客户id', align: 'center', width:130,templet: '#checkCustomer'}
                 ,{field: 'batch_id', title: '批次ID', align: 'center',  minWidth: 130}
-                ,{field: 'status', title: '使用状态',  align: 'center', minWidth: 200, sort: true}
+                ,{field: 'status', title: '使用状态',  align: 'center', minWidth: 200, sort: true, templet: '#statusLabel'}
                 ,{field: 'order_id', title: '订单id',  align: 'center', minWidth: 130, sort: true,templet: '#checkOrderDetail'}
                 ,{field: 'received_time', title: '领取时间', align: 'center',  minWidth: 80, sort: true}
                 ,{field: 'validate_time', title: '有效日期', align: 'center',  minWidth: 80, sort: true}
@@ -196,7 +196,7 @@
             jsonData["ids"] = ids;
             jsonData["code"] = value;
             var params = JSON.stringify(jsonData);
-            ajaxPost(comment_delete, params, function (data) {
+            ajaxPost(coupon_delete, params, function (data) {
                 layer.msg(data.msg, {time: 3000, icon: 1});
                 layui.table.reload('tableview'); //重载表格
             });
@@ -207,11 +207,11 @@
           layer.open({
               type: 2
               ,area: ['50%', '80%']
-              ,title: '订单【'+data.order_sn+'】详情'
+              ,title: '优惠券【'+data.order_sn+'】详情'
               ,shade: 0.6 //遮罩透明度
               ,maxmin: true //允许全屏最小化
               ,anim: 0 //0-6的动画形式，-1不开启
-              ,content: 'order/addform?order_id='+id+'&type=edit'
+              ,content: coupon_form_view+'?coupon_id='+id+'&type=edit'
               ,success: function(layero, index){
               }
               ,cancel: function(){
@@ -225,11 +225,12 @@
           layer.open({
               type: 2
               ,area: ['50%', '80%']
-              ,title: '订单【'+data.order_sn+'】详情'
+              ,title: '优惠券【'+data.order_sn+'】详情'
               ,shade: 0.6 //遮罩透明度
               ,maxmin: true //允许全屏最小化
               ,anim: 0 //0-6的动画形式，-1不开启
-              ,content: order_master_form_view+'?order_id='+id+'&type=view'
+              ,content: coupon_form_view+'?coupon_id='+id+'&type=view'
+
           });
 
       }
@@ -258,7 +259,7 @@
             layer.close(index);
             jsonData["code"] = value;
             var params = JSON.stringify(jsonData);
-            ajaxPost(comment_delete, params, function (data) {
+            ajaxPost(coupon_delete, params, function (data) {
                 layer.msg(data.msg, {time: 3000, icon: 1});
                 layui.table.reload('tableview'); //重载表格
             });

@@ -64,6 +64,11 @@ var comment_delete = "/web/comment/deletes"
 
 // coupon
 var coupon_queryAll = "/web/coupon/queryAll"
+var coupon_form_view = "/view/coupon/addform"
+
 var coupon_batch_queryAll = "/web/coupon/batch/queryAll"
 var coupon_rule_queryAll = "/web/coupon/rule/queryAll"
 
+var coupon_delete = "/web/coupon/deletes"
+var coupon_form_add = "/web/coupon/add"
+var coupon_form_update = "/web/coupon/edit"
