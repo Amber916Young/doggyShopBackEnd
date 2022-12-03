@@ -21,6 +21,6 @@ public interface SysCommentMapper {
 
     int pageQueryCommentCount(Page page);
 
-    @Delete("delete from DoggyPets.comment where comment_id = {id}")
+    @Delete("delete from DoggyPets.comment where comment_id = #{id} ")
     void deleteComment(HashMap<String, Object> param);
 }

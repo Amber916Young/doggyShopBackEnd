@@ -155,6 +155,9 @@
         select * from DoggyPets.Coupon
         <where>
             1=1
+            <if test="data.status !=null">
+                and status = #{data.status}
+            </if>
             <if test="keyWord !=null">
                 and   concat(
                 IFNULL(customer_id,'')
@@ -170,6 +173,9 @@
         select count(1) from DoggyPets.Coupon
         <where>
             1=1
+            <if test="data.status !=null">
+                and status = #{data.status}
+            </if>
             <if test="keyWord !=null">
                 and   concat(
                 IFNULL(customer_id,'')
@@ -276,10 +282,10 @@
             <if test="received_time != null">
                 received_time = #{received_time},
             </if>
-            <if test="validate_time != null">
+            <if test="validate_time != null and validate_time != 'null'">
                 validate_time = #{validate_time},
             </if>
-            <if test="used_time != null">
+            <if test="used_time != null and used_time != 'null'">
                 used_time = #{used_time},
             </if>
         </set>
@@ -324,6 +330,35 @@
                 and  customer_id=#{customer_id}
             </if>
         </where>
+    </select>
+    <select id="queryCouponBatch" resultType="com.doggy.entity.Coupon_batch">
+        select * from DoggyPets.Coupon_Batch
+        <where>
+            1=1
+            <if test="batch_id !=null">
+                and  batch_id=#{batch_id}
+            </if>
+            <if test="rule_id !=null">
+                and  rule_id=#{rule_id}
+            </if>
+
+            <if test="coupon_name !=null">
+                and  coupon_name=#{coupon_name}
+            </if>
+        </where>
+    </select>
+    <select id="queryRule" resultType="com.doggy.entity.Rule">
+        select * from DoggyPets.rule
+        <where>
+            1=1
+            <if test="rule_id !=null">
+                and  rule_id=#{rule_id}
+            </if>
+            <if test="name !=null">
+                and  name=#{name}
+            </if>
+        </where>
+
     </select>
 
 

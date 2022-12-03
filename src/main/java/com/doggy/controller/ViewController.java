@@ -1,21 +1,11 @@
 package com.doggy.controller;
 
-import com.doggy.entity.Category;
-import com.doggy.entity.Goods;
-import com.doggy.entity.ImageRepo;
-import com.doggy.entity.OrderDetail;
 import com.doggy.service.SysGoodsService;
 import com.doggy.service.SysOrderService;
-import com.doggy.utils.HttpResult;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * @ClassName:ViewController
@@ -55,6 +45,18 @@ public class ViewController {
         return "/admin/coupons/index";
     }
 
+
+    @GetMapping("/coupon/batch/addform")
+    synchronized public String coupons_Batch() {
+        return "/admin/coupons_batch/addform_coupons_batch";
+    }
+
+    @SneakyThrows
+    @GetMapping("/coupon/addform")
+    synchronized public String coupon_form() {
+        return "/admin/coupons/addform";
+    }
+
     @SneakyThrows
     @GetMapping("/order")
     synchronized public String page_order() {
@@ -75,11 +77,6 @@ public class ViewController {
         return "/admin/user/addform";
     }
 
-    @SneakyThrows
-    @GetMapping("/user/coupon/addform")
-    synchronized public String coupon_form() {
-        return "/admin/coupon/addform";
-    }
 
 
 

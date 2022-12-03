@@ -89,4 +89,12 @@ public class SysCouponService {
     public Coupon queryCoupon(HashMap<String, Object> map) {
        return couponMapper.queryCoupon(map);
     }
+
+    public Coupon_batch queryCouponBatch(HashMap<String, Object> map) {
+        return couponMapper.queryCouponBatch(map);
+    }
+
+    public Rule queryRule(HashMap<String, Object> map) {
+        return couponMapper.queryRule(map);
+    }
 }

@@ -44,8 +44,16 @@ public class WebCouponsController {
     @GetMapping("/queryAll")
     public HttpResult couponQueryAll(Page page, @RequestParam("limit") int limit, HttpServletRequest request) {
         String keyword = request.getParameter("keyword");
+        String status = request.getParameter("status");
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("status",status);
+
+        if(Integer.parseInt(status) == -1){
+            map.put("status",null);
+        }
         page.setKeyWord(keyword);
         page.setRows(limit);
+        page.setData(map);
         List<Coupon> lists = couponService.pageQuerycCouponData(page);
         int totals=couponService.pageQueryCouponCount(page);
         return HttpResult.ok(0,"查询成功", lists,totals);
@@ -53,12 +61,19 @@ public class WebCouponsController {
 
     @SneakyThrows
     @ResponseBody
-    @GetMapping("/detail")
-    public HttpResult detailCoupon(HttpServletRequest request) {
-        String coupon_id = request.getParameter("coupon_id");
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("coupon_id",coupon_id);
-        Coupon coupon = couponService.queryCoupon(map);
+    @PostMapping("/detail")
+    public HttpResult detailCoupon(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        Coupon coupon = couponService.queryCoupon(param);
+//        map.put("batch_id", coupon.getBatch_id());
+//        Coupon_batch batch = couponService.queryCouponBatch(map);
+//        map.put("rule_id",batch.getRule_id());
+//        Rule rule = couponService.queryRule(map);
+//        map = new HashMap<>();
+//        map.put("batch",batch);
+//        map.put("coupon",coupon);
+//        map.put("rule",rule);
         return HttpResult.ok("查询成功", coupon);
     }
 
@@ -80,6 +95,12 @@ public class WebCouponsController {
     public HttpResult  couponEdit(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        if("null".equals(param.get("used_time").toString().trim())){
+            param.put("used_time",null);
+        }
+        if("null".equals(param.get("validate_time").toString().trim())){
+            param.put("validate_time",null);
+        }
         couponService.updateCoupon(param);
         return HttpResult.ok("新增成功");
     }

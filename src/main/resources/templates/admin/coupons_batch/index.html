@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:replace="fragments/headerPage :: headerPage"></div>
-<title>优惠券管理</title>
+<title>优惠券发放管理</title>
 <style>
   img{
     height: 100px;
@@ -21,18 +21,20 @@
       <div class="layui-card-header">
         <div class="layui-breadcrumb" lay-filter="breadcrumb">
           <a lay-href="">产品</a>
-          <a><cite>优惠券管理</cite></a>
+          <a><cite>优惠券发放管理</cite></a>
         </div>
       </div>
       <div class="layui-card-body">
 
           <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
               <ul class="layui-tab-title">
-                  <li class="layui-this">用户优惠券领取</li>
-                  <li>优惠券发放</li>
+                  <li>用户优惠券领取</li>
+                  <li  class="layui-this">优惠券发放</li>
                   <li>优惠规则</li>
               </ul>
               <div class="layui-tab-content">
+                  <div class="layui-tab-item">
+                  </div>
                   <div class="layui-tab-item layui-show">
                       <div class="layui-fluid">
                           <div class="layui-form    layuiadmin-card-header-auto">
@@ -50,44 +52,12 @@
                                       <button class="layui-btn btn-batch" data-type="add">新增</button>
                                   </div>
                               </div>
-                              <div class="layui-form-item">
-                                  <div class="layui-input-block"   >
-                                      <input type="radio" name="key" lay-filter="statusKey"  value="-1" title="全部" checked>
-                                      <input type="radio" name="key" lay-filter="statusKey"  value="0" title="未使用">
-                                      <input type="radio" name="key" lay-filter="statusKey"  value="1" title="已使用">
-                                      <input type="radio" name="key" lay-filter="statusKey" value="2" title="已过期">
-                                      <input type="radio" name="key" lay-filter="statusKey" value="3" title="冻结">
-                                  </div>
-
-
-                              </div>
                           </div>
                           <table id="tableview" lay-filter="tableview"></table>
                           <script type="text/html" id="toolbar">
                               <div class="layui-btn-container"></div>
                           </script>
 
-                          <script type="text/html" id="checkOrderDetail">
-                              <a  href="javascript:;"  onclick="checkOrderDetail('{{d.order_id}}' ,'{{d.order_sn}}'  )" class="layui-table-link" >{{ d.order_sn }}</a>
-                          </script>
-                          <script type="text/html" id="checkCustomer">
-                              <a  href="javascript:;"  onclick="checkCustomer('{{d.customer_id}}'  )" class="layui-table-link" >{{ d.customer_id }}</a>
-                          </script>
-
-                          <script type="text/html" id="checkCouponBatch">
-                              <a  href="javascript:;"  onclick="checkCouponBatch('{{d.batch_id}}'  )" class="layui-table-link" >{{ d.customer_id }}</a>
-                          </script>
-                          <script type="text/html" id="statusLabel">
-                              {{#  if(d.status == 2){ }}
-                              <span class="layui-badge">已过期</span>
-                              {{#  } else if(d.status == 1){ }}
-                              <span class="layui-badge layui-bg-orange">橙</span>
-                              {{#  } else if(d.status == 0){ }}
-                              <span class="layui-badge layui-bg-blue">未使用</span>
-                              {{#  } else { }}
-                              <span class="layui-badge layui-bg-black">黑</span>
-                              {{#  } }}
-                          </script>
 
                           <script type="text/html" id="tableTool">
                               <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
@@ -95,12 +65,6 @@
                           </script>
 
                       </div>
-                  </div>
-                  <div class="layui-tab-item">
-
-
-
-
                   </div>
                   <div class="layui-tab-item"></div>
               </div>
@@ -124,7 +88,6 @@
 <script type="text/javascript">
   var ItemId = "Item3_1";
 
-  var status = -1
   var table
   var form
   /*<![CDATA[*/
@@ -133,7 +96,6 @@
       form = layui.form;
       form.on('submit(searchBtn)', function(data){
           var field = data.field;
-            field.status = status
           table.reload('tableview', {
             page:1
             ,where: field
@@ -143,8 +105,6 @@
       //触发radio单选
       form.on('radio(statusKey)', function(data){
           var jsonData={}
-          status = data.value
-          jsonData.status = status
           table.reload('tableview', {
               page:1
               ,where: jsonData
@@ -153,25 +113,22 @@
 
       table.render({
            elem: '#tableview'
-          ,url: coupon_queryAll //模拟接口
+          ,url: coupon_batch_queryAll //模拟接口
           ,toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
           ,defaultToolbar: ['filter', 'exports', 'print']
-          ,title: '优惠券管理'
-          ,where:{
-              "status":status,
-          }
+          ,title: '优惠券发放管理'
           ,cols: [
             [
                  {type: 'checkbox', fixed: 'left'}
-                ,{field: 'coupon_id', width: 100, title: 'id',  align: 'center', sort: true}
-                ,{field: 'customer_id', title: '客户id', align: 'center', width:130,templet: '#checkCustomer'}
-                ,{field: 'batch_id', title: '批次ID', align: 'center',  minWidth: 130,templet: '#checkCouponBatch'}
-                ,{field: 'status', title: '使用状态',  align: 'center', minWidth: 130, sort: true, templet: '#statusLabel'}
-                ,{field: 'order_id', title: '订单id',  align: 'center', minWidth: 130, sort: true,templet: '#checkOrderDetail'}
-                ,{field: 'received_time', title: '领取时间', align: 'center',  minWidth: 200, sort: true}
-                ,{field: 'validate_time', title: '有效日期', align: 'center',  minWidth: 200, sort: true}
-                ,{field: 'used_time', title: '使用时间', align: 'center',  minWidth: 200, sort: true}
-                ,{field: 'modified_time', title: '修改时间', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'batch_id', width: 100, title: 'id',  align: 'center', sort: true}
+                ,{field: 'batch_name', title: '批次名称', align: 'center', width:130}
+                ,{field: 'coupon_name', title: '劵名称', align: 'center',  minWidth: 130}
+                ,{field: 'rule_id', title: '规则ID',  align: 'center', minWidth: 200, sort: true}
+                ,{field: 'total_count', title: '总数量',  align: 'center', minWidth: 130, sort: true}
+                ,{field: 'assign_count', title: '已发放劵数量', align: 'center',  minWidth: 80, sort: true}
+                ,{field: 'used_count', title: '已使用劵数量', align: 'center',  minWidth: 80, sort: true}
+                ,{field: 'create_time', title: '创建时间', align: 'center',  minWidth: 200, sort: true}
+                ,{field: 'modified_time', title: '修改时间', align: 'center',  minWidth: 80, sort: true}
                 ,{title: '操作', minWidth: 200, align: 'center', fixed: 'right', toolbar: '#tableTool'}
             ]
           ]
@@ -186,7 +143,7 @@
 
     table.on('tool(tableview)', function(obj){
       var data = obj.data;
-      var id = data.coupon_id
+      var id = data.order_id
       if(obj.event === 'del'){
         layer.prompt({
           formType: 1
@@ -199,7 +156,7 @@
             jsonData["ids"] = ids;
             jsonData["code"] = value;
             var params = JSON.stringify(jsonData);
-            ajaxPost(coupon_delete, params, function (data) {
+            ajaxPost(coupon_batch_delete, params, function (data) {
                 layer.msg(data.msg, {time: 3000, icon: 1});
                 layui.table.reload('tableview'); //重载表格
             });
@@ -214,7 +171,7 @@
               ,shade: 0.6 //遮罩透明度
               ,maxmin: true //允许全屏最小化
               ,anim: 0 //0-6的动画形式，-1不开启
-              ,content: coupon_form_view+'?coupon_id='+id+'&type=edit'
+              ,content: coupon_batch_form_view+'?coupon_id='+id+'&type=edit'
               ,success: function(layero, index){
               }
               ,cancel: function(){
@@ -249,7 +206,7 @@
             layer.close(index);
             jsonData["code"] = value;
             var params = JSON.stringify(jsonData);
-            ajaxPost(coupon_delete, params, function (data) {
+            ajaxPost(coupon_batch_delete, params, function (data) {
                 layer.msg(data.msg, {time: 3000, icon: 1});
                 layui.table.reload('tableview'); //重载表格
             });
@@ -264,40 +221,7 @@
     });
   })
   /*]]>*/
-  function checkCouponBatch(batch_id){
-      layer.open({
-          type: 2
-          ,area: ['50%', '50%']
-          ,title: '优惠券批次【'+batch_id+'】详情'
-          ,shade: 0.6 //遮罩透明度
-          ,maxmin: true //允许全屏最小化
-          ,anim: 0 //0-6的动画形式，-1不开启
-          ,content: coupon_batch_form_view+'?batch_id='+id+'&type=edit'
-      });
-  }
-  function checkCustomer(customer_id){
-      layer.open({
-          type: 2
-          ,area: ['50%', '50%']
-          ,title: '用户【'+customer_id+'】详情'
-          ,shade: 0.6 //遮罩透明度
-          ,maxmin: true //允许全屏最小化
-          ,anim: 0 //0-6的动画形式，-1不开启
-          ,content: user_form_view+'?customer_id='+customer_id+'&type=view'
-      });
-  }
 
-  function checkOrderDetail(order_id,order_sn){
-      layer.open({
-          type: 2
-          ,area: ['90%', '80%']
-          ,title: '订单【'+order_sn+'】详情'
-          ,shade: 0.6 //遮罩透明度
-          ,maxmin: true //允许全屏最小化
-          ,anim: 0 //0-6的动画形式，-1不开启
-          ,content:order_detail_form+ '?order_id='+order_id+'&type=edit'
-      });
-  }
 
 </script>
 </html>

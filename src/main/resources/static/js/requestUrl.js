@@ -75,3 +75,10 @@ var coupon_rule_queryAll = "/web/coupon/rule/queryAll"
 var coupon_delete = "/web/coupon/deletes"
 var coupon_form_add = "/web/coupon/add"
 var coupon_form_update = "/web/coupon/edit"
+
+// coupon batch
+var coupon_batch_form_view = "/view/coupon/batch/addform"
+
+var coupon_batch_delete = "/web/coupon/batch/deletes"
+var coupon_batch_form_add = "/web/coupon/batch/add"
+var coupon_batch_form_update = "/web/coupon/batch/edit"
