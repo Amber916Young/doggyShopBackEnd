@@ -85,4 +85,8 @@ public class SysCouponService {
     public void updateCoupon(HashMap<String, Object> param) {
         couponMapper.updateCoupon(param);
     }
+
+    public Coupon queryCoupon(HashMap<String, Object> map) {
+       return couponMapper.queryCoupon(map);
+    }
 }

@@ -21,5 +21,4 @@ public class Coupon {
     private String validate_time; //有效日期
     private String used_time;  //使用时间
     private String modified_time;
-    private String create_time;
 }

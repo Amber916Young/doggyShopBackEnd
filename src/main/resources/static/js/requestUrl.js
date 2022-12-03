@@ -28,6 +28,8 @@ var order_master_form_view = "/view/order/addform"
 var order_master_detail = "/web/order/master/detail"
 var order_detail_form_view = "/web/order/detail/queryAll"
 var order_detail_form = "/view/order/detail/addform"
+var order_detail_update = "/web/order/detail/update"
+var order_detail_add = "/web/order/detail/add"
 
 
 // product index
@@ -65,6 +67,7 @@ var comment_delete = "/web/comment/deletes"
 // coupon
 var coupon_queryAll = "/web/coupon/queryAll"
 var coupon_form_view = "/view/coupon/addform"
+var coupon_detail = "/web/coupon/detail"
 
 var coupon_batch_queryAll = "/web/coupon/batch/queryAll"
 var coupon_rule_queryAll = "/web/coupon/rule/queryAll"

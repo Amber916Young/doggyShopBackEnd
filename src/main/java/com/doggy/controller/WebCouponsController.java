@@ -53,6 +53,19 @@ public class WebCouponsController {
 
     @SneakyThrows
     @ResponseBody
+    @GetMapping("/detail")
+    public HttpResult detailCoupon(HttpServletRequest request) {
+        String coupon_id = request.getParameter("coupon_id");
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("coupon_id",coupon_id);
+        Coupon coupon = couponService.queryCoupon(map);
+        return HttpResult.ok("查询成功", coupon);
+    }
+
+
+
+    @SneakyThrows
+    @ResponseBody
     @PostMapping("/add")
     public HttpResult  couponAdd(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");

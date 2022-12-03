@@ -40,4 +40,6 @@ public interface SysCouponMapper {
     void insertCoupon(HashMap<String, Object> param);
 
     void updateCoupon(HashMap<String, Object> param);
+
+    Coupon queryCoupon(HashMap<String, Object> map);
 }

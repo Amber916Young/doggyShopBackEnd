@@ -1,0 +1,100 @@
+
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+  img{
+    height: 150px;
+    width: auto;
+  }
+
+  .center{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+  }
+  .layui-input, .layui-textarea {
+      width: 70%;
+  }
+
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form  layui-form-pane" style="padding: 20px 20px;">
+    <div id="Info">
+        <div class="layui-collapse">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">分发优惠券</h2>
+                <div class="layui-colla-content layui-show">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">批次ID</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="order_sn"  value="'+data.order_sn+'"   placeholder="openid" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户ID</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="customer_id"  placeholder="下单人ID" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <input type="button" lay-submit lay-filter="form-submit-add" value="分发" class="layui-btn">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="center">
+
+    </div>
+
+
+    <br> <br> <br>
+</div>
+
+<script>
+  var coupon_id = null;
+  var type = null;
+  var  element
+  layui.use(['form','table','element'], function(){
+    var $ = layui.$
+    ,form = layui.form
+
+    element = layui.element;
+    coupon_id = getParam('coupon_id');
+    type = getParam('type');
+    if(type === "edit")
+        loadData(coupon_id)
+
+    form.on('submit(form-submit)', function(data){
+      var field = data.field;
+      ajaxPost(order_detail_update, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+    form.on('submit(form-submit-add)', function(data){
+      var field = data.field;
+      ajaxPost(order_detail_add, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+  })
+
+
+
+  function loadData(id){
+      var jsonData={}
+      jsonData.order_id= id;
+      var params = JSON.stringify(jsonData);
+      ajaxPost(coupon_detail, params, function (data) {
+          var str = '';
+          var data = data.data
+          str = ''
+          $("#Info").html(str)
+          element.render();
+      });
+  }
+</script>

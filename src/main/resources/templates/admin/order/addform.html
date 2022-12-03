@@ -188,22 +188,20 @@
     type = getParam('type');
     loadData(order_id)
 
-    form.on('submit(form-submit)', function(data){
+
+  form.on('submit(form-submit)', function(data){
       var field = data.field;
-      var url = "/web/order/detail/update"
-      ajaxPost(url, JSON.stringify(field), function (data) {
+      ajaxPost(order_detail_update, JSON.stringify(field), function (data) {
           layer.msg(data.msg, {time: 3000, icon: 1});
       });
-    });
+  });
 
-    form.on('submit(form-submit-add)', function(data){
+  form.on('submit(form-submit-add)', function(data){
       var field = data.field;
-      var url = "/web/order/detail/add"
-      ajaxPost(url, JSON.stringify(field), function (data) {
+      ajaxPost(order_detail_add, JSON.stringify(field), function (data) {
           layer.msg(data.msg, {time: 3000, icon: 1});
       });
-    });
-
+  });
 
 
   })

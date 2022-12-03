@@ -75,6 +75,13 @@ public class ViewController {
         return "/admin/user/addform";
     }
 
+    @SneakyThrows
+    @GetMapping("/user/coupon/addform")
+    synchronized public String coupon_form() {
+        return "/admin/coupon/addform";
+    }
+
+
 
 
     @SneakyThrows
