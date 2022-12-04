@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class Page implements Serializable {
     //当前页
     private Integer page=1;
-    private int id;
+    private Integer id = null;
     //页大小
     private Integer rows=5;
 

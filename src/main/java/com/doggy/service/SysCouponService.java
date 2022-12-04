@@ -97,4 +97,8 @@ public class SysCouponService {
     public Rule queryRule(HashMap<String, Object> map) {
         return couponMapper.queryRule(map);
     }
+
+    public List<Rule> queryRuleAll(HashMap<String, Object> map) {
+        return couponMapper.queryRuleAll(map);
+    }
 }

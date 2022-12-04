@@ -26,4 +26,6 @@ public class Rule {
     private int use_range; //使用范围，0—全场，1—商品
     private String modified_time;
     private String create_time;
+    private String goods_list;
+
 }

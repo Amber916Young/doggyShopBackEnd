@@ -1,0 +1,184 @@
+
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+  img{
+    height: 150px;
+    width: auto;
+  }
+
+  .center{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+  }
+
+  .flex{
+      display: flex;
+  }
+
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form  layui-form-pane" style="padding: 20px 20px;">
+    <div id="Info">
+        <div class="layui-collapse">
+            <div class="layui-colla-item" >
+                <h2 class="layui-colla-title">优惠券规则</h2>
+                <div class="layui-colla-content layui-show" id="coupon_rule_show">
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">辅助时间选择器</label>
+            <div class="layui-input-inline flex">
+                <input type="text" id="test1" name="key"   placeholder="key" autocomplete="off" class="layui-input">
+                <input type="button" lay-submit lay-filter="form-submit-add" value="新增Text类型" class="layui-btn">
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <br> <br> <br>
+</div>
+
+<script>
+  var flag = null;
+  var type = null;
+  var  element
+  var form
+  var laydate
+  layui.use(['form','table','element','laydate'], function(){
+    var $ = layui.$
+      form = layui.form
+      laydate = layui.laydate;
+    element = layui.element;
+    flag = getParam('flag');
+    type = getParam('type');
+    loadDataAdd()
+    form.on('submit(form-submit-add)', function(data){
+      var field = data.field;
+        field.rule_id = rule_id
+      ajaxPost(coupon_rule_form_add, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+      laydate.render({
+          elem: '#test'
+          ,type: 'datetime'
+      });
+  })
+
+  function loadDataAdd(){
+      var str = '';
+      var type = 0
+      str =  '   <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">规则名称</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="text" name="name"    placeholder="规则名称" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">使用状态</label>\n' +
+          '                        <div class="layui-input-block" id="status_select">\n' +
+          '                            <select name="status"  lay-filter="status_select">\n'
+                                          if (type === 0){
+                                              str +=' <option value="0" selected >满减</option>\n'
+                                                  + '  <option value="1" >折扣</option>\n'
+                                          }else if (type === 1){
+                                              str +=' <option value="0" >满减</option>\n'
+                                                  + '  <option value="1" selected>折扣</option>\n'
+                                          }
+
+      str  += '                            </select>\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">规则</label>\n' +
+          '                        <div class="layui-input-block" id="ruleJson">\n' +
+          '                              <textarea placeholder="{ \n' +
+          '  threshold: 5.01 // 使用门槛 \n' +
+          '  amount: 5 // 优惠金额 \n' +
+          '  use_range: 3 // 使用范围，0—全场，1—商家，2—类别，3—商品 \n' +
+          '  commodity_id: 10 // 商品 id \n' +
+          '  receive_count: 1 // 每个用户可以领取的数量 \n' +
+          '  is_mutex: true // 是否互斥，true 表示互斥，false 表示不互斥 \n' +
+          '  receive_started_at: 2020-11-1 00:08:00 // 领取开始时间 \n' +
+          '  receive_ended_at: 2020-11-6 00:08:00 // 领取结束时间 \n' +
+          '  use_started_at: 2020-11-1 00:00:00 // 使用开始时间 \n' +
+          '  use_ended_at: 2020-11-11 11:59:59 // 使用结束时间 \n' +
+          '}\n"   lay-verify="required" name="rule_content" class="layui-textarea"></textarea>\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '    <div class="center">\n' +
+          '          <div class="layui-form-item">\n' +
+          '              <div class="layui-input-block">\n' +
+          '                  <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">\n' +
+          '              </div>\n' +
+          '          </div>\n' +
+          '    </div>'
+
+      $("#coupon_rule_show").html(str)
+      form.render();
+      element.render();
+  }
+
+
+  function loadData(id){
+      var jsonData={}
+      jsonData.order_id= id;
+      var params = JSON.stringify(jsonData);
+      ajaxPost(coupon_detail, params, function (data) {
+          var str = '';
+          var rule = data.data
+          var type = rule.type
+          str =  '   <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">规则名称</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="name"  value="'+rule.name+'"   placeholder="openid" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">使用状态</label>\n' +
+              '                        <div class="layui-input-block" id="status_select">\n' +
+              '                            <select name="status"  lay-filter="status_select">\n'
+                                          if (type === 0){
+                                              str +=' <option value="0" selected >满减</option>\n'
+                                                  + '  <option value="1" >折扣</option>\n'
+                                          }else if (type === 1){
+                                              str +=' <option value="0" >满减</option>\n'
+                                                  + '  <option value="1" selected>折扣</option>\n'
+                                          }
+
+          str  += '                            </select>\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">规则</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                              <textarea placeholder="规则"   lay-verify="required" name="rule_content" class="layui-textarea">'+rule.rule_content+'</textarea>\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">最新修改时间</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input readonly type="text" name="modified_time"  value="'+rule.modified_time+' " placeholder="最新修改时间" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '    <div class="center">\n' +
+              '          <div class="layui-form-item">\n' +
+              '              <div class="layui-input-block">\n' +
+              '                  <input type="button" lay-submit lay-filter="form-submit-edit" value="修改" class="layui-btn">\n' +
+              '              </div>\n' +
+              '          </div>\n' +
+              '    </div>'
+          $("#coupon_rule_show").html(str)
+          form.render();
+          element.render();
+
+      });
+  }
+</script>

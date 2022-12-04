@@ -1,10 +1,168 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>支付页面</title>
-</head>
-<body>
 
-</body>
-</html>
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+    img{
+        height: 150px;
+        width: auto;
+    }
+
+    .center{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    .layui-form-pane .layui-form-label{
+        width: 20%;
+    }
+    .layui-input, .layui-textarea{
+        width: 80%;
+    }
+    .flex{
+        display: flex;
+    }
+
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form  layui-form-pane" style="padding: 20px 20px;">
+    <div id="Info">
+        <div class="layui-collapse">
+            <div class="layui-colla-item" id="coupon_rule_show">
+                <h2 class="layui-colla-title">【商品】满减️优惠券规则，需要指定商品，有门槛</h2>
+                <div class="layui-colla-content layui-show" >
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">规则名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" required placeholder="规则名称" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">优惠金额</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="amount" required  placeholder="优惠金额" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">门槛金额</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="threshold" required  placeholder="门槛金额" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户领取数量</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="receive_count" required  placeholder="每个用户可以领取的数量" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">领取时间范围</label>
+                        <div class="layui-input-block flex">
+                            <input type="text" id="receive_started_at" required name="receive_started_at"   placeholder="领取开始时间" autocomplete="off" class="layui-input">
+                            <input type="text" id="receive_ended_at" required name="receive_ended_at"   placeholder="领取结束时间" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">使用时间范围</label>
+                        <div class="layui-input-block flex">
+                            <input type="text" id="use_started_at" required name="use_started_at"   placeholder="使用开始时间" autocomplete="off" class="layui-input">
+                            <input type="text" id="use_ended_at" required name="use_ended_at"   placeholder="使用结束时间" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="center">
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+    <br> <br> <br>
+</div>
+
+<script>
+    var flag = null
+    var type = null
+    var  element
+    var form
+    var laydate
+    var use_range = null //使用范围，0—全场，1—商品
+    layui.use(['form','table','element','laydate'], function(){
+        var $ = layui.$
+        form = layui.form
+        laydate = layui.laydate;
+        element = layui.element;
+        flag = getParam('flag');
+        type = getParam('type');
+        if(type === "Discount"){
+            if(flag === 0){
+                loadData1()
+            }else if(flag === 1){
+                loadData2()
+            }
+        }else if(type === "DirectDiscount"){
+            if(flag === 0){
+                loadData3()
+            }else if(flag === 1){
+                loadData4()
+            }
+        }else if(type === "FullDiscount"){
+            if(flag === 0){
+                loadData5()
+            }else if(flag === 1){
+                loadData6()
+            }
+        }
+        form.on('submit(form-submit-add)', function(data){
+            var field = data.field;
+            field.type = type
+            field.use_range = flag
+            ajaxPost(coupon_rule_form_add, JSON.stringify(field), function (data) {
+                layer.msg(data.msg, {time: 3000, icon: 1});
+            });
+        });
+
+
+
+    })
+    function loadDate(){
+        laydate.render({
+            elem: '#receive_started_at'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem: '#receive_ended_at'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem: '#use_started_at'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem: '#use_ended_at'
+            ,type: 'datetime'
+        });
+    }
+
+    function loadData1(){
+        var str = '';
+        var type = 0
+        str =  ''
+
+        // $("#coupon_rule_show").html(str)
+        form.render();
+        element.render();
+    }
+
+
+</script>

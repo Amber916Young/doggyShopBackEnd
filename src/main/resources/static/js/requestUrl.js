@@ -48,6 +48,7 @@ var product_category_form_detail = "/web/product/category/detail"
 var product_goods_update_flag = "/web/product/goods/update/flag"
 var product_goods_delete = "/web/product/goods/deletes"
 var product_goods_queryAll = "/web/product/goods/queryAll"
+var product_goods_queryAll_allKind = "/web/product/goods/queryAll/allKind"
 
 
 // product goods form
@@ -81,6 +82,7 @@ var coupon_batch_view = "/view/coupon/batch/index"
 
 var coupon_batch_form_view = "/view/coupon/batch/addform"
 var coupon_batch_detail = "/web/coupon/batch/detail"
+var coupon_batch_rule_query = "/web/coupon/batch/rule/option"
 var coupon_batch_delete = "/web/coupon/batch/deletes"
 var coupon_batch_form_add = "/web/coupon/batch/add"
 var coupon_batch_form_update = "/web/coupon/batch/edit"

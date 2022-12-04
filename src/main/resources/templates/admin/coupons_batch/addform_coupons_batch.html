@@ -11,8 +11,12 @@
       display: flex;
       justify-content: center;
   }
-  .layui-form-label {
-      width: 130px;
+
+  .layui-form-pane .layui-form-label{
+      width: 20%;
+  }
+  .layui-input, .layui-textarea{
+      width: 80%;
   }
 
 </style>
@@ -124,7 +128,9 @@
     form.on('submit(form-submit-add)', function(data){
       var field = data.field;
         field.batch_id = batch_id
-      ajaxPost(coupon_batch_form_add, JSON.stringify(field), function (data) {
+        console.info(field)
+
+        ajaxPost(coupon_batch_form_add, JSON.stringify(field), function (data) {
           layer.msg(data.msg, {time: 3000, icon: 1});
       });
     });
@@ -136,8 +142,8 @@
       str =
           '                    <div class="layui-form-item">\n' +
           '                        <label class="layui-form-label">规则ID</label>\n' +
-          '                        <div class="layui-input-block">\n' +
-          '                            <input type="text" name="rule_id"    placeholder="规则ID" autocomplete="off" class="layui-input">\n' +
+          '                        <div class="layui-input-block"  id="ruleID">\n' +
+          // '                            <input type="text" name="rule_id"    placeholder="规则ID" autocomplete="off" class="layui-input">\n' +
           '                        </div>\n' +
           '                    </div>\n' +
           '                    <div class="layui-form-item">\n' +
@@ -146,18 +152,18 @@
           '                            <input type="number" name="total_count"  placeholder="总数量" autocomplete="off" class="layui-input">\n' +
           '                        </div>\n' +
           '                    </div>\n' +
-          '                    <div class="layui-form-item">\n' +
-          '                        <label class="layui-form-label">已发放劵数量</label>\n' +
-          '                        <div class="layui-input-block">\n' +
-          '                            <input type="number" name="assign_count"    placeholder="已发放劵数量" autocomplete="off" class="layui-input">\n' +
-          '                        </div>\n' +
-          '                    </div>\n' +
-          '                    <div class="layui-form-item">\n' +
-          '                        <label class="layui-form-label">已使用劵数量</label>\n' +
-          '                        <div class="layui-input-block">\n' +
-          '                            <input type="number" name="used_count"  placeholder="已使用劵数量" autocomplete="off" class="layui-input">\n' +
-          '                        </div>\n' +
-          '                    </div>\n' +
+          // '                    <div class="layui-form-item">\n' +
+          // '                        <label class="layui-form-label">已发放劵数量</label>\n' +
+          // '                        <div class="layui-input-block">\n' +
+          // '                            <input type="number" name="assign_count"    placeholder="已发放劵数量" autocomplete="off" class="layui-input">\n' +
+          // '                        </div>\n' +
+          // '                    </div>\n' +
+          // '                    <div class="layui-form-item">\n' +
+          // '                        <label class="layui-form-label">已使用劵数量</label>\n' +
+          // '                        <div class="layui-input-block">\n' +
+          // '                            <input type="number" name="used_count"  placeholder="已使用劵数量" autocomplete="off" class="layui-input">\n' +
+          // '                        </div>\n' +
+          // '                    </div>\n' +
           '                    <div class="layui-form-item">\n' +
           '                        <label class="layui-form-label">批次名称</label>\n' +
           '                        <div class="layui-input-block">\n' +
@@ -170,27 +176,71 @@
           '                            <input type="text" name="coupon_name" placeholder="劵名称" autocomplete="off" class="layui-input">\n' +
           '                        </div>\n' +
           '                    </div>\n' +
-          '                    <div class="layui-form-item">\n' +
+          '                    <div class="layui-form-item center">\n' +
           '                        <div class="layui-input-block">\n' +
           '                            <input type="button" lay-submit lay-filter="form-submit-add" value="确认" class="layui-btn">\n' +
           '                        </div>\n' +
           '                    </div>'
       $("#coupon_batch_show").html(str)
       element.render();
+
+      loadSelectList2()
+
   }
 
+  function loadSelectList(cid) {
+      var jsonData = {};
+      jsonData.rid = cid
+      var params = JSON.stringify(jsonData);
+      ajaxPost(coupon_batch_rule_query, params, function (data) {
+          var res = data.data
+          var size = res.length;
+          var selectStr = ""
+          // console.info(cid)
+          selectStr += "<select name=\"rule_id\" >";
+          for (var i = 0; i < size; i++) {
+              var node = ('<option value="' + res[i].id + '">' + res[i].title + '</option>');
+              if (parseInt(cid) === res[i].id) {
+                  node = ('<option value="' + res[i].id + '" selected>' + res[i].title + '</option>');
+              }
+              selectStr += node;
+          }
+          selectStr += "</select>";
+          $("#categoryList").html(selectStr)
+          form.render();
+      });
+  }
+
+
+  function loadSelectList2() {
+      var jsonData = {};
+      var params = JSON.stringify(jsonData);
+      ajaxPost(coupon_batch_rule_query, params, function (data) {
+          var res = data.data
+          var size = res.length;
+          var selectStr = ""
+          selectStr += "<select name=\"rule_id\" >";
+          for (var i = 0; i < size; i++) {
+              var node = ('<option value="' + res[i].rule_id + '">' + res[i].name + '</option>');
+              selectStr += node;
+          }
+          selectStr += "</select>";
+          $("#ruleID").html(selectStr)
+          form.render();
+      });
+  }
   function loadData(id){
       var jsonData={}
       jsonData.order_id= id;
       var params = JSON.stringify(jsonData);
-      ajaxPost(coupon_batch_detail, params, function (data) {
+      ajaxPost(coupon_batch_rule_query, params, function (data) {
           var str = '';
           var batch = data.data
           str =
               '                    <div class="layui-form-item">\n' +
               '                        <label class="layui-form-label">规则ID</label>\n' +
-              '                        <div class="layui-input-block">\n' +
-              '                            <input type="text" name="rule_id"  value="'+batch.rule_id+'"    placeholder="规则ID" autocomplete="off" class="layui-input">\n' +
+              '                        <div class="layui-input-block"  id="ruleID">\n' +
+              // '                            <input type="text" name="rule_id"  value="'+batch.rule_id+'"    placeholder="规则ID" autocomplete="off" class="layui-input">\n' +
               '                        </div>\n' +
               '                    </div>\n' +
               '                    <div class="layui-form-item">\n' +
@@ -223,13 +273,15 @@
               '                            <input type="text" name="coupon_name" value="'+batch.coupon_name+'"     placeholder="coupon_name" autocomplete="off" class="layui-input">\n' +
               '                        </div>\n' +
               '                    </div>\n' +
-              '                    <div class="layui-form-item">\n' +
+              '                    <div class="layui-form-item center">\n' +
               '                        <div class="layui-input-block">\n' +
               '                            <input type="button"   lay-submit lay-filter="form-submit-edit" value="确认" class="layui-btn">\n' +
               '                        </div>\n' +
               '                    </div>'
           $("#coupon_batch_show").html(str)
           element.render();
+
+
       });
   }
 </script>

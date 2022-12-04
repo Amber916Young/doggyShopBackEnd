@@ -12,8 +12,32 @@
             <if test="type != null">
                 type,
             </if>
-            <if test="rule_content != null">
-                rule_content,
+            <if test="receive_started_at != null">
+                receive_started_at,
+            </if>
+            <if test="receive_ended_at != null">
+                receive_ended_at,
+            </if>
+            <if test="use_started_at != null">
+                use_started_at,
+            </if>
+            <if test="use_ended_at != null">
+                use_ended_at,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="threshold != null">
+                threshold,
+            </if>
+            <if test="receive_count != null">
+                receive_count,
+            </if>
+            <if test="use_range != null">
+                use_range,
+            </if>
+            <if test="goods_list != null">
+                goods_list,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -23,9 +47,34 @@
             <if test="type != null">
                 #{type},
             </if>
-            <if test="rule_content != null">
-                #{rule_content},
+            <if test="receive_started_at != null">
+                #{receive_started_at},
             </if>
+            <if test="receive_ended_at != null">
+                #{receive_ended_at},
+            </if>
+            <if test="use_started_at != null">
+                #{use_started_at},
+            </if>
+            <if test="use_ended_at != null">
+                #{use_ended_at},
+            </if>
+            <if test="amount != null">
+                #{amount},
+            </if>
+            <if test="threshold != null">
+                #{threshold},
+            </if>
+            <if test="receive_count != null">
+                #{receive_count},
+            </if>
+            <if test="use_range != null">
+                #{use_range},
+            </if>
+            <if test="goods_list != null">
+                #{goods_list},
+            </if>
+
         </trim>
     </insert>
     <insert id="insertCouponBatch">
@@ -49,7 +98,6 @@
             <if test="coupon_name != null">
                 coupon_name,
             </if>
-
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="rule_id != null">
@@ -354,6 +402,16 @@
             </if>
         </where>
 
+    </select>
+    <select id="queryRuleAll" resultType="com.doggy.entity.Rule">
+        select * from DoggyPets.rule
+        <where>
+            1=1
+            <if test="receive_ended_at !=null">
+                and  receive_ended_at &gt;=  #{receive_ended_at}
+            </if>
+
+        </where>
     </select>
 
 

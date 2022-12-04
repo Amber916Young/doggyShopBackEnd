@@ -44,15 +44,14 @@
                                           <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                                       </button>
                                   </div>
-                                  <div class="layui-inline">
-                                      <button class="layui-btn btn-batch layui-btn-danger " data-type="batchdel">批量删除</button>
-                                      <button class="layui-btn btn-batch" data-type="add">新增</button>
-                                  </div>
                               </div>
                           </div>
                           <table id="tableview" lay-filter="tableview"></table>
                           <script type="text/html" id="toolbar">
-                              <div class="layui-btn-container"></div>
+                              <div class="layui-btn-container">
+                                  <button class="layui-btn btn-batch  layui-btn-sm layui-btn-danger " data-type="batchdel">批量删除</button>
+                                  <button class="layui-btn btn-batch  layui-btn-sm" data-type="add">新增</button>
+                              </div>
                           </script>
 
 
@@ -185,7 +184,7 @@
         add: function () {
             layer.open({
                 type: 2
-                ,area: ['500px', '400px']
+                ,area: ['50%', '80%']
                 ,title: '新增商品大类信息'
                 ,shade: 0.6 //遮罩透明度
                 ,maxmin: true //允许全屏最小化

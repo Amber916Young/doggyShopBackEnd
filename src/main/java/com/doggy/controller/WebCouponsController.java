@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.doggy.entity.*;
 import com.doggy.service.*;
 import com.doggy.utils.HttpResult;
+import com.doggy.utils.JsonUtils;
 import com.doggy.utils.Page;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLDecoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -87,14 +89,6 @@ public class WebCouponsController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         Coupon coupon = couponService.queryCoupon(param);
-//        map.put("batch_id", coupon.getBatch_id());
-//        Coupon_batch batch = couponService.queryCouponBatch(map);
-//        map.put("rule_id",batch.getRule_id());
-//        Rule rule = couponService.queryRule(map);
-//        map = new HashMap<>();
-//        map.put("batch",batch);
-//        map.put("coupon",coupon);
-//        map.put("rule",rule);
         return HttpResult.ok("查询成功", coupon);
     }
 
@@ -209,6 +203,18 @@ public class WebCouponsController {
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         couponService.updateCouponBatch(param);
         return HttpResult.ok("修改成功");
+    }
+
+
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/batch/rule/option")
+    public HttpResult batchOption(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        param.put("receive_ended_at",new Date());
+        List<Rule> rules = couponService.queryRuleAll(param);
+        return HttpResult.ok("查询成功",rules);
     }
 
 

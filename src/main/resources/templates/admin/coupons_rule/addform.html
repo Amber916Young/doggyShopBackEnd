@@ -11,7 +11,12 @@
       display: flex;
       justify-content: center;
   }
-
+  .layui-form-pane .layui-form-label{
+      width: 20%;
+  }
+  .layui-input, .layui-textarea{
+      width: 80%;
+  }
   .flex{
       display: flex;
   }
@@ -20,36 +25,92 @@
 <div  xmlns:th="http://www.thymeleaf.org" class="layui-form  layui-form-pane" style="padding: 20px 20px;">
     <div id="Info">
         <div class="layui-collapse">
-            <div class="layui-colla-item" >
-                <h2 class="layui-colla-title">优惠券规则</h2>
-                <div class="layui-colla-content layui-show" id="coupon_rule_show">
+            <div class="layui-colla-item" id="coupon_rule_show">
+<!--                <h2 class="layui-colla-title">【商品】折扣优惠券规则，需要指定商品</h2>-->
+<!--                <div class="layui-colla-content layui-show" >-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">规则名称</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input type="text" name="name" required lay-verify="required" placeholder="规则名称" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">优惠卷类型</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <select  disabled>-->
+<!--                                <option value="0" selected>满减</option>-->
+<!--                                <option value="1">折扣</option>-->
+<!--                                <option value="2">直减</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">使用范围</label>-->
+<!--                        <div class="layui-input-block" >-->
+<!--                            <input type="radio" disabled  value="0" title="全场" checked>-->
+<!--                            <input type="radio"  disabled value="1" title="商品" >-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">优惠金额</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input type="number" name="amount" required lay-verify="required"  placeholder="优惠金额" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">折扣</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input type="number" name="discount" required lay-verify="required"  placeholder="折扣 90% 打九折" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">门槛金额</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input type="number" name="threshold" required lay-verify="required"  placeholder="门槛金额" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">用户领取数量</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input type="number" name="receive_count" required lay-verify="required"  placeholder="每个用户可以领取的数量" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
 
+
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">领取时间范围</label>-->
+<!--                        <div class="layui-input-block flex">-->
+<!--                            <input type="text" id="receive_started_at" required lay-verify="required" name="receive_started_at"   placeholder="领取开始时间" autocomplete="off" class="layui-input">-->
+<!--                            <input type="text" id="receive_ended_at" required lay-verify="required" name="receive_ended_at"   placeholder="领取结束时间" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">使用时间范围</label>-->
+<!--                        <div class="layui-input-block flex">-->
+<!--                            <input type="text" id="use_started_at" required lay-verify="required" name="use_started_at"   placeholder="使用开始时间" autocomplete="off" class="layui-input">-->
+<!--                            <input type="text" id="use_ended_at" required lay-verify="required" name="use_ended_at"   placeholder="使用结束时间" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="center">-->
+<!--                        <div class="layui-form-item">-->
+<!--                            <div class="layui-input-block">-->
+<!--                                <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+            <script type="text/html" id="img_urlTpL">
+                <img  src="{{d.img_url}}"  />
+            </script>
+            <script type="text/html" id="toolbar">
+                <div class="layui-btn-container">
+                    <button class="layui-btn  layui-btn-sm  " onclick="CheckId()">请勾选商品，完成后点击此按钮</button>
                 </div>
-            </div>
-
+            </script>
         </div>
 
-<!--
-        {
-          threshold: 5.01 // 使用门槛
-          amount: 5 // 优惠金额
-          use_range: 3 // 使用范围，0—全场，1—商家，2—类别，3—商品
-          commodity_id: 10 // 商品 id
-          receive_count: 1 // 每个用户可以领取的数量
-          is_mutex: true // 是否互斥，true 表示互斥，false 表示不互斥
-          receive_started_at: 2020-11-1 00:08:00 // 领取开始时间
-          receive_ended_at: 2020-11-6 00:08:00 // 领取结束时间
-          use_started_at: 2020-11-1 00:00:00 // 使用开始时间
-          use_ended_at: 2020-11-11 11:59:59 // 使用结束时间
-        }
--->
-        <div class="layui-form-item">
-            <label class="layui-form-label">辅助时间选择器</label>
-            <div class="layui-input-inline flex">
-                <input type="text" id="test1" name="key"   placeholder="key" autocomplete="off" class="layui-input">
-                <input type="button" lay-submit lay-filter="form-submit-add" value="新增Text类型" class="layui-btn">
-            </div>
-        </div>
+
     </div>
 
 
@@ -59,150 +120,426 @@
 </div>
 
 <script>
-  var rule_id = null;
-  var type = null;
+  var flag = null
+  var type = null
   var  element
   var form
   var laydate
+  var table
+  var use_range = null //使用范围，0—全场，1—商品
+  var jsonData = new Array();
   layui.use(['form','table','element','laydate'], function(){
     var $ = layui.$
       form = layui.form
+      table = layui.table;
       laydate = layui.laydate;
-    element = layui.element;
-      rule_id = getParam('rule_id');
-    type = getParam('type');
-    if(type === "edit")
-        loadData(rule_id)
-    else loadDataAdd()
-    form.on('submit(form-submit)', function(data){
-      var field = data.field;
-        field.rule_id = rule_id
-        ajaxPost(coupon_rule_form_update, JSON.stringify(field), function (data) {
-          layer.msg(data.msg, {time: 3000, icon: 1});
-      });
-    });
+      element = layui.element;
+      flag = parseInt(getParam('flag'))
+      type = parseInt(getParam('type'))
+      console.info(flag)
+      console.info(type)
 
+      //优惠卷类型, 0-满减, 1-折扣 2—直减
+    if(type === 1){
+        if(flag === 0){
+            loadData1()
+        }else if(flag === 1){
+            loadData2()
+        }
+    }else if(type === 2){
+        if(flag === 0){
+            loadData3()
+        }else if(flag === 1){
+            loadData4()
+        }
+    }else if(type === 0){
+        if(flag === 0){
+            loadData5()
+        }else if(flag === 1){
+            loadData6()
+        }
+    }
+      form.render();
+      element.render();
+      loadDate()
     form.on('submit(form-submit-add)', function(data){
       var field = data.field;
-        field.rule_id = rule_id
+        field.type = type
+        field.use_range = flag
+        field.goods_list = JSON.stringify(jsonData)
+        console.info(field)
       ajaxPost(coupon_rule_form_add, JSON.stringify(field), function (data) {
           layer.msg(data.msg, {time: 3000, icon: 1});
       });
     });
 
+
+  })
+  function CheckId(){
+      var checkStatus = table.checkStatus('tableview')
+          , checkData = checkStatus.data;
+      jsonData = new Array()
+      if (checkData.length === 0) {
+          return layer.msg('请选择数据');
+      } else {
+          for (var i = 0; i < checkData.length; i++) {
+              jsonData.push(checkData[i].id);
+          }
+      }
+      return layer.msg('您已选择完成');
+
+  }
+  function loadDate(){
       laydate.render({
-          elem: '#test'
+          elem: '#receive_started_at'
           ,type: 'datetime'
       });
-  })
-
-  function loadDataAdd(){
-      var str = '';
-      var type = 0
-      str =  '   <div class="layui-form-item">\n' +
-          '                        <label class="layui-form-label">规则名称</label>\n' +
-          '                        <div class="layui-input-block">\n' +
-          '                            <input type="text" name="name"    placeholder="规则名称" autocomplete="off" class="layui-input">\n' +
-          '                        </div>\n' +
-          '                    </div>\n' +
-          '                    <div class="layui-form-item">\n' +
-          '                        <label class="layui-form-label">使用状态</label>\n' +
-          '                        <div class="layui-input-block" id="status_select">\n' +
-          '                            <select name="status"  lay-filter="status_select">\n'
-                                          if (type === 0){
-                                              str +=' <option value="0" selected >满减</option>\n'
-                                                  + '  <option value="1" >折扣</option>\n'
-                                          }else if (type === 1){
-                                              str +=' <option value="0" >满减</option>\n'
-                                                  + '  <option value="1" selected>折扣</option>\n'
-                                          }
-
-      str  += '                            </select>\n' +
-          '                        </div>\n' +
-          '                    </div>\n' +
-          '                    <div class="layui-form-item">\n' +
-          '                        <label class="layui-form-label">规则</label>\n' +
-          '                        <div class="layui-input-block" id="ruleJson">\n' +
-          '                              <textarea placeholder="{ \n' +
-          '  threshold: 5.01 // 使用门槛 \n' +
-          '  amount: 5 // 优惠金额 \n' +
-          '  use_range: 3 // 使用范围，0—全场，1—商家，2—类别，3—商品 \n' +
-          '  commodity_id: 10 // 商品 id \n' +
-          '  receive_count: 1 // 每个用户可以领取的数量 \n' +
-          '  is_mutex: true // 是否互斥，true 表示互斥，false 表示不互斥 \n' +
-          '  receive_started_at: 2020-11-1 00:08:00 // 领取开始时间 \n' +
-          '  receive_ended_at: 2020-11-6 00:08:00 // 领取结束时间 \n' +
-          '  use_started_at: 2020-11-1 00:00:00 // 使用开始时间 \n' +
-          '  use_ended_at: 2020-11-11 11:59:59 // 使用结束时间 \n' +
-          '}\n"   lay-verify="required" name="rule_content" class="layui-textarea"></textarea>\n' +
-          '                        </div>\n' +
-          '                    </div>\n' +
-          '    <div class="center">\n' +
-          '          <div class="layui-form-item">\n' +
-          '              <div class="layui-input-block">\n' +
-          '                  <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">\n' +
-          '              </div>\n' +
-          '          </div>\n' +
-          '    </div>'
-
-      $("#coupon_rule_show").html(str)
-      form.render();
-      element.render();
-  }
-
-
-  function loadData(id){
-      var jsonData={}
-      jsonData.order_id= id;
-      var params = JSON.stringify(jsonData);
-      ajaxPost(coupon_detail, params, function (data) {
-          var str = '';
-          var rule = data.data
-          var type = rule.type
-          str =  '   <div class="layui-form-item">\n' +
-              '                        <label class="layui-form-label">规则名称</label>\n' +
-              '                        <div class="layui-input-block">\n' +
-              '                            <input type="text" name="name"  value="'+rule.name+'"   placeholder="openid" autocomplete="off" class="layui-input">\n' +
-              '                        </div>\n' +
-              '                    </div>\n' +
-              '                    <div class="layui-form-item">\n' +
-              '                        <label class="layui-form-label">使用状态</label>\n' +
-              '                        <div class="layui-input-block" id="status_select">\n' +
-              '                            <select name="status"  lay-filter="status_select">\n'
-                                          if (type === 0){
-                                              str +=' <option value="0" selected >满减</option>\n'
-                                                  + '  <option value="1" >折扣</option>\n'
-                                          }else if (type === 1){
-                                              str +=' <option value="0" >满减</option>\n'
-                                                  + '  <option value="1" selected>折扣</option>\n'
-                                          }
-
-          str  += '                            </select>\n' +
-              '                        </div>\n' +
-              '                    </div>\n' +
-              '                    <div class="layui-form-item">\n' +
-              '                        <label class="layui-form-label">规则</label>\n' +
-              '                        <div class="layui-input-block">\n' +
-              '                              <textarea placeholder="规则"   lay-verify="required" name="rule_content" class="layui-textarea">'+rule.rule_content+'</textarea>\n' +
-              '                        </div>\n' +
-              '                    </div>\n' +
-              '                    <div class="layui-form-item">\n' +
-              '                        <label class="layui-form-label">最新修改时间</label>\n' +
-              '                        <div class="layui-input-block">\n' +
-              '                            <input readonly type="text" name="modified_time"  value="'+rule.modified_time+' " placeholder="最新修改时间" autocomplete="off" class="layui-input">\n' +
-              '                        </div>\n' +
-              '                    </div>\n' +
-              '    <div class="center">\n' +
-              '          <div class="layui-form-item">\n' +
-              '              <div class="layui-input-block">\n' +
-              '                  <input type="button" lay-submit lay-filter="form-submit-edit" value="修改" class="layui-btn">\n' +
-              '              </div>\n' +
-              '          </div>\n' +
-              '    </div>'
-          $("#coupon_rule_show").html(str)
-          form.render();
-          element.render();
-
+      laydate.render({
+          elem: '#receive_ended_at'
+          ,type: 'datetime'
+      });
+      laydate.render({
+          elem: '#use_started_at'
+          ,type: 'datetime'
+      });
+      laydate.render({
+          elem: '#use_ended_at'
+          ,type: 'datetime'
       });
   }
+
+
+  function loadData4(){
+      var str = '<h2 class="layui-colla-title">【商品】直减优惠券规则，需要指定商品，没有门槛</h2>\n' +
+          '                <div class="layui-colla-content layui-show" >\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">规则名称</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="text" name="name" required lay-verify="required" placeholder="规则名称" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                  \n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">优惠金额</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="amount" required lay-verify="required"  placeholder="优惠金额" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                 \n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">用户领取数量</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="receive_count" required lay-verify="required"  placeholder="每个用户可以领取的数量" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <div class="layui-input-block" style="    margin: 0;">\n' +
+          '                            <table id="tableview" lay-filter="tableview"></table>\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">领取时间范围</label>\n' +
+          '                        <div class="layui-input-block flex">\n' +
+          '                            <input type="text" id="receive_started_at" required lay-verify="required" name="receive_started_at"   placeholder="领取开始时间" autocomplete="off" class="layui-input">\n' +
+          '                            <input type="text" id="receive_ended_at" required lay-verify="required" name="receive_ended_at"   placeholder="领取结束时间" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">使用时间范围</label>\n' +
+          '                        <div class="layui-input-block flex">\n' +
+          '                            <input type="text" id="use_started_at" required lay-verify="required" name="use_started_at"   placeholder="使用开始时间" autocomplete="off" class="layui-input">\n' +
+          '                            <input type="text" id="use_ended_at" required lay-verify="required" name="use_ended_at"   placeholder="使用结束时间" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="center">\n' +
+          '                        <div class="layui-form-item">\n' +
+          '                            <div class="layui-input-block">\n' +
+          '                                <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">\n' +
+          '                            </div>\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                </div>'
+      $("#coupon_rule_show").html(str)
+      loadGoods();
+  }
+  function loadData6(){
+      var str =' <h2 class="layui-colla-title">【商品】满减️优惠券规则，需要指定商品，有门槛</h2>\n' +
+          '                <div class="layui-colla-content layui-show" >\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">规则名称</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="text" name="name" required lay-verify="required" placeholder="规则名称" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">优惠金额</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="amount" required lay-verify="required"  placeholder="优惠金额" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">门槛金额</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="threshold" required lay-verify="required"  placeholder="门槛金额" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">用户领取数量</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="receive_count" required lay-verify="required"  placeholder="每个用户可以领取的数量" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <div class="layui-input-block" style="    margin: 0;">\n' +
+          '                            <table id="tableview" lay-filter="tableview"></table>\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">领取时间范围</label>\n' +
+          '                        <div class="layui-input-block flex">\n' +
+          '                            <input type="text" id="receive_started_at" required lay-verify="required" name="receive_started_at"   placeholder="领取开始时间" autocomplete="off" class="layui-input">\n' +
+          '                            <input type="text" id="receive_ended_at" required lay-verify="required" name="receive_ended_at"   placeholder="领取结束时间" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">使用时间范围</label>\n' +
+          '                        <div class="layui-input-block flex">\n' +
+          '                            <input type="text" id="use_started_at" required lay-verify="required" name="use_started_at"   placeholder="使用开始时间" autocomplete="off" class="layui-input">\n' +
+          '                            <input type="text" id="use_ended_at" required lay-verify="required" name="use_ended_at"   placeholder="使用结束时间" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="center">\n' +
+          '                        <div class="layui-form-item">\n' +
+          '                            <div class="layui-input-block">\n' +
+          '                                <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">\n' +
+          '                            </div>\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                </div>'
+      $("#coupon_rule_show").html(str)
+      loadGoods();
+  }
+  function loadData2(){
+      var str =' <h2 class="layui-colla-title">【商品】折扣优惠券规则，需要指定商品</h2>\n' +
+          '                <div class="layui-colla-content layui-show" >\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">规则名称</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="text" name="name" required lay-verify="required" placeholder="规则名称" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">折扣</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="discount" required lay-verify="required"  placeholder="折扣 90% 打九折" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">用户领取数量</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="receive_count" required lay-verify="required"  placeholder="每个用户可以领取的数量" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <div class="layui-input-block" style="    margin: 0;">\n' +
+          '                            <table id="tableview" lay-filter="tableview"></table>\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">领取时间范围</label>\n' +
+          '                        <div class="layui-input-block flex">\n' +
+          '                            <input type="text" id="receive_started_at" required lay-verify="required" name="receive_started_at"   placeholder="领取开始时间" autocomplete="off" class="layui-input">\n' +
+          '                            <input type="text" id="receive_ended_at" required lay-verify="required" name="receive_ended_at"   placeholder="领取结束时间" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">使用时间范围</label>\n' +
+          '                        <div class="layui-input-block flex">\n' +
+          '                            <input type="text" id="use_started_at" required lay-verify="required" name="use_started_at"   placeholder="使用开始时间" autocomplete="off" class="layui-input">\n' +
+          '                            <input type="text" id="use_ended_at" required lay-verify="required" name="use_ended_at"   placeholder="使用结束时间" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="center">\n' +
+          '                        <div class="layui-form-item">\n' +
+          '                            <div class="layui-input-block">\n' +
+          '                                <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">\n' +
+          '                            </div>\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                </div>'
+      $("#coupon_rule_show").html(str)
+      loadGoods();
+
+  }
+
+
+  function loadGoods(){
+      table.render({
+          elem: '#tableview'
+          ,url: product_goods_queryAll_allKind //模拟接口
+          ,toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
+          ,title: ''
+          ,cols: [
+              [
+                  {type: 'checkbox', fixed: 'left'}
+                  ,{field: 'id', width: 100, title: 'id',  align: 'center', sort: true}
+                  ,{field: 'title', title: '商品名称', align: 'center', width:200}
+                  ,{field: 'img_url', title: '商品图', align: 'center',style: '-moz-box-align: start;', minWidth: 150,templet: '#img_urlTpL'}
+                  ,{field: 'original_price', title: '价格', align: 'center',  minWidth: 130}
+                  ,{field: 'description', title: '描述', align: 'center',  minWidth: 300, fixed: 'right'}
+              ]
+          ]
+          ,page: true
+          ,limit: 30
+          ,limits: [10, 20, 30, 50, 100,150,200]
+          ,text: '暂无数据'
+      });
+  }
+  function loadData5(){
+      var str = '   <h2 class="layui-colla-title">【全场】满减券规则</h2>\n' +
+          '                <div class="layui-colla-content layui-show" >\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">规则名称</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="text" name="name" required lay-verify="required" placeholder="规则名称" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">优惠金额</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="amount" required lay-verify="required"  placeholder="优惠金额" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">门槛金额</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="threshold" required lay-verify="required"  placeholder="门槛金额" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">用户领取数量</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="receive_count" required lay-verify="required"  placeholder="每个用户可以领取的数量" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">领取时间范围</label>\n' +
+          '                        <div class="layui-input-block flex">\n' +
+          '                            <input type="text" id="receive_started_at" required lay-verify="required" name="receive_started_at"   placeholder="领取开始时间" autocomplete="off" class="layui-input">\n' +
+          '                            <input type="text" id="receive_ended_at" required lay-verify="required" name="receive_ended_at"   placeholder="领取结束时间" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">使用时间范围</label>\n' +
+          '                        <div class="layui-input-block flex">\n' +
+          '                            <input type="text" id="use_started_at" required lay-verify="required" name="use_started_at"   placeholder="使用开始时间" autocomplete="off" class="layui-input">\n' +
+          '                            <input type="text" id="use_ended_at" required lay-verify="required" name="use_ended_at"   placeholder="使用结束时间" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="center">\n' +
+          '                        <div class="layui-form-item">\n' +
+          '                            <div class="layui-input-block">\n' +
+          '                                <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">\n' +
+          '                            </div>\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                </div>';
+      $("#coupon_rule_show").html(str)
+  }
+
+
+  function loadData3(){
+      var str = '   <h2 class="layui-colla-title">【全场】直减券规则，无门槛</h2>\n' +
+          '                <div class="layui-colla-content layui-show" >\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">规则名称</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="text" name="name" required lay-verify="required" placeholder="规则名称" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">优惠金额</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="amount" required lay-verify="required"  placeholder="优惠金额" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">用户领取数量</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="receive_count" required lay-verify="required"  placeholder="每个用户可以领取的数量" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">领取时间范围</label>\n' +
+          '                        <div class="layui-input-block flex">\n' +
+          '                            <input type="text" id="receive_started_at" required lay-verify="required" name="receive_started_at"   placeholder="领取开始时间" autocomplete="off" class="layui-input">\n' +
+          '                            <input type="text" id="receive_ended_at" required lay-verify="required" name="receive_ended_at"   placeholder="领取结束时间" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">使用时间范围</label>\n' +
+          '                        <div class="layui-input-block flex">\n' +
+          '                            <input type="text" id="use_started_at" required lay-verify="required" name="use_started_at"   placeholder="使用开始时间" autocomplete="off" class="layui-input">\n' +
+          '                            <input type="text" id="use_ended_at" required lay-verify="required" name="use_ended_at"   placeholder="使用结束时间" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="center">\n' +
+          '                        <div class="layui-form-item">\n' +
+          '                            <div class="layui-input-block">\n' +
+          '                                <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">\n' +
+          '                            </div>\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                </div>';
+      $("#coupon_rule_show").html(str)
+  }
+
+
+  function loadData1(){
+      var str = '<h2 class="layui-colla-title">【全场】折扣---优惠券规则</h2>\n' +
+          '                <div class="layui-colla-content layui-show" >\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">规则名称</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="text" name="name" required lay-verify="required" placeholder="规则名称" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">折扣</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="discount" required lay-verify="required"  placeholder="折扣 90% 打九折" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">用户领取数量</label>\n' +
+          '                        <div class="layui-input-block">\n' +
+          '                            <input type="number" name="receive_count" required lay-verify="required"  placeholder="每个用户可以领取的数量" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">领取时间范围</label>\n' +
+          '                        <div class="layui-input-block flex">\n' +
+          '                            <input type="text" id="receive_started_at" required lay-verify="required" name="receive_started_at"   placeholder="领取开始时间" autocomplete="off" class="layui-input">\n' +
+          '                            <input type="text" id="receive_ended_at" required lay-verify="required" name="receive_ended_at"   placeholder="领取结束时间" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="layui-form-item">\n' +
+          '                        <label class="layui-form-label">使用时间范围</label>\n' +
+          '                        <div class="layui-input-block flex">\n' +
+          '                            <input type="text" id="use_started_at" required lay-verify="required" name="use_started_at"   placeholder="使用开始时间" autocomplete="off" class="layui-input">\n' +
+          '                            <input type="text" id="use_ended_at" required lay-verify="required" name="use_ended_at"   placeholder="使用结束时间" autocomplete="off" class="layui-input">\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                    <div class="center">\n' +
+          '                        <div class="layui-form-item">\n' +
+          '                            <div class="layui-input-block">\n' +
+          '                                <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">\n' +
+          '                            </div>\n' +
+          '                        </div>\n' +
+          '                    </div>\n' +
+          '                </div>';
+
+      $("#coupon_rule_show").html(str)
+  }
+
 </script>

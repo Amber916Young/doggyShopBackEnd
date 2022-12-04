@@ -3,13 +3,14 @@
 <div th:replace="fragments/headerPage :: headerPage"></div>
 <title>优惠券发放管理</title>
 <style>
-
+    .flex{
+        display: flex;
+        justify-content: space-around;
+    }
 </style>
 <body >
 <div >
-  <div >
     <div th:replace="fragments/headerSide :: headerSide"></div>
-  </div>
   <div class="col col-lg-2" style="    background: white;">
     <div th:replace="fragments/sidebarPage :: sidebarPage"></div>
   </div>
@@ -34,25 +35,57 @@
                   <div class="layui-tab-item"></div>
                   <div class="layui-tab-item layui-show">
                       <div class="layui-fluid">
-                          <div class="layui-form    layuiadmin-card-header-auto">
-                              <div class="layui-form-item">
-                                  <div class="layui-inline">
+                          <div class="layui-form layui-form-pane    layuiadmin-card-header-auto">
+                              <div class="layui-form-item flex">
+                                  <div class="layui-inline ">
                                       <input type="text" name="keyword" placeholder="模糊查询" autocomplete="off" class="layui-input">
                                   </div>
                                   <div class="layui-inline">
-                                      <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="searchBtn">
+                                      <button class="layui-btn " lay-submit lay-filter="searchBtn">
                                           <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                                       </button>
                                   </div>
-                                  <div class="layui-inline">
-                                      <button class="layui-btn btn-batch layui-btn-danger " data-type="batchdel">批量删除</button>
-                                      <button class="layui-btn btn-batch" data-type="add">新增</button>
+                                  <div class="flex">
+                                      <label class="layui-form-label">新增店铺券</label>
+                                      <div class="layui-inline">
+                                          <button class="layui-btn btn-batch" data-type="addDiscount">折扣券</button>
+                                          <button class="layui-btn layui-btn-danger btn-batch" data-type="addDirectDiscount">直减券</button>
+                                          <button class="layui-btn  layui-btn-warm btn-batch" data-type="addFullDiscount">满减券</button>
+                                      </div>
+
+                                      <label class="layui-form-label">新增商品券</label>
+                                      <div class="layui-inline">
+                                          <button class="layui-btn  layui-btn-primary layui-border-green btn-batch" data-type="addDiscount2">折扣券</button>
+                                          <button class="layui-btn   layui-btn-primary  layui-border-red  btn-batch" data-type="addDirectDiscount2">直减券</button>
+                                          <button class="layui-btn   layui-btn-primary layui-border-orange btn-batch" data-type="addFullDiscount2">满减券</button>
+                                      </div>
                                   </div>
+
                               </div>
                           </div>
                           <table id="tableview" lay-filter="tableview"></table>
                           <script type="text/html" id="toolbar">
-                              <div class="layui-btn-container"></div>
+                              <div class="layui-btn-container">
+                                      <button class="layui-btn btn-batch layui-btn-danger layui-btn-sm " data-type="batchdel">批量删除</button>
+                              </div>
+                          </script>
+
+<!--                          //优惠卷类型, 0-满减, 1-折扣 2—直减-->
+                          <script type="text/html" id="typeLabel">
+                              {{#  if(d.status == 0){ }}
+                              <span class="layui-badge layui-bg-orange">满减</span>
+                              {{#  } else if(d.status == 1){ }}
+                              <span class="layui-badge layui-bg-blue">折扣</span>
+                              {{#  } else { }}
+                              <span class="layui-badge layui-bg-black">直减</span>
+                              {{#  } }}
+                          </script>
+                          <script type="text/html" id="use_rangeLabel">
+                              {{#  if(d.status == 0){ }}
+                              <span class="layui-badge layui-bg-orange ">全场</span>
+                              {{#  } else { }}
+                              <span class="layui-badge layui-bg-blue">商品</span>
+                              {{#  } }}
                           </script>
                           <script type="text/html" id="tableTool">
                               <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
@@ -63,19 +96,10 @@
                   </div>
               </div>
           </div>
-
-
       </div>
-
     </div>
   </div>
-
-
-
-  </div>
 </div>
-
-
 </body>
 <div th:replace="fragments/footerPage :: footerPage"></div>
 
@@ -109,18 +133,18 @@
                  {type: 'checkbox', fixed: 'left'}
                 ,{field: 'rule_id', width: 100, title: 'id',  align: 'center', sort: true}
                 ,{field: 'name', title: '规则名称', align: 'center', width:130}
-                ,{field: 'type', title: '优惠卷类型', align: 'center',  minWidth: 130}
+                ,{field: 'type', title: '优惠卷类型', align: 'center',  minWidth: 130, templet: '#typeLabel'}
+                ,{field: 'use_range', title: '使用范围', align: 'center',  minWidth: 130, templet: '#use_rangeLabel'}
                 ,{field: 'receive_started_at', title: '领取开始时间', align: 'center',  minWidth: 200}
                 ,{field: 'receive_ended_at', title: '领取结束时间', align: 'center',  minWidth: 200}
                 ,{field: 'use_started_at', title: '使用开始时间', align: 'center',  minWidth: 200}
                 ,{field: 'use_ended_at', title: '使用结束时间', align: 'center',  minWidth: 200}
-                ,{field: 'amount', title: '优惠金额', align: 'center',  minWidth: 200}
-                ,{field: 'threshold', title: '门槛金额', align: 'center',  minWidth: 200}
-                ,{field: 'receive_count', title: '用户可以领取数量', align: 'center',  minWidth: 350}
-                ,{field: 'use_range', title: '使用范围(0—全场，1—商品)', align: 'center',  minWidth: 350}
+                ,{field: 'amount', title: '优惠金额', align: 'center',  minWidth: 130}
+                ,{field: 'threshold', title: '门槛金额', align: 'center',  minWidth: 130}
+                ,{field: 'receive_count', title: '用户可以领取数量', align: 'center',  minWidth: 200}
                 ,{field: 'create_time', title: '创建时间', align: 'center',  minWidth: 200, sort: true}
                 ,{field: 'modified_time', title: '修改时间', align: 'center',  minWidth: 200, sort: true}
-                ,{title: '操作', minWidth: 200, align: 'center', fixed: 'right', toolbar: '#tableTool'}
+                ,{title: '操作', minWidth: 150, align: 'center', fixed: 'right', toolbar: '#tableTool'}
             ]
           ]
           ,page: true
@@ -128,8 +152,6 @@
           ,limits: [10, 20, 30, 50, 100,150,200]
           ,text: '暂无数据'
     });
-
-
 
 
     table.on('tool(tableview)', function(obj){
@@ -174,26 +196,98 @@
       }
     });
 
-
+//优惠卷类型, 0-满减, 1-折扣 2—直减
     var active = {
-        add: function () {
+        addDiscount: function () {
             layer.open({
                 type: 2
                 ,area: ['70%', '80%']
-                ,title: '新增规则信息'
+                ,title: '【全场】折扣---优惠券规则'
                 ,shade: 0.6 //遮罩透明度
                 ,maxmin: true //允许全屏最小化
                 ,anim: 0 //0-6的动画形式，-1不开启
-                ,content: coupon_rule_form_view+'?rule_id=-1&type=view'
-                ,success: function(layero, index){
-                }
+                ,content: coupon_rule_form_view+'?type=1&flag=0'
                 ,cancel: function(){
                     layui.table.reload('tableview'); //重载表格
                 }
-                ,end : function(){
+            });
+        },
+        addDirectDiscount: function () {
+            layer.open({
+                type: 2
+                ,area: ['70%', '80%']
+                ,title: '【全场】直减券规则，无门槛'
+                ,shade: 0.6 //遮罩透明度
+                ,maxmin: true //允许全屏最小化
+                ,anim: 0 //0-6的动画形式，-1不开启
+                ,content: coupon_rule_form_view+'?type=2&flag=0'
+                ,cancel: function(){
+                    layui.table.reload('tableview'); //重载表格
                 }
             });
         },
+        addFullDiscount: function () {
+            layer.open({
+                type: 2
+                ,area: ['70%', '80%']
+                ,title: '【全场】满减券规则'
+                ,shade: 0.6 //遮罩透明度
+                ,maxmin: true //允许全屏最小化
+                ,anim: 0 //0-6的动画形式，-1不开启
+                ,content: coupon_rule_form_view+'?type=0&flag=0'
+                ,cancel: function(){
+                    layui.table.reload('tableview'); //重载表格
+                }
+            });
+        },
+        addDiscount2: function () {
+            layer.open({
+                type: 2
+                ,area: ['70%', '80%']
+                ,title: '【商品】折扣优惠券规则，需要指定商品'
+                ,shade: 0.6 //遮罩透明度
+                ,maxmin: true //允许全屏最小化
+                ,anim: 0 //0-6的动画形式，-1不开启
+                ,content: coupon_rule_form_view+'?type=1&flag=1'
+                ,cancel: function(){
+                    layui.table.reload('tableview'); //重载表格
+                }
+            });
+        },
+        addDirectDiscount2: function () {
+            layer.open({
+                type: 2
+                ,area: ['70%', '80%']
+                ,title: '【商品】直减优惠券规则，需要指定商品，没有门槛'
+                ,shade: 0.6 //遮罩透明度
+                ,maxmin: true //允许全屏最小化
+                ,anim: 0 //0-6的动画形式，-1不开启
+                ,content: coupon_rule_form_view+'?type=2&flag=1'
+                ,cancel: function(){
+                    layui.table.reload('tableview'); //重载表格
+                }
+            });
+        },
+        addFullDiscount2: function () {
+            layer.open({
+                type: 2
+                ,area: ['70%', '80%']
+                ,title: '【商品】直减优惠券规则，需要指定商品，没有门槛'
+                ,shade: 0.6 //遮罩透明度
+                ,maxmin: true //允许全屏最小化
+                ,anim: 0 //0-6的动画形式，-1不开启
+                ,content: coupon_rule_form_view+'?type=0&flag=1'
+                ,cancel: function(){
+                    layui.table.reload('tableview'); //重载表格
+                }
+            });
+        },
+
+
+
+
+
+
       batchdel: function () {
         var checkStatus = table.checkStatus('tableview')
                 , checkData = checkStatus.data;

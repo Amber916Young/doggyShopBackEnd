@@ -39,6 +39,17 @@ public class WebProductController {
     private String Delcode;
 
 
+
+    @SneakyThrows
+    @ResponseBody
+    @GetMapping("/goods/queryAll/allKind")
+    public HttpResult good_queryAll_allKind(Page page, @RequestParam("limit") int limit) {
+        page.setRows(limit);
+        List<Goods> lists = goodsService.pageQueryGoodData(page);
+        int totals=goodsService.pageQueryGoodCount(page);
+        return HttpResult.ok(0,"查询成功", lists,totals);
+    }
+
     @SneakyThrows
     @ResponseBody
     @GetMapping("/goods/queryAll")

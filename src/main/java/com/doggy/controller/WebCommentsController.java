@@ -119,7 +119,7 @@ public class WebCommentsController {
     @SneakyThrows
     @ResponseBody
     @PostMapping("/replies")
-    public HttpResult reply(@RequestBody String jsonData) {
+    public HttpResult replyComment(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         JSONObject json = JSONObject.parseObject(jsonData);
         String fid = json.getString("fid");
