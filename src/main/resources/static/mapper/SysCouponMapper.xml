@@ -139,9 +139,7 @@
             <if test="received_time != null">
                 received_time,
             </if>
-            <if test="validate_time != null">
-                validate_time,
-            </if>
+
             <if test="used_time != null">
                 used_time,
             </if>
@@ -162,9 +160,7 @@
             <if test="received_time != null">
                 #{received_time},
             </if>
-            <if test="validate_time != null">
-                #{validate_time},
-            </if>
+
             <if test="used_time != null">
                 #{used_time},
             </if>
@@ -434,7 +430,6 @@
                 and  customer_id =  #{id}
             </if>
         </where>
-        order by use_ended_at asc
         limit #{start},#{rows}
     </select>
     <select id="querycCouponBatchMap" resultType="com.doggy.entity.Coupon_batch">

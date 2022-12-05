@@ -37,6 +37,17 @@ public class OrderController {
 
     @SneakyThrows
     @ResponseBody
+    @PostMapping("/clear/cart")
+    synchronized public HttpResult Clear(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        int customer_id = Integer.parseInt(param.get("customer_id").toString());
+        orderService.deleteOrderCartAll(customer_id);
+        return HttpResult.ok("successfully");
+    }
+
+        @SneakyThrows
+    @ResponseBody
     @PostMapping("/payment/cart")
     synchronized public HttpResult MockPayment(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
@@ -305,17 +316,19 @@ public class OrderController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         modifyOrder_cart(param);
-        int customer_id = Integer.parseInt(param.get("customer_id").toString());
-        List<OrderCart> cartList= orderService.queryOrderCartList(param);
-        for( OrderCart orderCart : cartList){
-            int id = orderCart.getGood_id();
-            Goods goods = getGoodsAmountImages(customer_id,id);
-            orderCart.setGoods(goods);
-        }
-        param = new HashMap<>();
-        param.put("size",cartList.size());
-        param.put("cartList",cartList);
-        return HttpResult.ok("successfully",param);
+        return HttpResult.ok("successfully");
+
+//        int customer_id = Integer.parseInt(param.get("customer_id").toString());
+//        List<OrderCart> cartList= orderService.queryOrderCartList(param);
+//        for( OrderCart orderCart : cartList){
+//            int id = orderCart.getGood_id();
+//            Goods goods = getGoodsAmountImages(customer_id,id);
+//            orderCart.setGoods(goods);
+//        }
+//        param = new HashMap<>();
+//        param.put("size",cartList.size());
+//        param.put("cartList",cartList);
+//        return HttpResult.ok("successfully",param);
     }
     @SneakyThrows
     @ResponseBody

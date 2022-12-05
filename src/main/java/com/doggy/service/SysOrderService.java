@@ -86,4 +86,7 @@ public class SysOrderService {
          orderMapper.updateOrderDetail(map);
     }
 
+    public void deleteOrderCartAll(int customer_id) {
+         orderMapper.deleteOrderCartAll(customer_id);
+    }
 }

@@ -34,6 +34,64 @@ public class CouponsController {
     private SysCouponService couponService;
 
 
+
+    /**
+     * 查询可以领取的优惠券
+     * 注意如果此优惠券已经被领取过，那么从集合中删除
+     * @param jsonData
+     * @return
+     */
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/getOne")
+    public HttpResult getOneCoupon(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        Page page = new Page();
+        int limit = 5;
+        HashMap<String,Object> data = new HashMap<>();
+        int customer_id = Integer.parseInt(param.get("customer_id").toString());
+        page.setData(data);
+        page.setRows(limit);
+        page.setPage(1);
+        int start = page.getStart();
+        page.setStart(start);
+        page.setId(customer_id);
+        //status 0-未使用,1-已使用,2-已过期,3-冻结
+        data.put("status",0);
+        List<Coupon> couponList = couponService.querycCouponCustomerMap(page);
+        // 查询已经领取过并且可用的优惠券
+        data = new HashMap<>();
+        for(Coupon coupon : couponList){
+            // 查询优惠券批次
+            data.put("batch_id",coupon.getBatch_id());
+            Coupon_batch batch= couponService.queryCouponBatch(data);
+            // 查询规则
+            data.put("rule_id",batch.getRule_id());
+            // 是否过期 TODO 定时任务
+            data.put("use_ended_at",new Date());
+            Rule rule= couponService.queryRule(data);
+            if(rule == null) {
+                //过期了 更新Coupon表 没有使用但是过期了
+                HashMap<String,Object> updateMap = new HashMap<>();
+                updateMap.put("coupon_id",coupon.getCoupon_id());
+                updateMap.put("status",2); // 更新已经过期
+                couponService.updateCoupon(updateMap);
+            }else {
+                String  use_started_at = rule.getUse_started_at().substring(0,10);
+                String  use_ended_at = rule.getUse_ended_at().substring(0,10);
+                rule.setUse_ended_at(use_ended_at);
+                rule.setUse_started_at(use_started_at);
+                coupon.setRule(rule);
+                coupon.setCoupon_batch(batch);
+                return HttpResult.ok("查询成功",coupon);
+            }
+        }
+        return HttpResult.ok("暂无可用优惠券");
+    }
+
+
+
     /**
      * 领取的优惠券 修改状态
      * @param jsonData { coupon_id }
@@ -45,9 +103,18 @@ public class CouponsController {
     public HttpResult collectCoupons(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
-        param.put("status",2); // 更新已经过期
         try {
-            couponService.updateCoupon(param);
+            // 更新
+            Coupon_batch batch = couponService.queryCouponBatch(param);
+            int assign_count = batch.getAssign_count();
+            int total_count = batch.getTotal_count();
+            if(assign_count == total_count){
+                return HttpResult.error("优惠券已经领取完了～");
+            }
+            param.put("assign_count",assign_count+1);
+            couponService.updateCouponBatch(param);
+            // 新增
+            couponService.insertCoupon(param);
             return HttpResult.ok("领取成功");
         }catch (Exception e){
             return HttpResult.error(e.toString());
@@ -90,6 +157,10 @@ public class CouponsController {
                 data.put("batch_id",coupon_batch.getBatch_id());
                 Coupon coupon = couponService.queryCoupon(data);
                 if(coupon == null){
+                    String  use_started_at = rule.getUse_started_at().substring(0,10);
+                    String  use_ended_at = rule.getUse_ended_at().substring(0,10);
+                    rule.setUse_ended_at(use_ended_at);
+                    rule.setUse_started_at(use_started_at);
                     coupon_batch.setRule(rule);
                 }
             }
@@ -132,7 +203,6 @@ public class CouponsController {
         //status 0-未使用,1-已使用,2-已过期,3-冻结
         data.put("status",0);
 
-        // use_ended_at 根据使用结束时间正序查询
         List<Coupon> couponList = couponService.querycCouponCustomerMap(page);
         // 查询已经领取过并且可用的优惠券
         data = new HashMap<>();
@@ -152,6 +222,10 @@ public class CouponsController {
                 updateMap.put("status",2); // 更新已经过期
                 couponService.updateCoupon(updateMap);
             }else {
+                String  use_started_at = rule.getUse_started_at().substring(0,10);
+                String  use_ended_at = rule.getUse_ended_at().substring(0,10);
+                rule.setUse_ended_at(use_ended_at);
+                rule.setUse_started_at(use_started_at);
                 coupon.setRule(rule);
                 coupon.setCoupon_batch(batch);
             }
