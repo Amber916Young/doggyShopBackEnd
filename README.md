@@ -1,4 +1,52 @@
-## 文档说明
+# 文档说明
+
+## 【知识点】uniapp 返回上一页携带参数
+
+```javascript
+// 返回的页面添加以下方法 （onBackPress 是返回的生命周期）
+
+onBackPress(options) {
+	if (options.from === 'navigateBack') {
+		return false;
+	}
+	let pages = getCurrentPages(); //获取所有页面栈实例列表
+	let nowPage = pages[pages.length - 1]; //当前页页面实例
+	let prevPage = pages[pages.length - 2]; //上一页页面实例
+	prevPage.$vm.searchVal = 1211; //修改上一页data里面 searchVal 的值
+	
+	//uni.navigateTo跳转的返回，默认1为返回上一级
+	uni.navigateBack({
+		delta: 1
+	});
+	return true; // 此处必须 return 
+}
+
+```
+
+**上一页获取**
+
+```js
+data() {
+	return {
+		searchVal :'' // 返回后等于 1211
+	}
+}
+
+```
+
+
+
+## BUG 日记 03/12/2022
+
+### 优惠券系统设计
+
+[![zD31SO.png](https://s1.ax1x.com/2022/12/03/zD31SO.png)](https://imgse.com/i/zD31SO)
+
+[![zD33lD.png](https://s1.ax1x.com/2022/12/03/zD33lD.png)](https://imgse.com/i/zD33lD)
+
+
+
+
 
 ## BUG 日记 02/12/2022
 
@@ -14,7 +62,7 @@
 
 - 默认地址只允许存在一个
 - 限制最大添加地址数量5个
-- 删除商品的时候，客户的订单也会被删除，因为商品和订单里的字段关联
+- 删除商品的时候，客户的订单也会被删除，因为商品和订单里的字段关联，所以实际上删除指的是下架商品！
 
 
 
