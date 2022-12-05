@@ -128,8 +128,7 @@
     form.on('submit(form-submit-add)', function(data){
       var field = data.field;
         field.batch_id = batch_id
-        console.info(field)
-
+        // console.info(field)
         ajaxPost(coupon_batch_form_add, JSON.stringify(field), function (data) {
           layer.msg(data.msg, {time: 3000, icon: 1});
       });

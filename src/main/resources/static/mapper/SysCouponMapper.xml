@@ -369,6 +369,9 @@
             <if test="coupon_id !=null">
                 and  coupon_id=#{coupon_id}
             </if>
+            <if test="batch_id !=null">
+                and  batch_id=#{batch_id}
+            </if>
             <if test="customer_id !=null">
                 and  customer_id=#{customer_id}
             </if>
@@ -400,6 +403,12 @@
             <if test="name !=null">
                 and  name=#{name}
             </if>
+            <if test="receive_ended_at !=null">
+                and  receive_ended_at &gt;=  #{receive_ended_at}
+            </if>
+            <if test="use_ended_at !=null">
+                and  use_ended_at &gt;=  #{use_ended_at}
+            </if>
         </where>
 
     </select>
@@ -412,6 +421,29 @@
             </if>
 
         </where>
+    </select>
+
+    <select id="querycCouponCustomerMap" resultType="com.doggy.entity.Coupon">
+        select * from DoggyPets.Coupon
+        <where>
+            1=1
+            <if test="data.status !=null">
+                and  status =  #{data.status}
+            </if>
+            <if test="id !=null">
+                and  customer_id =  #{id}
+            </if>
+        </where>
+        order by use_ended_at asc
+        limit #{start},#{rows}
+    </select>
+    <select id="querycCouponBatchMap" resultType="com.doggy.entity.Coupon_batch">
+        select * from DoggyPets.Coupon_Batch
+        <where>
+            total_count &gt; assign_count and
+            1=1
+        </where>
+        limit #{start},#{rows}
     </select>
 
 

@@ -48,4 +48,8 @@ public interface SysCouponMapper {
     Rule queryRule(HashMap<String, Object> map);
 
     List<Rule> queryRuleAll(HashMap<String, Object> map);
+
+    List<Coupon> querycCouponCustomerMap(Page page);
+
+    List<Coupon_batch> querycCouponBatchMap(Page page);
 }

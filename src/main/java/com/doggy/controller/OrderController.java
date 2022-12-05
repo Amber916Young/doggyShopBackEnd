@@ -57,8 +57,9 @@ public class OrderController {
 
         // get all cart
         List<OrderCart> cartList = orderService.queryOrderCartList(param);
-        if(cartList.size() == 0)
+        if(cartList.size() == 0) {
             return HttpResult.error("一些未知错误");
+        }
 
         String order_sn = NumberUtil.customFormatDate("yyyyMMddHHmmssSSSSSSS");
         master.setOrder_sn(order_sn);
@@ -164,7 +165,7 @@ public class OrderController {
         page.setStart(start);
         page.setId(customer_id);
 
-        int totals=orderService.pageQueryOrderCount(page);
+//        int totals=orderService.pageQueryOrderCount(page);
         List<OrderMaster> lists = orderService.pageQueryOrderData(page);
         for(OrderMaster orderMaster : lists){
             List<OrderDetail> details = orderService.queryOrderDetailAll(orderMaster.getOrder_id());
@@ -176,7 +177,7 @@ public class OrderController {
         }
         HashMap<String, Object> res = new HashMap<>();
         res.put("orderList",lists);
-        res.put("count",totals);
+//        res.put("count",totals);
         return  HttpResult.ok("successfully",res);
     }
 
@@ -264,7 +265,6 @@ public class OrderController {
             orderCart.setGoods(goods);
         }
         param = new HashMap<>();
-        param.put("size",cartList.size());
         param.put("cartList",cartList);
         param.put("amount_price",amount_price);
 

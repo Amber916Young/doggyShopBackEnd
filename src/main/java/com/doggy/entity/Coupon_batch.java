@@ -23,4 +23,7 @@ public class Coupon_batch {
     private String create_time;
     private String modified_time;
 
+
+    private Rule rule;
+
 }
