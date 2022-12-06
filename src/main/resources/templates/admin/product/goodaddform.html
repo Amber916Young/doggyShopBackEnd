@@ -187,7 +187,7 @@
       jsonGood.img_url = field.img_url
       jsonGood.original_price = field.original_price
       jsonGood.price = field.price
-      jsonGood.category_id = field.category_id
+      jsonGood.category_id = category_id
       jsonGood.description = field.description
       jsonGood.specification = field.specification
       jsonData.goods = JSON.stringify(jsonGood)
@@ -197,6 +197,7 @@
       });
     });
     category_id = getParam('cid');
+    console.info(category_id)
     type = getParam('type');
     id = getParam('id');
     if(type === "add"){
@@ -222,13 +223,11 @@
             '      </div>\n' +
             '    </div>\n' +
             '    <div class="layui-form-item">\n' +
-            '      <label class="layui-form-label">商品详情图片</label>\n' +
+            '      <label class="layui-form-label">商品详情图片 请回车</label>\n' +
             '      <div class="layui-input-block">\n' +
             '        <textarea placeholder="回车分割"   lay-verify="required" name="imgList" class="layui-textarea"></textarea>\n' +
             '      </div>\n' +
             '    </div>\n' +
-            '\n' +
-            '\n' +
             '    <div class="layui-form-item">\n' +
             '      <label class="layui-form-label">原价格</label>\n' +
             '      <div class="layui-input-block">\n' +
@@ -241,7 +240,6 @@
             '        <input type="number" name="price" placeholder="" autocomplete="off" class="layui-input">\n' +
             '      </div>\n' +
             '    </div>\n' +
-            '\n' +
             '    <div class="layui-form-item">\n' +
             '      <label class="layui-form-label">描述</label>\n' +
             '      <div class="layui-input-block">\n' +
@@ -249,12 +247,11 @@
             '      </div>\n' +
             '    </div>\n' +
             '    <div class="layui-form-item">\n' +
-            '      <label class="layui-form-label">规格</label>\n' +
+            '      <label class="layui-form-label">规格 请回车</label>\n' +
             '      <div class="layui-input-block">\n' +
-            '        <input type="text" name="specification"  placeholder="" autocomplete="off" class="layui-input">\n' +
+            '        <textarea placeholder="请输入内容" required  lay-verify="required" name="specification" class="layui-textarea" ></textarea>\n' +
             '      </div>\n' +
             '    </div>\n' +
-            '\n' +
             '    <div class="layui-form-item">\n' +
             '      <label class="layui-form-label"></label>\n' +
             '      <div class="layui-input-inline">\n' +
@@ -292,7 +289,7 @@
               '    <div  id="test1" style="    margin: auto;">\n' +
               '    </div>\n' +
               '    <div class="layui-form-item">\n' +
-              '      <label class="layui-form-label">商品详情图片</label>\n' +
+              '      <label class="layui-form-label">商品详情图片 请回车</label>\n' +
               '      <div class="layui-input-block">\n' +
               '        <textarea placeholder="回车"  lay-verify="required" name="imgList" class="layui-textarea" >'+imgArea+'</textarea>\n' +
               '      </div>\n' +
@@ -323,9 +320,9 @@
               '      </div>\n' +
               '    </div>\n' +
               '    <div class="layui-form-item">\n' +
-              '      <label class="layui-form-label">规格</label>\n' +
+              '      <label class="layui-form-label">规格 请回车</label>\n' +
               '      <div class="layui-input-block">\n' +
-              '        <input type="text" name="specification"   value="'+data.specification+'"  placeholder="" autocomplete="off" class="layui-input">\n' +
+              '        <textarea placeholder="请输入内容" required  lay-verify="required" name="specification" class="layui-textarea" >'+data.specification+'</textarea>\n' +
               '      </div>\n' +
               '    </div>\n' +
               '    <div class="layui-form-item">\n' +

@@ -21,6 +21,7 @@ public class Rule {
     private String use_started_at;//使用开始时间
     private String use_ended_at; //使用结束时间
     private double amount;  //优惠金额
+    private double discount;  //优惠金额
     private double threshold; //门槛
     private int receive_count; //每个用户可以领取的数量
     private int use_range; //使用范围，0—全场，1—商品

@@ -11,6 +11,7 @@ import com.doggy.service.SysGoodsService;
 import com.doggy.service.SysOrderService;
 import com.doggy.utils.HttpResult;
 import com.doggy.utils.JsonUtils;
+import com.doggy.utils.Page;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -94,10 +95,45 @@ public class CommentsController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         // good_id
-//        List<Comment> commentList = commentService.queryAllComments(param);
+//        int good_id= Integer.parseInt(param.get("good_id").toString());
+//        List<Comment> commentList = getComments(good_id);
+//        return HttpResult.ok("successfully", commentList);
+
+
+        Page page = new Page();
+        HashMap<String,Object> map = new HashMap<>();
+        double rate = Double.parseDouble(param.get("rate").toString());
         int good_id= Integer.parseInt(param.get("good_id").toString());
-        List<Comment> commentList = getComments(good_id);
-        return HttpResult.ok("successfully", commentList);
+        page.setRows(20);
+        map.put("rateHigh",rate);
+        map.put("rateLow",0);
+        map.put("good_id",good_id);
+        if(rate == -1){
+            map.put("rateHigh",5);
+            map.put("rateLow",0);
+        }else {
+            if(rate <= 2.0){
+                map.put("rateHigh",rate);
+                map.put("rateLow",0);
+            }else  if(rate > 2.0 && rate <4){
+                map.put("rateHigh",3.9);
+                map.put("rateLow",3.1);
+            } else {
+                map.put("rateHigh",5);
+                map.put("rateLow",4);
+            }
+        }
+        page.setKeyWord(null);
+        page.setData(map);
+        List<Comment> lists = commentService.pageQueryCommentDataByid(page);
+        for(Comment tmp : lists){
+            int id = tmp.getComment_id();
+            CustomerInfo  customerInfo = customerService.queryCustomerByid(tmp.getCustomer_id());
+            Comment subComment = commentService.queryCommentsbyId(id);
+            tmp.setCustomer(customerInfo);
+            tmp.setSubComment(subComment);
+        }
+        return HttpResult.ok("查询成功", lists);
 
     }
 

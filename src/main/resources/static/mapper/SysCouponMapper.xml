@@ -39,6 +39,9 @@
             <if test="goods_list != null">
                 goods_list,
             </if>
+            <if test="discount != null">
+                discount,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">
@@ -74,7 +77,9 @@
             <if test="goods_list != null">
                 #{goods_list},
             </if>
-
+            <if test="discount != null">
+                #{discount},
+            </if>
         </trim>
     </insert>
     <insert id="insertCouponBatch">
@@ -419,7 +424,7 @@
         </where>
     </select>
 
-    <select id="querycCouponCustomerMap" resultType="com.doggy.entity.Coupon">
+    <select id="queryCouponCustomerMap" resultType="com.doggy.entity.Coupon">
         select * from DoggyPets.Coupon
         <where>
             1=1
@@ -439,6 +444,17 @@
             1=1
         </where>
         limit #{start},#{rows}
+    </select>
+
+
+    <select id="queryAllCouponCustomer" resultType="com.doggy.entity.Coupon">
+        select * from DoggyPets.Coupon
+        <where>
+            1=1
+            <if test="customer_id !=null">
+                and  customer_id =  #{customer_id}
+            </if>
+        </where>
     </select>
 
 

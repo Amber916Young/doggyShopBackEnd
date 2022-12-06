@@ -1,23 +1,19 @@
 package com.doggy.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.doggy.entity.Coupon;
-import com.doggy.entity.Coupon_batch;
-import com.doggy.entity.OrderMaster;
-import com.doggy.entity.Rule;
+import com.doggy.entity.*;
 import com.doggy.service.SysCouponService;
 import com.doggy.service.SysOrderService;
 import com.doggy.utils.HttpResult;
 import com.doggy.utils.Page;
+import com.sun.tools.corba.se.idl.constExpr.Or;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * @ClassName:CouponsController
@@ -32,7 +28,97 @@ public class CouponsController {
 
     @Autowired
     private SysCouponService couponService;
+    @Autowired
+    private SysOrderService orderService;
 
+
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/get/unique")
+    public HttpResult getUniqueCoupon(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        Coupon_batch batch= couponService.queryCouponBatch(param);
+        param.put("rule_id",batch.getRule_id());
+        Rule rule= couponService.queryRule(param);
+        batch.setRule(rule);
+        return HttpResult.ok("可使用优惠券查询成功",batch);
+    }
+
+    /**
+     * 查询当前订单可以使用的优惠券
+     * @param jsonData get/unique
+     * @return
+     */
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/getAll/collection/canuse")
+    public HttpResult getAllCouponsWhichCanuseInCurrentOrder(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        List<OrderCart> orderCarts = orderService.queryOrderCartList(param);
+        param.put("status",0);
+        List<Coupon> couponList = couponService.queryAllCouponCustomer(param);
+        List<Coupon> res = new ArrayList<>();
+        for(Coupon coupon : couponList){
+            HashMap<String, Object> data = new HashMap<>();
+
+            // 查询优惠券批次
+            data.put("batch_id",coupon.getBatch_id());
+            Coupon_batch batch= couponService.queryCouponBatch(data);
+            // 查询规则
+            data.put("rule_id",batch.getRule_id());
+            // 是否过期 TODO 定时任务
+            data.put("use_ended_at",new Date());
+            Rule rule= couponService.queryRule(data);
+            if(rule == null) {
+                //过期了 更新Coupon表 没有使用但是过期了
+                HashMap<String,Object> updateMap = new HashMap<>();
+                updateMap.put("coupon_id",coupon.getCoupon_id());
+                updateMap.put("status",2); // 更新已经过期
+                couponService.updateCoupon(updateMap);
+            }else {
+                String  use_started_at = rule.getUse_started_at().substring(0,10);
+                String  use_ended_at = rule.getUse_ended_at().substring(0,10);
+                rule.setUse_ended_at(use_ended_at);
+                rule.setUse_started_at(use_started_at);
+                DecimalFormat format = new DecimalFormat("#.00");
+                String str = format.format(rule.getAmount());
+                String str2 = format.format(rule.getDiscount());
+                rule.setAmount(Double.parseDouble(str));
+                rule.setDiscount(Double.parseDouble(str2));
+                coupon.setRule(rule);
+                coupon.setCoupon_batch(batch);
+                if(rule.getUse_range() == 0){
+                    res.add(coupon);
+                    continue;
+                }
+                // 验证当前coupon是否符合
+                if(isMacth(rule,orderCarts)){
+                    res.add(coupon);
+                }
+            }
+        }
+        return HttpResult.ok("可使用优惠券查询成功",res);
+    }
+
+    private boolean isMacth(Rule rule, List<OrderCart> orderCarts) {
+        String goods_list = rule.getGoods_list().replaceAll("\\[","").replaceAll("\\]","");
+        String[] goods_ids = goods_list.split(",");
+        Set<Integer> set = new HashSet<>();
+        for(String id : goods_ids){
+            id = id.trim();
+            if(id != null || id.equals("") || id.length()>0){
+                set.add(Integer.parseInt(id));
+            }
+        }
+        for(OrderCart cart : orderCarts){
+            if(set.contains(cart.getGood_id())){
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     /**
@@ -59,7 +145,7 @@ public class CouponsController {
         page.setId(customer_id);
         //status 0-未使用,1-已使用,2-已过期,3-冻结
         data.put("status",0);
-        List<Coupon> couponList = couponService.querycCouponCustomerMap(page);
+        List<Coupon> couponList = couponService.queryCouponCustomerMap(page);
         // 查询已经领取过并且可用的优惠券
         data = new HashMap<>();
         for(Coupon coupon : couponList){
@@ -147,6 +233,8 @@ public class CouponsController {
         List<Coupon_batch> batches =  couponService.querycCouponBatchMap(page);
         HashMap<String,Object> data = new HashMap<>();
         // O(n) 复杂度
+        List<Coupon_batch> res = new ArrayList<>();
+
         for(Coupon_batch coupon_batch : batches){
             data.put("rule_id",coupon_batch.getRule_id());
             data.put("receive_ended_at",new Date());
@@ -161,15 +249,14 @@ public class CouponsController {
                     String  use_ended_at = rule.getUse_ended_at().substring(0,10);
                     rule.setUse_ended_at(use_ended_at);
                     rule.setUse_started_at(use_started_at);
+                    DecimalFormat format = new DecimalFormat("#.00");
+                    String str = format.format(rule.getAmount());
+                    String str2 = format.format(rule.getDiscount());
+                    rule.setAmount(Double.parseDouble(str));
+                    rule.setDiscount(Double.parseDouble(str2));
                     coupon_batch.setRule(rule);
+                    res.add(coupon_batch);
                 }
-            }
-        }
-        // 删除不符合的
-        List<Coupon_batch> res = new ArrayList<>();
-        for(Coupon_batch batch : batches){
-            if(batch.getRule() != null){
-                res.add(batch);
             }
         }
         return HttpResult.ok("查询成功",res);
@@ -203,10 +290,12 @@ public class CouponsController {
         //status 0-未使用,1-已使用,2-已过期,3-冻结
         data.put("status",0);
 
-        List<Coupon> couponList = couponService.querycCouponCustomerMap(page);
+        List<Coupon> couponList = couponService.queryCouponCustomerMap(page);
         // 查询已经领取过并且可用的优惠券
-        data = new HashMap<>();
+        List<Coupon> res = new ArrayList<>();
+
         for(Coupon coupon : couponList){
+            data = new HashMap<>();
             // 查询优惠券批次
             data.put("batch_id",coupon.getBatch_id());
             Coupon_batch batch= couponService.queryCouponBatch(data);
@@ -222,22 +311,24 @@ public class CouponsController {
                 updateMap.put("status",2); // 更新已经过期
                 couponService.updateCoupon(updateMap);
             }else {
+
                 String  use_started_at = rule.getUse_started_at().substring(0,10);
                 String  use_ended_at = rule.getUse_ended_at().substring(0,10);
                 rule.setUse_ended_at(use_ended_at);
                 rule.setUse_started_at(use_started_at);
+
+                DecimalFormat format = new DecimalFormat("#.00");
+                String str = format.format(rule.getAmount());
+                String str2 = format.format(rule.getDiscount());
+                rule.setAmount(Double.parseDouble(str));
+                rule.setDiscount(Double.parseDouble(str2));
                 coupon.setRule(rule);
                 coupon.setCoupon_batch(batch);
-            }
-        }
 
-        // 删除不符合的
-        List<Coupon> res = new ArrayList<>();
-        for(Coupon coupon : couponList){
-            if(coupon.getCoupon_batch() != null){
                 res.add(coupon);
             }
         }
+
         return HttpResult.ok("查询成功",res);
     }
 

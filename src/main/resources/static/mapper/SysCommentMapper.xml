@@ -106,6 +106,8 @@
         order by create_time desc
         limit #{start},#{rows}
     </select>
+
+
     <select id="pageQueryCommentCount" resultType="java.lang.Integer">
         select count(1) from DoggyPets.comment
         <where>
@@ -123,6 +125,26 @@
             </if>
         </where>
     </select>
+
+    <select id="pageQueryCommentDataByid" resultType="com.doggy.entity.Comment">
+
+        select * from DoggyPets.comment
+        <where>
+            1=1
+            <if test="data.good_id !=null " >
+                and  good_id = #{data.good_id} and fid = 0
+            </if>
+            <if test="data.rateHigh !=null " >
+                and  rate &lt;= #{data.rateHigh}
+            </if>
+            <if test="data.rateLow != null">
+                and  rate &gt;= #{data.rateLow}
+            </if>
+        </where>
+        order by create_time desc
+        limit #{start},#{rows}
+    </select>
+
 
     <update id="updateComment">
         update DoggyPets.comment

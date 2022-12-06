@@ -49,7 +49,9 @@ public interface SysCouponMapper {
 
     List<Rule> queryRuleAll(HashMap<String, Object> map);
 
-    List<Coupon> querycCouponCustomerMap(Page page);
+    List<Coupon> queryCouponCustomerMap(Page page);
 
     List<Coupon_batch> querycCouponBatchMap(Page page);
+
+    List<Coupon> queryAllCouponCustomer(HashMap<String, Object> param);
 }

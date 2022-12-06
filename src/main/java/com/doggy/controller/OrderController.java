@@ -5,11 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.doggy.entity.*;
 import com.doggy.service.*;
 import com.doggy.utils.*;
+import com.vdurmont.emoji.EmojiParser;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.*;
@@ -242,13 +244,29 @@ public class OrderController {
 
 
 
-
-
-
-
-
-
-
+    public HashMap<String,Object> ReturnCartNumAndPrice( List<OrderCart> cartList, HashMap<String, Object> param){
+        double amount_price =0.0;
+        int customer_id = Integer.parseInt(param.get("customer_id").toString());
+        for( OrderCart orderCart : cartList){
+            int id = orderCart.getGood_id();
+            Goods goods = getGoodsAmountImages(customer_id,id);
+            amount_price += goods.getOriginal_price() * goods.getAmount();
+        }
+        param = new HashMap<>();
+        param.put("size",cartList.size());
+        param.put("amount_price",new DecimalFormat("0.00").format(amount_price));
+        return param;
+    }
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/change/number")
+    public HttpResult GoodsChangenNumber(@RequestBody String jsonData){
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        modifyOrder_cart(param);
+        List<OrderCart> cartList= orderService.queryOrderCartList(param);
+        return HttpResult.ok("successfully", ReturnCartNumAndPrice(cartList,param));
+    }
     @SneakyThrows
     @ResponseBody
     @PostMapping("/getAll/cart/number")
@@ -256,7 +274,8 @@ public class OrderController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         List<OrderCart> cartList= orderService.queryOrderCartList(param);
-        return HttpResult.ok("successfully",cartList.size());
+        return HttpResult.ok("successfully", ReturnCartNumAndPrice(cartList,param));
+
     }
 
 
@@ -272,12 +291,13 @@ public class OrderController {
         for( OrderCart orderCart : cartList){
             int id = orderCart.getGood_id();
             Goods goods = getGoodsAmountImages(customer_id,id);
-            amount_price += goods.getPrice() * goods.getAmount();
+            goods = transferUnicode(goods);
+            amount_price += goods.getOriginal_price() * goods.getAmount();
             orderCart.setGoods(goods);
         }
         param = new HashMap<>();
         param.put("cartList",cartList);
-        param.put("amount_price",amount_price);
+        param.put("amount_price",new DecimalFormat("0.00").format(amount_price));
 
         return HttpResult.ok("successfully",param);
     }
@@ -307,7 +327,13 @@ public class OrderController {
         }else {
             orderService.updateOrderCart(param);
         }
+    }
 
+    Goods transferUnicode( Goods goods){
+        String title = EmojiParser.parseToUnicode(goods.getTitle());
+        goods.setSpecification(goods.getSpecification().substring(0,15)+"...");
+        goods.setTitle(title);
+        return goods;
     }
     @SneakyThrows
     @ResponseBody
@@ -316,30 +342,26 @@ public class OrderController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         modifyOrder_cart(param);
-        return HttpResult.ok("successfully");
-
-//        int customer_id = Integer.parseInt(param.get("customer_id").toString());
-//        List<OrderCart> cartList= orderService.queryOrderCartList(param);
-//        for( OrderCart orderCart : cartList){
-//            int id = orderCart.getGood_id();
-//            Goods goods = getGoodsAmountImages(customer_id,id);
-//            orderCart.setGoods(goods);
-//        }
-//        param = new HashMap<>();
-//        param.put("size",cartList.size());
-//        param.put("cartList",cartList);
-//        return HttpResult.ok("successfully",param);
-    }
-    @SneakyThrows
-    @ResponseBody
-    @PostMapping("/change/number")
-    public HttpResult GoodsChangenNumber(@RequestBody String jsonData){
-        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
-        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
-        modifyOrder_cart(param);
+//        return HttpResult.ok("successfully");
+        double amount_price =0.0;
+        int customer_id = Integer.parseInt(param.get("customer_id").toString());
         List<OrderCart> cartList= orderService.queryOrderCartList(param);
-        return HttpResult.ok("successfully",cartList.size());
+        for( OrderCart orderCart : cartList){
+            int id = orderCart.getGood_id();
+            Goods goods = getGoodsAmountImages(customer_id,id);
+            goods = transferUnicode(goods);
+            amount_price += goods.getOriginal_price() * goods.getAmount();
+            orderCart.setGoods(goods);
+        }
+
+        param = new HashMap<>();
+        param.put("cartList",cartList);
+        param.put("amount_price",new DecimalFormat("0.00").format(amount_price));
+        return HttpResult.ok("successfully",param);
+
+
     }
+
     @SneakyThrows
     @ResponseBody
     @PostMapping("/change/detail/number")
@@ -347,7 +369,7 @@ public class OrderController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         modifyOrder_cart(param);
-        OrderCart orderCart = orderService.queryOrderCart(param);
-        return HttpResult.ok("successfully",orderCart);
+//        OrderCart orderCart = orderService.queryOrderCart(param);
+        return HttpResult.ok("successfully");
     }
 }

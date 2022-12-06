@@ -58,4 +58,6 @@ public interface SysGoodsMapper {
 
     @Delete("delete from DoggyPets.ImageRepo where fid = #{fid}")
     void deleteImageRepo(int fid);
+
+    List<HashMap> queryAllTest();
 }

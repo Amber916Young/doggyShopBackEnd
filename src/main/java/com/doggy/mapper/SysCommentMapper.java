@@ -4,6 +4,7 @@ import com.doggy.entity.Comment;
 import com.doggy.entity.ImageRepo;
 import com.doggy.utils.Page;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,4 +26,10 @@ public interface SysCommentMapper {
     void deleteComment(HashMap<String, Object> param);
 
     void updateComment(HashMap<String, Object> param);
+
+
+    List<Comment> pageQueryCommentDataByid(Page page);
+
+    @Select("select from DoggyPets.comment where comment_id = #{id} ")
+    Comment queryCommentsbyId(int id);
 }

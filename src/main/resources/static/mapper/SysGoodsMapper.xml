@@ -214,6 +214,9 @@
         </where>
         order by order_id asc
     </select>
+    <select id="queryAllTest" resultType="java.util.HashMap">
+        select * from yyjblog.article
+    </select>
 
 
     <select id="queryAllGoods" resultType="com.doggy.entity.Goods">

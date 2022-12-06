@@ -42,6 +42,8 @@ import static com.doggy.utils.WxApi.code2Session;
 @RequestMapping("wx")
 public class WxController {
 
+
+
     @Value("${WeChat.appid}")
     private String APP_ID ;
     @Value("${WeChat.appSecret}")
@@ -59,11 +61,13 @@ public class WxController {
         CustomerInfo customer = JSONObject.parseObject(param.get("customer").toString(),CustomerInfo.class);
         String token =TokenUtils.refreshToken(customer);
         customer.setToken(token);
-        customerService.updateCustomerInfo(customer);
-
+        CustomerInfo isExist = customerService.queryCustomerByid(customer.getId());
+        if(isExist == null){
+            customerService.insertCustomerInfo(customer);
+        }else {
+            customerService.updateCustomerInfo(customer);
+        }
         return HttpResult.ok(customer);
-
-
     }
 
     @SneakyThrows

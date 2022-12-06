@@ -11,6 +11,8 @@ import com.doggy.service.SysOrderService;
 import com.doggy.utils.HttpResult;
 import com.doggy.utils.JsonUtils;
 import com.doggy.utils.Page;
+import com.doggy.utils.UnicodeUtils;
+import com.vdurmont.emoji.EmojiParser;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -112,6 +115,7 @@ public class WebProductController {
         try {
             String[] imgList = param.get("imgList").toString().trim().split("\\n");
             int fid = Integer.parseInt(param.get("id").toString());
+            param.put("type","goods");
             goodsService.updateGoods(param);
             goodsService.deleteImageRepo(fid);
             for(String s : imgList){
@@ -136,8 +140,8 @@ public class WebProductController {
         try {
             HashMap<String, Object> map = JsonUtils.jsonToPojo(param.get("field").toString(),HashMap.class);
             String[] imgList = map.get("imgList").toString().trim().split("\\n");
-
             Goods goods = JsonUtils.jsonToPojo(param.get("goods").toString(),Goods.class);
+            goods = UnicodeUtils.DECODEUnicode(goods);
             int c = goodsService.insertGoods(goods);
             int fid = goods.getId();
             for(String s : imgList){
@@ -145,6 +149,7 @@ public class WebProductController {
                 ImageRepo imageRepo = new ImageRepo();
                 imageRepo.setFid(fid);
                 imageRepo.setImg_url(s);
+                imageRepo.setType("goods");
                 goodsService.insertImageRepo(imageRepo);
             }
             return HttpResult.ok("新增");
@@ -210,6 +215,10 @@ public class WebProductController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         try {
+            List<String > list = new ArrayList<>();
+            list.add("title");
+            list.add("description");
+            param = UnicodeUtils.DECODEUnicode(param,list);
             goodsService.insertCategory(param);
             return HttpResult.ok("新增");
         }catch (Exception e){

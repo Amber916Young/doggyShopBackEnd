@@ -1,8 +1,8 @@
 server:
   port: 8089
-  session-timeout: 60 # session 超时时间/分钟，默认是30
-  tomcat:
-    uri-encoding: utf-8 # 设置tomcat编码
+#  session-timeout: 60 # session 超时时间/分钟，默认是30
+#  tomcat:
+#    uri-encoding: utf-8 # 设置tomcat编码
 
 spring:
   datasource:

@@ -113,7 +113,7 @@
             '    <div class="layui-form-item">\n' +
             '      <label class="layui-form-label">名称</label>\n' +
             '      <div class="layui-input-block">\n' +
-            '        <input type="text" name="title"   lay-verify="required" placeholder="大类名称" autocomplete="off" class="layui-input">\n' +
+            '        <input type="text" name="title"  required lay-verify="required" placeholder="大类名称" autocomplete="off" class="layui-input">\n' +
             '      </div>\n' +
             '    </div>\n' +
             '    <div class="layui-form-item">\n' +
@@ -125,17 +125,16 @@
             '    <div class="layui-form-item">\n' +
             '      <label class="layui-form-label">描述</label>\n' +
             '      <div class="layui-input-block">\n' +
-            '        <textarea placeholder="请输入内容"  ay-verify="required" name="description" class="layui-textarea" ></textarea>\n' +
+            '        <textarea placeholder="请输入内容" required  lay-verify="required" name="description" class="layui-textarea" ></textarea>\n' +
             '      </div>\n' +
             '    </div>\n' +
             '    <div class="layui-form-item">\n' +
             '      <label class="layui-form-label">上架顺序</label>\n' +
             '      <div class="layui-input-block">\n' +
-            '        <input type="text" name="order_id"  placeholder="上架顺序" autocomplete="off" class="layui-input">\n' +
+            '        <input type="text" name="order_id" required  lay-verify="required" placeholder="上架顺序" autocomplete="off" class="layui-input">\n' +
             '      </div>\n' +
             '    </div>\n' +
-            '    <div class="layui-form-item">\n' +
-            '      <label class="layui-form-label"></label>\n' +
+            '    <div class="layui-form-item"  style="float: right">\n' +
             '      <div class="layui-input-inline">\n' +
             '        <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">\n' +
             '      </div>\n' +
@@ -154,7 +153,7 @@
       str ='<div class="layui-form-item">\n' +
               '      <label class="layui-form-label">名称</label>\n' +
               '      <div class="layui-input-block">\n' +
-              '        <input type="text" name="title"  value="'+data.title+'"   lay-verify="required" placeholder="大类名称" autocomplete="off" class="layui-input">\n' +
+              '        <input type="text" name="title"  value="'+data.title+'" required   lay-verify="required" placeholder="大类名称" autocomplete="off" class="layui-input">\n' +
               '        <input  name="id" value="'+data.id+'"  hidden>\n' +
               '      </div>\n' +
               '    </div>\n' +
@@ -162,16 +161,16 @@
               '      <label class="layui-form-label">侧边图片</label>\n' +
               '      <div class="layui-input-block">\n' +
               '        <img src="'+data.img_url+'" />\n' +
-              '        <input type="text" name="img_url" lay-verify="required"    value="'+data.img_url+'" placeholder="侧边图片 Url 不用本地的上传" autocomplete="off" class="layui-input">\n' +
+              '        <input type="text" name="img_url"     value="'+data.img_url+'" placeholder="侧边图片 Url 不用本地的上传" autocomplete="off" class="layui-input">\n' +
               '      </div>\n' +
               '    </div>\n' +
               '    <div class="layui-form-item">\n' +
               '      <label class="layui-form-label">描述</label>\n' +
               '      <div class="layui-input-block">\n' +
-              '        <textarea placeholder="请输入内容"  lay-verify="required" name="description" class="layui-textarea" >'+data.description+'</textarea>\n' +
+              '        <textarea placeholder="请输入内容"  required lay-verify="required" name="description" class="layui-textarea" >'+data.description+'</textarea>\n' +
               '      </div>\n' +
               '    </div>\n' +
-              '    <div class="layui-form-item">\n' +
+              '    <div class="layui-form-item" style="float: right">\n' +
               '      <div class="layui-input-inline">\n' +
               '        <input type="button" lay-submit lay-filter="form-submit" value="确认" class="layui-btn">\n' +
               '      </div>\n' +

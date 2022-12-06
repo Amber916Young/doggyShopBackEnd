@@ -7,6 +7,7 @@ import com.doggy.entity.ImageRepo;
 import com.doggy.entity.OrderCart;
 import com.doggy.service.SysGoodsService;
 import com.doggy.service.SysOrderService;
+import com.vdurmont.emoji.EmojiParser;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class GoodController {
 
     @SneakyThrows
     @ResponseBody
-    @PostMapping("/get/current/category")
+    @PostMapping(value = "/get/current/category", produces = "application/json; charset=utf-8")
     public HttpResult GetCurrentGood(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
@@ -63,16 +64,33 @@ public class GoodController {
         return HttpResult.ok("successfully", param);
     }
 
-
     @SneakyThrows
     @ResponseBody
-    @PostMapping("/get/all")
+    @GetMapping(value = "/test", produces = "application/json; charset=utf-8")
+    public Object sas() {
+        List<HashMap> test = goodsService.queryAllTest();
+        return  HttpResult.ok("successfully",test);
+    }
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping(value = "/get/all" , produces = "application/json; charset=utf-8")
         public HttpResult GetAllGood(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         int customer_id = Integer.parseInt(param.get("customer_id").toString());
         int index = Integer.parseInt(param.get("index").toString());
         List<Category> categoryList = goodsService.queryAllCategory(param);
+
+        for(Category category : categoryList){
+            // 还原表情
+            String  content = EmojiParser.parseToUnicode( category.getDescription());
+            String title = EmojiParser.parseToUnicode(category.getTitle());
+            category.setDescription(content);
+            category.setTitle(title);
+        }
+        if(categoryList.isEmpty()){
+            return HttpResult.ok("无产品");
+        }
         param = new HashMap<>();
         Category category = categoryList.get(index);
         param.put("category_id", category.getId());
@@ -86,6 +104,11 @@ public class GoodController {
             if(orderCart != null){
                 goods.setAmount(orderCart.getGood_amount());
             }
+            String content = EmojiParser.parseToUnicode( goods.getDescription());
+            String title = EmojiParser.parseToUnicode(goods.getTitle());
+            goods.setDescription(content);
+            goods.setTitle(title);
+
         }
         category.setGoodsList(goodsList);
         return HttpResult.ok("successfully", categoryList);
@@ -101,6 +124,13 @@ public class GoodController {
         int customer_id = Integer.parseInt(param.get("customer_id").toString());
         int id = Integer.parseInt(param.get("id").toString());
         Goods goods = goodsService.queryAllGoodsById(id);
+
+        String  content = EmojiParser.parseToUnicode( goods.getDescription());
+        String title = EmojiParser.parseToUnicode(goods.getTitle());
+        goods.setDescription(content);
+        goods.setTitle(title);
+
+
         param = new HashMap<>();
         param.put("fid",goods.getId());
         param.put("good_id",goods.getId());
@@ -110,6 +140,7 @@ public class GoodController {
             goods.setAmount(orderCart.getGood_amount());
         }
         param.put("type","goods");
+        param.remove("customer_id");
         List<ImageRepo> imageList = goodsService.queryAllImageList(param);
         goods.setImageList(imageList);
         return HttpResult.ok("successfully",goods);

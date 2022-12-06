@@ -58,4 +58,13 @@ public class SysCommentService {
         commentMapper.updateComment(param);
     }
 
+
+
+    public List<Comment> pageQueryCommentDataByid(Page page) {
+        return commentMapper.pageQueryCommentDataByid(page);
+    }
+
+    public Comment queryCommentsbyId(int id) {
+        return commentMapper.queryCommentsbyId(id);
+    }
 }

@@ -95,4 +95,9 @@ public class SysGoodsService {
     public void deleteImageRepo(int fid) {
         goodsMapper.deleteImageRepo(fid);
     }
+
+    public List<HashMap> queryAllTest() {
+        return         goodsMapper.queryAllTest();
+
+    }
 }

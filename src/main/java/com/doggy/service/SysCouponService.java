@@ -102,11 +102,15 @@ public class SysCouponService {
         return couponMapper.queryRuleAll(map);
     }
 
-    public List<Coupon> querycCouponCustomerMap(Page page) {
-        return couponMapper.querycCouponCustomerMap(page);
+    public List<Coupon> queryCouponCustomerMap(Page page) {
+        return couponMapper.queryCouponCustomerMap(page);
     }
 
     public List<Coupon_batch> querycCouponBatchMap(Page page) {
         return couponMapper.querycCouponBatchMap(page);
+    }
+
+    public List<Coupon> queryAllCouponCustomer(HashMap<String, Object> param) {
+        return couponMapper.queryAllCouponCustomer(param);
     }
 }

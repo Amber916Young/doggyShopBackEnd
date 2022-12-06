@@ -24,5 +24,6 @@ public class Comment {
     private double rate = 5;
     private CustomerInfo customer;
     private List<Comment> commentList;
+    private Comment subComment;
     private List<String> commentImage;
 }
