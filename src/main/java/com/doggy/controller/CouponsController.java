@@ -69,41 +69,40 @@ public class CouponsController {
     }
 
 
-    synchronized public HashMap<String,Object> ReturnCartNumAndPrice( List<OrderCart> cartList, Rule rule){
+    synchronized public HashMap<String,Object> ReturnCartNumAndPrice( List<OrderCart> cartList, Rule rule) {
         int rule_type = rule.getType(); //优惠卷类型, 0-满减, 1-折扣 2 直减
         int use_range = rule.getUse_range(); //使用范围，0—全场，1—商品
         Set<Integer> set = new HashSet<>();
         Set<Integer> setAll = new HashSet<>();
         Set<Integer> goodsIdSet = new HashSet<>();
         Map<Integer, Goods> goodsMap = new HashMap<>();
-        if(use_range == 1){
-            String goods_list = rule.getGoods_list().replaceAll("\\[","").replaceAll("\\]","");
+        if (use_range == 1) {
+            String goods_list = rule.getGoods_list().replaceAll("\\[", "").replaceAll("\\]", "");
             String[] goods_ids = goods_list.split(",");
-            for(String id : goods_ids){
+            for (String id : goods_ids) {
                 id = id.trim();
-                if(id != null || id.equals("") || id.length()>0){
+                if (id != null || id.equals("") || id.length() > 0) {
                     set.add(Integer.parseInt(id));
                 }
             }
         }
         BigDecimal match_amount_price = new BigDecimal("0");
         BigDecimal match_amount_price_all = new BigDecimal("0");
-        BigDecimal amount_price_discount = new BigDecimal("0");
 
-        Map<Integer,BigDecimal> countMap = new HashMap<>();
+        Map<Integer, BigDecimal> countMap = new HashMap<>();
 
-        for( OrderCart orderCart : cartList){
+        for (OrderCart orderCart : cartList) {
             int id = orderCart.getGood_id();
             Goods goods = goodsService.queryAllGoodsById(id);
             setAll.add(id);
-            goodsMap.put(id,goods);
+            goodsMap.put(id, goods);
             BigDecimal tmp = new BigDecimal(Double.toString(goods.getOriginal_price()));
             BigDecimal count = new BigDecimal(orderCart.getGood_amount());
             tmp = tmp.multiply(count);
-            countMap.put(id,count);
+            countMap.put(id, count);
             // 符合条件的
-            if(!set.isEmpty()){
-                if(set.contains(id)){
+            if (!set.isEmpty()) {
+                if (set.contains(id)) {
                     goodsIdSet.add(id);
                     match_amount_price = match_amount_price.add(tmp);
                 }
@@ -113,110 +112,103 @@ public class CouponsController {
 
         }
 
-        BigDecimal amount = new BigDecimal(Double.toString( rule.getAmount()));
-        BigDecimal discount =  new BigDecimal(Double.toString( rule.getDiscount() / 10.0));
+        BigDecimal amount = new BigDecimal(Double.toString(rule.getAmount()));
+        BigDecimal discount = new BigDecimal(Double.toString(rule.getDiscount() / 10.0));
         BigDecimal threshold = new BigDecimal(Double.toString(rule.getThreshold()));
-        if(use_range == 1){
-            if(rule_type == 1){ //优惠卷类型, 0-满减, 1-折扣 2 直减
-                amount = match_amount_price.multiply(discount);
-            }
-            for(int gid : goodsIdSet){
+        boolean flag = false;
+        if (rule_type == 1) { //优惠卷类型, 0-满减, 1-折扣 2 直减
+            amount = match_amount_price.multiply(discount);
+        }
+        if (use_range == 0) {
+            for (int gid : goodsIdSet) {
                 Goods goods = goodsMap.get(gid);
-                BigDecimal count =  countMap.get(gid);
-                BigDecimal ratio = new BigDecimal(Double.toString(goods.getOriginal_price())).multiply(count).divide(match_amount_price,8,BigDecimal.ROUND_HALF_UP);
+                BigDecimal count = countMap.get(gid);
+                BigDecimal org = new BigDecimal(Double.toString(goods.getOriginal_price()));
+                BigDecimal total_original_price = org.multiply(count);
+                BigDecimal ratio = total_original_price.divide(match_amount_price, 8, BigDecimal.ROUND_HALF_UP);
                 BigDecimal disMoney = ratio.multiply(amount);
-//                disMoney = disMoney.setScale(2, RoundingMode.HALF_UP);//保留两位小数
-                BigDecimal div = new BigDecimal(Double.toString(goods.getOriginal_price() - disMoney.doubleValue()))
-                        .setScale(2, RoundingMode.HALF_UP);//保留两位小数
+                BigDecimal div = total_original_price.subtract(disMoney);
+                BigDecimal newPrice = div.divide(count, 2, BigDecimal.ROUND_HALF_UP);
                 //优惠卷类型, 0-满减, 1-折扣 2 直减
-                if(rule_type == 0 ){
-                    if(match_amount_price.compareTo(threshold) < 0){
+                if (rule_type == 0) {
+                    if (match_amount_price.compareTo(threshold) < 0) {
+                        flag =true;
                         break;
-                    }else {
-                        goods.setPrice(div.doubleValue());
+                    } else {
+                        goods.setPrice(newPrice.doubleValue());
                     }
-                }else if(rule_type == 1 ){
-                    goods.setPrice(disMoney.doubleValue());
-                }else if(rule_type == 2 ){
-                    goods.setPrice(div.doubleValue());
+                } else if (rule_type == 1) {
+                    goods.setPrice(newPrice.doubleValue());
+                } else if (rule_type == 2) {
+                    goods.setPrice(newPrice.doubleValue());
                 }
+            }
+        } else {
+            for (int gid : setAll) {
+                Goods goods = goodsMap.get(gid);
+                BigDecimal count = countMap.get(gid);
+                BigDecimal org = new BigDecimal(Double.toString(goods.getOriginal_price()));
+                BigDecimal total_original_price = org.multiply(count);
 
-                amount_price_discount = amount_price_discount.add(disMoney);
+                BigDecimal ratio = total_original_price
+                        .divide(match_amount_price_all, 8, BigDecimal.ROUND_HALF_UP);
+                BigDecimal disMoney = ratio.multiply(amount);
+                BigDecimal div = total_original_price.subtract(disMoney);
+                BigDecimal newPrice = div.divide(count, 2, BigDecimal.ROUND_HALF_UP);
+
+                //优惠卷类型, 0-满减, 1-折扣 2 直减
+                if (rule_type == 0) {
+                    if (match_amount_price_all.compareTo(threshold) < 0) {
+                        flag =true;
+                        break;
+                    } else {
+                        goods.setPrice(newPrice.doubleValue());
+                    }
+                } else if (rule_type == 1) {
+                    goods.setPrice(newPrice.doubleValue());
+
+                    goods.setPrice(disMoney.divide(count, 2, RoundingMode.HALF_UP).doubleValue());
+
+                } else if (rule_type == 2) {
+                    goods.setPrice(newPrice.doubleValue());
+
+                }
             }
         }
 
-        if(use_range == 0){
-            if(rule_type == 1){
-                amount = match_amount_price_all.multiply(discount);
-            }
-            for(int gid : setAll){
-                Goods goods = goodsMap.get(gid);
-                BigDecimal count =  countMap.get(gid);
-                BigDecimal ratio = new BigDecimal(Double.toString(goods.getOriginal_price())).multiply(count);
-                ratio = ratio.divide(match_amount_price_all,8,BigDecimal.ROUND_HALF_UP);
-                BigDecimal disMoney = ratio.multiply(amount);
-//                disMoney = disMoney.setScale(2, RoundingMode.HALF_UP);//保留两位小数
-                BigDecimal div = new BigDecimal(Double.toString(goods.getOriginal_price() - disMoney.doubleValue())).setScale(2, RoundingMode.HALF_UP);//保留两位小数
 
-                //优惠卷类型, 0-满减, 1-折扣 2 直减
-                if(rule_type == 0 ){
-                    if(match_amount_price_all.compareTo(threshold) < 0){
-                        //match_amount_price < amount
-                        break;
-                    }else {
-                        goods.setPrice(div.doubleValue());
-                    }
-                }else if(rule_type == 1 ){
-                    goods.setPrice(disMoney.divide(count,2,RoundingMode.HALF_UP).doubleValue());
+        BigDecimal Discount = new BigDecimal("0");
+        BigDecimal amount_price = new BigDecimal("0");
+        BigDecimal amount_price_discount = new BigDecimal("0");
 
-                }else if(rule_type == 2 ){
-                    goods.setPrice(div.doubleValue());
-                }
-
-                amount_price_discount = amount_price_discount.add(disMoney);
-            }
-        }
-
-
-        List<HashMap<String,Object>> res =new ArrayList<>();
-        for( OrderCart orderCart : cartList){
+        List<HashMap<String, Object>> res = new ArrayList<>();
+        for (OrderCart orderCart : cartList) {
             Goods goods = orderCart.getGoods();
-            HashMap<String,Object> objectHashMap = new HashMap<>();
-            objectHashMap.put("good_id",orderCart.getGood_id());
-            objectHashMap.put("good_amount",orderCart.getGood_amount());
-            objectHashMap.put("price",goods.getPrice());
-            objectHashMap.put("original_price",goods.getOriginal_price());
+            HashMap<String, Object> objectHashMap = new HashMap<>();
+            objectHashMap.put("good_id", orderCart.getGood_id());
+            objectHashMap.put("good_amount", orderCart.getGood_amount());
+            objectHashMap.put("price", goods.getPrice());
+            objectHashMap.put("original_price", goods.getOriginal_price());
             BigDecimal count = new BigDecimal(orderCart.getGood_amount());
-            BigDecimal total_original_price = new BigDecimal(Double.toString(goods.getOriginal_price())).
-                    multiply(count).setScale(2,BigDecimal.ROUND_HALF_UP);
-            objectHashMap.put("total_original_price",total_original_price);
-            BigDecimal total_price = new BigDecimal(Double.toString(goods.getPrice())).
-                    multiply(count).setScale(2,BigDecimal.ROUND_HALF_UP);
-            objectHashMap.put("total_price",total_price);
-
-
-
-
-
-
-
+            BigDecimal org = new BigDecimal(Double.toString(goods.getOriginal_price()));
+            BigDecimal price = new BigDecimal(Double.toString(goods.getPrice()));
+            BigDecimal total_original_price = org.multiply(count).setScale(2, BigDecimal.ROUND_HALF_UP);
+            objectHashMap.put("total_original_price", total_original_price);
+            BigDecimal total_price = price.multiply(count).setScale(2, BigDecimal.ROUND_HALF_UP);
+            objectHashMap.put("total_price", total_price);
+            amount_price = amount_price.add(total_original_price);
+            amount_price_discount = amount_price_discount.add(total_price);
+            Discount = Discount.add(total_original_price.subtract(total_price));
             res.add(objectHashMap);
         }
-        HashMap<String, Object>  param = new HashMap<>();
-        param.put("priceList",res);
-        param.put("amount_price",match_amount_price_all .setScale(2, RoundingMode.HALF_UP));
-
-
-        param.put("amount_price_discount",amount_price_discount .setScale(2, RoundingMode.HALF_UP));
-
-        if(rule_type == 1){
-            param.put("discount",match_amount_price_all.subtract(amount_price_discount) .setScale(2, RoundingMode.HALF_UP));
-        }else{
-            param.put("discount",amount_price_discount);
-            param.put("amount_price_discount",match_amount_price_all.subtract(amount_price_discount) .setScale(2, RoundingMode.HALF_UP));
-
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("priceList", res);
+        if(flag){
+            param.put("flag", "未满足优惠最低金额");
         }
-
+        param.put("amount_price", amount_price.setScale(2, RoundingMode.HALF_UP));
+        param.put("amount_price_discount", amount_price_discount.setScale(2, RoundingMode.HALF_UP));
+        param.put("discount", Discount.setScale(2, RoundingMode.HALF_UP));
         return param;
     }
 
