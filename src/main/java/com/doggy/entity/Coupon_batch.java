@@ -2,6 +2,8 @@ package com.doggy.entity;
 
 import lombok.Data;
 
+import java.util.HashMap;
+
 /**
  * @author birdyyoung
  * @ClassName:Coupon_batch
@@ -23,5 +25,6 @@ public class Coupon_batch {
     private String create_time;
     private String modified_time;
 
+    private HashMap<String,Object> ruleMap;
     private Rule rule;
 }

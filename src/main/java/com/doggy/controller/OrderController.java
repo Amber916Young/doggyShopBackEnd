@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -244,16 +245,47 @@ public class OrderController {
 
 
 
-    public HashMap<String,Object> ReturnCartNumAndPrice( List<OrderCart> cartList, HashMap<String, Object> param){
-        double amount_price =0.0;
-        int customer_id = Integer.parseInt(param.get("customer_id").toString());
+    public HashMap<String,Object> ReturnCartNumAndPrice( List<OrderCart> cartList, int type){
+        BigDecimal amount_price = new BigDecimal("0");
         for( OrderCart orderCart : cartList){
             int id = orderCart.getGood_id();
-            Goods goods = getGoodsAmountImages(customer_id,id);
-            amount_price += goods.getOriginal_price() * goods.getAmount();
+            Goods goods =  getGoodsAmountImages(id,orderCart);
+            BigDecimal Original_price = new BigDecimal(Double.toString(goods.getOriginal_price()));
+            BigDecimal count = new BigDecimal(goods.getAmount());
+            BigDecimal decimal = Original_price.multiply(count);
+            if(type == 1){
+                String  content = EmojiParser.parseToUnicode( goods.getDescription());
+                String title = EmojiParser.parseToUnicode(goods.getTitle());
+                goods.setDescription(content);
+                goods.setTitle(title);
+                orderCart.setGoods(goods);
+            }
+            amount_price = amount_price.add(decimal);
         }
-        param = new HashMap<>();
-        param.put("size",cartList.size());
+        HashMap<String, Object>  param = new HashMap<>();
+        if(type == 1){
+            List<HashMap<String,Object>> res =new ArrayList<>();
+            for( OrderCart orderCart : cartList){
+                Goods goods = orderCart.getGoods();
+                HashMap<String,Object> objectHashMap = new HashMap<>();
+                objectHashMap.put("good_id",orderCart.getGood_id());
+                objectHashMap.put("cart_id",orderCart.getCart_id());
+                objectHashMap.put("good_amount",orderCart.getGood_amount());
+                objectHashMap.put("price",goods.getPrice());
+                objectHashMap.put("original_price",goods.getOriginal_price());
+                objectHashMap.put("title",goods.getTitle());
+                objectHashMap.put("img_url",goods.getImg_url());
+//                if(goods.getTitle().length()>15){
+//                    objectHashMap.put("title",goods.getTitle().substring(0,15)+"...");
+//                }
+                objectHashMap.put("specification",goods.getSpecification().substring(0,25)+"...");
+                res.add(objectHashMap);
+            }
+            param.put("cartList",res);
+        }
+        if(type == 0){
+            param.put("size",cartList.size());
+        }
         param.put("amount_price",new DecimalFormat("0.00").format(amount_price));
         return param;
     }
@@ -265,7 +297,7 @@ public class OrderController {
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         modifyOrder_cart(param);
         List<OrderCart> cartList= orderService.queryOrderCartList(param);
-        return HttpResult.ok("successfully", ReturnCartNumAndPrice(cartList,param));
+        return HttpResult.ok("successfully", ReturnCartNumAndPrice(cartList,0));
     }
     @SneakyThrows
     @ResponseBody
@@ -274,7 +306,7 @@ public class OrderController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         List<OrderCart> cartList= orderService.queryOrderCartList(param);
-        return HttpResult.ok("successfully", ReturnCartNumAndPrice(cartList,param));
+        return HttpResult.ok("successfully", ReturnCartNumAndPrice(cartList,0));
 
     }
 
@@ -285,28 +317,11 @@ public class OrderController {
     public HttpResult CartGetAll(@RequestBody String jsonData){
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
-        int customer_id = Integer.parseInt(param.get("customer_id").toString());
         List<OrderCart> cartList= orderService.queryOrderCartList(param);
-        double amount_price =0.0;
-        for( OrderCart orderCart : cartList){
-            int id = orderCart.getGood_id();
-            Goods goods = getGoodsAmountImages(customer_id,id);
-            goods = transferUnicode(goods);
-            amount_price += goods.getOriginal_price() * goods.getAmount();
-            orderCart.setGoods(goods);
-        }
-        param = new HashMap<>();
-        param.put("cartList",cartList);
-        param.put("amount_price",new DecimalFormat("0.00").format(amount_price));
-
-        return HttpResult.ok("successfully",param);
+        return HttpResult.ok("successfully",ReturnCartNumAndPrice(cartList,1));
     }
 
-    private Goods getGoodsAmountImages(int customer_id, int good_id){
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("customer_id", customer_id);
-        map.put("good_id", good_id);
-        OrderCart orderCart = orderService.queryOrderCart(map);
+    private Goods getGoodsAmountImages(int good_id, OrderCart orderCart){
         Goods goods = goodsService.queryAllGoodsById(good_id);
         if(orderCart != null){
             goods.setAmount(orderCart.getGood_amount());
@@ -342,22 +357,8 @@ public class OrderController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         modifyOrder_cart(param);
-//        return HttpResult.ok("successfully");
-        double amount_price =0.0;
-        int customer_id = Integer.parseInt(param.get("customer_id").toString());
         List<OrderCart> cartList= orderService.queryOrderCartList(param);
-        for( OrderCart orderCart : cartList){
-            int id = orderCart.getGood_id();
-            Goods goods = getGoodsAmountImages(customer_id,id);
-            goods = transferUnicode(goods);
-            amount_price += goods.getOriginal_price() * goods.getAmount();
-            orderCart.setGoods(goods);
-        }
-
-        param = new HashMap<>();
-        param.put("cartList",cartList);
-        param.put("amount_price",new DecimalFormat("0.00").format(amount_price));
-        return HttpResult.ok("successfully",param);
+        return HttpResult.ok("successfully", ReturnCartNumAndPrice(cartList,1));
 
 
     }

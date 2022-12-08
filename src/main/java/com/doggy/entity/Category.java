@@ -2,6 +2,7 @@ package com.doggy.entity;
 
 import lombok.Data;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,5 +22,5 @@ public class Category {
     private String modify_time;
     private int order_id; //顺序
     private int flag; //0下架 1 上架
-    private List<Goods> goodsList;
+    private List<HashMap<String,Object>> goodsList;
 }

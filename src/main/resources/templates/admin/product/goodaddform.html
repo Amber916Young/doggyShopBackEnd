@@ -186,7 +186,8 @@
       jsonGood.title = field.title
       jsonGood.img_url = field.img_url
       jsonGood.original_price = field.original_price
-      jsonGood.price = field.price
+      jsonGood.price = field.original_price
+      // jsonGood.price = field.price
       jsonGood.category_id = category_id
       jsonGood.description = field.description
       jsonGood.specification = field.specification
@@ -234,12 +235,12 @@
             '        <input type="number" name="original_price"  placeholder="" autocomplete="off" class="layui-input">\n' +
             '      </div>\n' +
             '    </div>\n' +
-            '    <div class="layui-form-item">\n' +
-            '      <label class="layui-form-label">价格</label>\n' +
-            '      <div class="layui-input-block">\n' +
-            '        <input type="number" name="price" placeholder="" autocomplete="off" class="layui-input">\n' +
-            '      </div>\n' +
-            '    </div>\n' +
+            // '    <div class="layui-form-item">\n' +
+            // '      <label class="layui-form-label">价格</label>\n' +
+            // '      <div class="layui-input-block">\n' +
+            // '        <input type="number" name="price" placeholder="" autocomplete="off" class="layui-input">\n' +
+            // '      </div>\n' +
+            // '    </div>\n' +
             '    <div class="layui-form-item">\n' +
             '      <label class="layui-form-label">描述</label>\n' +
             '      <div class="layui-input-block">\n' +
@@ -301,13 +302,13 @@
               '               autocomplete="off" class="layui-input">\n' +
               '      </div>\n' +
               '    </div>\n' +
-              '    <div class="layui-form-item">\n' +
-              '      <label class="layui-form-label">价格</label>\n' +
-              '      <div class="layui-input-block">\n' +
-              '        <input type="number" name="price" value="'+data.price+'" placeholder=""\n' +
-              '               autocomplete="off" class="layui-input">\n' +
-              '      </div>\n' +
-              '    </div>\n' +
+              // '    <div class="layui-form-item">\n' +
+              // '      <label class="layui-form-label">价格</label>\n' +
+              // '      <div class="layui-input-block">\n' +
+              // '        <input type="number" name="price" value="'+data.price+'" placeholder=""\n' +
+              // '               autocomplete="off" class="layui-input">\n' +
+              // '      </div>\n' +
+              // '    </div>\n' +
               '    <div class="layui-form-item">\n' +
               '      <label class="layui-form-label">描述</label>\n' +
               '      <div class="layui-input-block">\n' +

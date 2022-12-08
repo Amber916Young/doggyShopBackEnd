@@ -88,7 +88,6 @@ public class AddressController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         JSONObject json= JSONObject.parseObject(jsonData);
         HashMap<String, Object> param  =  JSONObject.parseObject(json.get("addressObj").toString(), HashMap.class);
-
         addressService.insertAddress(param);
         return HttpResult.ok("successfully");
     }

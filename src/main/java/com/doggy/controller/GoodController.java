@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.doggy.utils.*;
 
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -87,30 +88,44 @@ public class GoodController {
             String title = EmojiParser.parseToUnicode(category.getTitle());
             category.setDescription(content);
             category.setTitle(title);
+
+            // 减少非必要 信息
+            category.setCreate_time(null);
+            category.setModify_time(null);
         }
         if(categoryList.isEmpty()){
             return HttpResult.ok("无产品");
         }
+
+
         param = new HashMap<>();
         Category category = categoryList.get(index);
         param.put("category_id", category.getId());
         List<Goods> goodsList = goodsService.queryAllGoods(param);
+        List<HashMap<String,Object>> res =new ArrayList<>();
         for (Goods goods : goodsList) {
-            param.put("pid", goods.getId());
             HashMap<String, Object> map = new HashMap<>();
             map.put("customer_id", customer_id);
             map.put("good_id", goods.getId());
             OrderCart orderCart = orderService.queryOrderCart(map);
+
+            HashMap<String,Object> objectHashMap = new HashMap<>();
+            objectHashMap.put("amount", 0);
             if(orderCart != null){
-                goods.setAmount(orderCart.getGood_amount());
+                objectHashMap.put("amount", orderCart.getGood_amount());
             }
             String content = EmojiParser.parseToUnicode( goods.getDescription());
             String title = EmojiParser.parseToUnicode(goods.getTitle());
-            goods.setDescription(content);
-            goods.setTitle(title);
-
+            objectHashMap.put("id", goods.getId());
+            objectHashMap.put("category_id", goods.getCategory_id());
+            objectHashMap.put("description", content);
+            objectHashMap.put("title", title);
+            objectHashMap.put("img_url", goods.getImg_url());
+            objectHashMap.put("original_price", goods.getPrice());
+            objectHashMap.put("price", goods.getPrice());
+            res.add(objectHashMap);
         }
-        category.setGoodsList(goodsList);
+        category.setGoodsList(res);
         return HttpResult.ok("successfully", categoryList);
     }
 
