@@ -230,18 +230,12 @@
   }
   function loadData(id){
       var jsonData={}
-      jsonData.order_id= id;
+      jsonData.batch_id= id;
       var params = JSON.stringify(jsonData);
-      ajaxPost(coupon_batch_rule_query, params, function (data) {
+      ajaxPost(coupon_batch_detail, params, function (data) {
           var str = '';
           var batch = data.data
           str =
-              '                    <div class="layui-form-item">\n' +
-              '                        <label class="layui-form-label">规则ID</label>\n' +
-              '                        <div class="layui-input-block"  id="ruleID">\n' +
-              // '                            <input type="text" name="rule_id"  value="'+batch.rule_id+'"    placeholder="规则ID" autocomplete="off" class="layui-input">\n' +
-              '                        </div>\n' +
-              '                    </div>\n' +
               '                    <div class="layui-form-item">\n' +
               '                        <label class="layui-form-label">总数量</label>\n' +
               '                        <div class="layui-input-block">\n' +

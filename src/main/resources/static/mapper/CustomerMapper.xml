@@ -70,12 +70,31 @@
             <if test="avatarUrl != null">
                 avatarUrl = #{avatarUrl},
             </if>
-            <if test="points != null">
+            <if test="points !=  -1">
                 points = points + #{points},
             </if>
         </set>
         where openid = #{openid} or id = #{id}
     </update>
+
+    <update id="updateCustomerPoints">
+        update DoggyPets.customer
+        <set>
+            <if test="points !=  -1">
+                points = points + #{points},
+            </if>
+        </set>
+        where openid = #{openid} or id = #{id}
+    </update>
+
+
+
+
+
+
+
+
+
 
     <delete id="deleteAddress">
         delete from DoggyPets.Customer_Address

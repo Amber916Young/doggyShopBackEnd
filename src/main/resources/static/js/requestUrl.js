@@ -17,6 +17,8 @@ var user_delete = "/web/user/deletes"
 // user  form
 var user_detail = "/web/user/detail"
 var user_form_view = "/view/user/detail/addform"
+var user_detail_update = "/web/user/detail/update"
+var user_detail_add = "/web/user/detail/add"
 
 
 // order index
@@ -92,3 +94,11 @@ var coupon_rule_form_view = "/view/coupons/rule/addform"
 var coupon_rule_delete = "/web/coupon/rule/deletes"
 var coupon_rule_form_add = "/web/coupon/rule/add"
 var coupon_rule_form_update = "/web/coupon/rule/edit"
+
+//定时任务
+var schedule_queryAll = "/web/scheduletask/queryByPage"
+var schedule_delete = "/web/scheduletask/deletes"
+var schedule_update = "/web/scheduletask/updates"
+//重新执行此任务
+var schedule_reload = "/web/scheduletask/reload"
+

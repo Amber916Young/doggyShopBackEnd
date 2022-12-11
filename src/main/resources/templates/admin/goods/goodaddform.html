@@ -1,0 +1,390 @@
+
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+  img{
+    height: 150px;
+    width: auto;
+  }
+  .layui-input, .layui-textarea{
+    width: 90%;
+  }
+
+  .layui-form-label{
+    width: 100px;
+  }
+  .main{
+    margin: 1rem 2rem;
+  }
+
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form main" >
+
+  <div  id="Info">
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">名称</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <input type="text" name="title" th:value="${item?.title}"  lay-verify="required" placeholder="大类名称" autocomplete="off" class="layui-input">-->
+<!--        <input  name="id" th:value="${item?.id}"  hidden>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">商品首页图片</label>-->
+<!--      <div class="layui-input-block">-->
+<!--          <div id="preview_edit">-->
+<!--            <img th:src="${item?.img_url}" />-->
+<!--          </div>-->
+<!--          <input type="text" name="img_url" th:value="${item?.img_url}"  id="edit_1" onchange="showImage('preview_edit' ,'edit_1')" placeholder="侧边图片 Url 不用本地的上传" autocomplete="off" class="layui-input">-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="layui-carousel" id="test1" style="    margin: auto;">-->
+<!--      <div carousel-item>-->
+<!--        <th:block th:each="imgItem,iterStat : ${imgList}">-->
+<!--          <img th:src="${imgItem?.img_url}" />-->
+<!--        </th:block>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">商品详情图片</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <textarea placeholder="回车"  lay-verify="required" name="imgList" class="layui-textarea" th:text="${imgArea}"></textarea>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">原价格</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <input type="number" name="original_price" th:value="${item?.original_price}" placeholder=""-->
+<!--               autocomplete="off" class="layui-input">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">价格</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <input type="number" name="price" th:value="${item?.price}" placeholder=""-->
+<!--               autocomplete="off" class="layui-input">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">描述</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <textarea placeholder="请输入内容"  lay-verify="required" name="description" class="layui-textarea" th:text="${item?.description}"></textarea>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">重新分类</label>-->
+<!--      <div class="layui-input-block" id="categoryList">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">规格</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <input type="text" name="specification" th:value="${item?.specification}" placeholder="" autocomplete="off" class="layui-input">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label"></label>-->
+<!--      <div class="layui-input-inline">-->
+<!--        <input type="button" lay-submit lay-filter="form-submit" value="确认" class="layui-btn">-->
+<!--      </div>-->
+<!--    </div>-->
+  </div>
+
+  <view  id="addDiv" >
+<!--    <blockquote class="layui-elem-quote">其余部分会自动更新，新增默认不上架</blockquote>-->
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">名称</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <input type="text" name="title"  lay-verify="required" placeholder="大类名称" autocomplete="off" class="layui-input">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">商品首页图片</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <div id="preview"></div>-->
+<!--        <input type="text" name="img_url" id="add_1" onchange="showImage('preview' ,'add_1')" placeholder="商品首页图片 Url 不用本地的上传 学生服务器压力太大" autocomplete="off" class="layui-input">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">商品详情图片</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <textarea placeholder="回车分割"   lay-verify="required" name="imgList" class="layui-textarea"></textarea>-->
+<!--      </div>-->
+<!--    </div>-->
+
+
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">原价格</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <input type="number" name="original_price"  placeholder="" autocomplete="off" class="layui-input">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">价格</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <input type="number" name="price" placeholder="" autocomplete="off" class="layui-input">-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">描述</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <textarea placeholder="请输入内容"  lay-verify="required" name="description" class="layui-textarea"></textarea>-->
+<!--      </div>-->
+<!--    </div>-->
+
+
+
+
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">规格</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <input type="text" name="specification"  placeholder="" autocomplete="off" class="layui-input">-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label"></label>-->
+<!--      <div class="layui-input-inline">-->
+<!--        <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">-->
+<!--      </div>-->
+<!--    </div>-->
+  </view>
+  <br> <br> <br>
+</div>
+<!--<script async id="chevereto-pup-src" src="https://imgtu.com/sdk/pup.js" data-url="https://imgtu.com/upload" data-auto-insert="bbcode-embed-medium"></script>-->
+
+<script>
+  var category_id = -1
+  var form =null
+  var id = -1
+  layui.use(['form','carousel'], function(){
+    var $ = layui.$
+    form = layui.form
+    var carousel = layui.carousel;
+    //建造实例
+    carousel.render({
+      elem: '#test1'
+      ,width: '200px' //设置容器宽度
+      ,height:'100px'
+      ,autoplay:false
+      ,arrow: 'hover' //始终显示箭头
+    });
+    form.on('submit(form-submit)', function(data){
+      var field = data.field;
+      field.id= id;
+
+      console.info(field)
+      ajaxPost(product_goods_form_update, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+    form.on('submit(form-submit-add)', function(data){
+      var field = data.field;
+      var jsonData={};
+      var jsonGood={};
+      jsonGood.title = field.title
+      jsonGood.img_url = field.img_url
+      jsonGood.original_price = field.original_price
+      jsonGood.price = field.original_price
+      // jsonGood.price = field.price
+      jsonGood.category_id = category_id
+      jsonGood.description = field.description
+      jsonGood.specification = field.specification
+      jsonGood.total_number = field.total_number
+      jsonGood.sale_number = field.sale_number
+      jsonData.goods = JSON.stringify(jsonGood)
+      jsonData.field = field
+      ajaxPost(product_goods_form_add, JSON.stringify(jsonData), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+    category_id = getParam('cid');
+    console.info(category_id)
+    type = getParam('type');
+    id = getParam('id');
+    if(type === "add"){
+      loadInfoAdd()
+    }else{
+      loadInfo(id)
+    }
+
+  })
+  function loadInfoAdd(){
+    var str = '  <blockquote class="layui-elem-quote">其余部分会自动更新，新增默认不上架</blockquote>\n' +
+            '    <div class="layui-form-item">\n' +
+            '      <label class="layui-form-label">名称</label>\n' +
+            '      <div class="layui-input-block">\n' +
+            '        <input type="text" name="title"  lay-verify="required" placeholder="大类名称" autocomplete="off" class="layui-input">\n' +
+            '      </div>\n' +
+            '    </div>\n' +
+            '    <div class="layui-form-item">\n' +
+            '      <label class="layui-form-label">商品首页图片</label>\n' +
+            '      <div class="layui-input-block">\n' +
+            '        <div id="preview"></div>\n' +
+            '        <input type="text" name="img_url" id="add_1" onchange="showImage(\'preview\' ,\'add_1\')" placeholder="商品首页图片 Url 不用本地的上传 学生服务器压力太大" autocomplete="off" class="layui-input">\n' +
+            '      </div>\n' +
+            '    </div>\n' +
+            '    <div class="layui-form-item">\n' +
+            '      <label class="layui-form-label">商品详情图片 请回车</label>\n' +
+            '      <div class="layui-input-block">\n' +
+            '        <textarea placeholder="回车分割"   lay-verify="required" name="imgList" class="layui-textarea"></textarea>\n' +
+            '      </div>\n' +
+            '    </div>\n' +
+            '    <div class="layui-form-item">\n' +
+            '      <label class="layui-form-label">原价格</label>\n' +
+            '      <div class="layui-input-block">\n' +
+            '        <input type="number" name="original_price"  placeholder="" autocomplete="off" class="layui-input">\n' +
+            '      </div>\n' +
+            '    </div>\n' +
+            '    <div class="layui-form-item">\n' +
+            '      <label class="layui-form-label">总库存</label>\n' +
+            '      <div class="layui-input-block">\n' +
+            '        <input type="number" name="total_number" placeholder="总库存" autocomplete="off" class="layui-input">\n' +
+            '      </div>\n' +
+            '    </div>\n' +
+            '    <div class="layui-form-item">\n' +
+            '      <label class="layui-form-label">描述</label>\n' +
+            '      <div class="layui-input-block">\n' +
+            '        <textarea placeholder="请输入内容"  lay-verify="required" name="description" class="layui-textarea"></textarea>\n' +
+            '      </div>\n' +
+            '    </div>\n' +
+            '    <div class="layui-form-item">\n' +
+            '      <label class="layui-form-label">规格 请回车</label>\n' +
+            '      <div class="layui-input-block">\n' +
+            '        <textarea placeholder="请输入内容" required  lay-verify="required" name="specification" class="layui-textarea" ></textarea>\n' +
+            '      </div>\n' +
+            '    </div>\n' +
+            '    <div class="layui-form-item">\n' +
+            '      <label class="layui-form-label"></label>\n' +
+            '      <div class="layui-input-inline">\n' +
+            '        <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">\n' +
+            '      </div>\n' +
+            '    </div>';
+    $("#addDiv").html(str)
+  }
+  function loadInfo(id){
+    var jsonData={}
+    jsonData.id= id;
+    var params = JSON.stringify(jsonData);
+    ajaxPost(product_goods_detail, params, function (data) {
+      var str = '';
+      var imgArea = data.data.imgArea
+      var imgList = data.data.imgList
+      var data = data.data.item
+      if( data===null ||data==="") return
+       str =' <div class="layui-form-item">\n' +
+              '      <label class="layui-form-label">名称</label>\n' +
+              '      <div class="layui-input-block">\n' +
+              '        <input type="text" name="title" value="'+data.title+'"  lay-verify="required" placeholder="大类名称" autocomplete="off" class="layui-input">\n' +
+              '        <input  name="id" th:value="${item?.id}"  hidden>\n' +
+              '      </div>\n' +
+              '    </div>\n' +
+              '    <div class="layui-form-item">\n' +
+              '      <label class="layui-form-label">商品首页图片</label>\n' +
+              '      <div class="layui-input-block">\n' +
+              '          <div id="preview_edit">\n' +
+              '            <img src="'+data.img_url+'" />\n' +
+              '          </div>\n' +
+              '          <input type="text" name="img_url" value="'+data.img_url+'"  id="edit_1" onchange="showImage(\'preview_edit\' ,\'edit_1\')" placeholder="侧边图片 Url 不用本地的上传" autocomplete="off" class="layui-input">\n' +
+              '      </div>\n' +
+              '    </div>\n' +
+              '    <div  id="test1" style="    margin: auto;">\n' +
+              '    </div>\n' +
+              '    <div class="layui-form-item">\n' +
+              '      <label class="layui-form-label">商品详情图片 请回车</label>\n' +
+              '      <div class="layui-input-block">\n' +
+              '        <textarea placeholder="回车"  lay-verify="required" name="imgList" class="layui-textarea" >'+imgArea+'</textarea>\n' +
+              '      </div>\n' +
+              '    </div>\n' +
+              '    <div class="layui-form-item">\n' +
+              '      <label class="layui-form-label">原价格</label>\n' +
+              '      <div class="layui-input-block">\n' +
+              '        <input type="number" name="original_price" value="'+data.original_price+'" placeholder=""\n' +
+              '               autocomplete="off" class="layui-input">\n' +
+              '      </div>\n' +
+              '    </div>\n' +
+              '    <div class="layui-form-item">\n' +
+              '      <label class="layui-form-label">总库存</label>\n' +
+              '      <div class="layui-input-block">\n' +
+              '        <input type="number" name="total_number" value="'+data.total_number+'" placeholder=""\n' +
+              '               autocomplete="off" class="layui-input">\n' +
+              '      </div>\n' +
+              '    </div>\n' +
+              '    <div class="layui-form-item">\n' +
+              '      <label class="layui-form-label">售卖数量</label>\n' +
+              '      <div class="layui-input-block">\n' +
+              '        <input type="number" name="sale_number" value="'+data.sale_number+'" placeholder=""\n' +
+              '               autocomplete="off" class="layui-input">\n' +
+              '      </div>\n' +
+              '    </div>\n' +
+              '    <div class="layui-form-item">\n' +
+              '      <label class="layui-form-label">描述</label>\n' +
+              '      <div class="layui-input-block">\n' +
+              '        <textarea placeholder="请输入内容"  lay-verify="required" name="description" class="layui-textarea" >'+data.description+'</textarea>\n' +
+              '      </div>\n' +
+              '    </div>\n' +
+              '    <div class="layui-form-item">\n' +
+              '      <label class="layui-form-label">重新分类</label>\n' +
+              '      <div class="layui-input-block" id="categoryList">\n' +
+              '      </div>\n' +
+              '    </div>\n' +
+              '    <div class="layui-form-item">\n' +
+              '      <label class="layui-form-label">规格 请回车</label>\n' +
+              '      <div class="layui-input-block">\n' +
+              '        <textarea placeholder="请输入内容" required  lay-verify="required" name="specification" class="layui-textarea" >'+data.specification+'</textarea>\n' +
+              '      </div>\n' +
+              '    </div>\n' +
+              '    <div class="layui-form-item">\n' +
+              '      <label class="layui-form-label"></label>\n' +
+              '      <div class="layui-input-inline">\n' +
+              '        <input type="button" lay-submit lay-filter="form-submit" value="确认" class="layui-btn">\n' +
+              '      </div>\n' +
+              '    </div>'
+      $("#Info").html(str)
+
+      var imgStr='';
+      for(let i=0;i<imgList.length;i++){
+        imgStr +="<img src='"+imgList[i].img_url+"' />"
+      }
+      $("#test1").html(imgStr)
+
+
+      loadCatrgoryList(category_id);
+    });
+
+  }
+
+  function showImage(id,id2){
+    var imgDiv = "#"+id;
+    var imgStr = "#"+id2;
+    var src = $(imgStr).val();
+    var str = "<img src='"+src+"'  />"
+    $(imgDiv).html(str)
+  }
+
+
+
+ function loadCatrgoryList(cid){
+    var jsonData={};
+    var params = JSON.stringify(jsonData);
+    ajaxPost(product_category_option, params, function (data) {
+      var res = data.data
+      var size = res.length;
+      var selectStr = ""
+      // console.info(cid)
+       selectStr += "<select name=\"category_id\" >";
+      for(var i = 0 ;i<size;i++){
+        var node = ('<option value="'+res[i].id+'">'+res[i].title+'</option>');
+        if(parseInt(cid) === res[i].id){
+          node = ('<option value="'+res[i].id+'" selected>'+res[i].title+'</option>');
+        }
+        selectStr += node;
+      }
+      selectStr += "</select>";
+      $("#categoryList").html(selectStr)
+      form.render();
+    });
+  }
+</script>

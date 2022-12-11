@@ -45,19 +45,22 @@
                                           <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                                       </button>
                                   </div>
-                                  <div class="layui-inline">
-                                      <button class="layui-btn btn-batch layui-btn-danger " data-type="batchdel">批量删除</button>
-                                      <button class="layui-btn btn-batch" data-type="add">新增</button>
-                                  </div>
                               </div>
                           </div>
                           <table id="tableview" lay-filter="tableview"></table>
                           <script type="text/html" id="toolbar">
-                              <div class="layui-btn-container"></div>
+                              <div class="layui-btn-container">
+                                  <button class="layui-btn btn-batch layui-btn-danger layui-btn-sm " data-type="batchdel">批量删除</button>
+                                  <button class="layui-btn btn-batch layui-btn-sm" data-type="add">新增</button>
+                              </div>
                           </script>
 
                           <script type="text/html" id="checkOrderDetail">
-                              <a  href="javascript:;"  onclick="checkOrderDetail('{{d.order_id}}' ,'{{d.order_sn}}'  )" class="layui-table-link" >{{ d.order_sn }}</a>
+                              {{#  if(d.order_id == 0){ }}
+                               <span class="layui-badge">未使用此优惠券</span>
+                              {{#  } else { }}
+                              <a  href="javascript:;"  onclick="checkOrderDetail('{{d.order_id}}' )" class="layui-table-link" >{{ d.order_id }}</a>
+                              {{#  } }}
                           </script>
                           <script type="text/html" id="checkCustomer">
                               <a  href="javascript:;"  onclick="checkCustomer('{{d.customer_id}}'  )" class="layui-table-link" >{{ d.customer_id }}</a>
@@ -70,11 +73,11 @@
                               {{#  if(d.status == 2){ }}
                               <span class="layui-badge">已过期</span>
                               {{#  } else if(d.status == 1){ }}
-                              <span class="layui-badge layui-bg-orange">橙</span>
+                              <span class="layui-badge layui-bg-orange">已使用</span>
                               {{#  } else if(d.status == 0){ }}
                               <span class="layui-badge layui-bg-blue">未使用</span>
                               {{#  } else { }}
-                              <span class="layui-badge layui-bg-black">黑</span>
+                              <span class="layui-badge layui-bg-black">冻结</span>
                               {{#  } }}
                           </script>
 
@@ -85,12 +88,7 @@
 
                       </div>
                   </div>
-                  <div class="layui-tab-item">
-
-
-
-
-                  </div>
+                  <div class="layui-tab-item"></div>
                   <div class="layui-tab-item"></div>
               </div>
           </div>
@@ -155,7 +153,7 @@
           ,cols: [
             [
                  {type: 'checkbox', fixed: 'left'}
-                ,{field: 'rule_id', width: 100, title: 'id',  align: 'center', sort: true}
+                ,{field: 'coupon_id', width: 100, title: 'id',  align: 'center', sort: true}
                 ,{field: 'customer_id', title: '客户id', align: 'center', width:130,templet: '#checkCustomer'}
                 ,{field: 'batch_id', title: '批次ID', align: 'center',  minWidth: 130,templet: '#checkCouponBatch'}
                 ,{field: 'status', title: '使用状态',  align: 'center', minWidth: 130, sort: true, templet: '#statusLabel'}
@@ -297,11 +295,11 @@
       });
   }
 
-  function checkOrderDetail(order_id,order_sn){
+  function checkOrderDetail(order_id){
       layer.open({
           type: 2
           ,area: ['90%', '80%']
-          ,title: '订单【'+order_sn+'】详情'
+          ,title: '订单【'+order_id+'】详情'
           ,shade: 0.6 //遮罩透明度
           ,maxmin: true //允许全屏最小化
           ,anim: 0 //0-6的动画形式，-1不开启

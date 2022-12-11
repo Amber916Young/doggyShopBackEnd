@@ -117,9 +117,13 @@ public class CouponsController {
         BigDecimal threshold = new BigDecimal(Double.toString(rule.getThreshold()));
         boolean flag = false;
         if (rule_type == 1) { //优惠卷类型, 0-满减, 1-折扣 2 直减
-            amount = match_amount_price.multiply(discount);
+            if (use_range == 0) {
+                amount = match_amount_price_all.multiply(discount);
+            }else{
+                amount = match_amount_price.multiply(discount);
+            }
         }
-        if (use_range == 0) {
+        if (use_range == 1) {
             for (int gid : goodsIdSet) {
                 Goods goods = goodsMap.get(gid);
                 BigDecimal count = countMap.get(gid);
@@ -138,7 +142,7 @@ public class CouponsController {
                         goods.setPrice(newPrice.doubleValue());
                     }
                 } else if (rule_type == 1) {
-                    goods.setPrice(newPrice.doubleValue());
+                    goods.setPrice(org.subtract(newPrice).doubleValue());
                 } else if (rule_type == 2) {
                     goods.setPrice(newPrice.doubleValue());
                 }
@@ -165,10 +169,7 @@ public class CouponsController {
                         goods.setPrice(newPrice.doubleValue());
                     }
                 } else if (rule_type == 1) {
-                    goods.setPrice(newPrice.doubleValue());
-
-                    goods.setPrice(disMoney.divide(count, 2, RoundingMode.HALF_UP).doubleValue());
-
+                    goods.setPrice(org.subtract(newPrice).doubleValue());
                 } else if (rule_type == 2) {
                     goods.setPrice(newPrice.doubleValue());
 

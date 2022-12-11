@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public class CustomerInfo {
     private int id;
-    private int points;
+    private int points = -1;
     private String uuid;
     private String openid;
     private String create_time;

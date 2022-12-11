@@ -29,11 +29,26 @@ public class ViewController {
     synchronized public String page1() {
         return "/admin/dashboard/index";
     }
+
+    @SneakyThrows
+    @GetMapping("/timingtask")
+    synchronized public String timingtask_index() {
+        return "/admin/TimingTask/index";
+    }
+
     @SneakyThrows
     @GetMapping("/product")
     synchronized public String page2() {
         return "/admin/product/index";
     }
+    @SneakyThrows
+    @GetMapping("/product/good/index")
+    synchronized public String goodIndex() {
+        return "/admin/goods/index";
+    }
+
+
+
     @SneakyThrows
     @GetMapping("/comment")
     synchronized public String comment_index() {
@@ -51,12 +66,9 @@ public class ViewController {
     }
 
 
-
-
-
     @GetMapping("/coupon/batch/addform")
     synchronized public String coupons_Batch() {
-        return "/admin/coupons_batch/addform_coupons_batch";
+        return "/admin/coupons_batch/addform";
     }
 
     @GetMapping("/coupons/rule")
@@ -68,8 +80,6 @@ public class ViewController {
     synchronized public String coupon_rule_form() {
         return "/admin/coupons_rule/addform";
     }
-
-
 
 
     @SneakyThrows
@@ -126,7 +136,7 @@ public class ViewController {
     @SneakyThrows
     @GetMapping("/product/goods/addform")
     synchronized public String good_Page() {
-        return "/admin/product/goodaddform";
+        return "/admin/goods/goodaddform";
     }
 
     @SneakyThrows

@@ -27,4 +27,6 @@ public interface CustomerMapper {
     int pageQueryAddressCount(Page page);
 
     List<CustomerAddress> pageQueryAddressData(Page page);
+
+    void updateCustomerPoints(CustomerInfo customerInfo);
 }

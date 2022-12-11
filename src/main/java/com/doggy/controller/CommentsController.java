@@ -12,6 +12,9 @@ import com.doggy.service.SysOrderService;
 import com.doggy.utils.HttpResult;
 import com.doggy.utils.JsonUtils;
 import com.doggy.utils.Page;
+import com.doggy.utils.UnicodeUtils;
+import com.vdurmont.emoji.EmojiManager;
+import com.vdurmont.emoji.EmojiParser;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -128,6 +131,9 @@ public class CommentsController {
         List<Comment> lists = commentService.pageQueryCommentDataByid(page);
         for(Comment tmp : lists){
             int id = tmp.getComment_id();
+            // 还原表情
+            String content = EmojiParser.parseToUnicode( tmp.getContent());
+            tmp.setContent(content);
             CustomerInfo  customerInfo = customerService.queryCustomerByid(tmp.getCustomer_id());
             Comment subComment = commentService.queryCommentsbyId(id);
             tmp.setCustomer(customerInfo);
@@ -153,6 +159,12 @@ public class CommentsController {
         int order_detail_id = Integer.parseInt(param.get("order_detail_id").toString());
         double rate  = Double.parseDouble(param.get("rate").toString());
         String content =param.get("content").toString();
+        if(EmojiManager.isEmoji(content)){
+            List<String > tmp = new ArrayList<>();
+            tmp.add("content");
+            param = UnicodeUtils.DECODEUnicode(param,tmp);
+        }
+
         List<String> imgMap = JsonUtils.jsonToPojo(param.get("imgMap").toString(),List.class);
         if(imgMap.size() > 0){
             List<ImageRepo> list = new ArrayList<>();

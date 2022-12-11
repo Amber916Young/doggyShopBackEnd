@@ -1,0 +1,126 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doggy.mapper.ScheduleTaskMapper">
+    <insert id="insertScheduleTask">
+        insert into DoggyPets.schedule_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="desc_txt != null">
+                desc_txt,
+            </if>
+            <if test="cron != null">
+                cron,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+            <if test="exe_class != null">
+                exe_class,
+            </if>
+            <if test="params != null">
+                params,
+            </if>
+            <if test="create_time != null">
+                create_time,
+            </if>
+            <if test="update_time != null">
+                update_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="desc_txt != null">
+                #{desc_txt},
+            </if>
+            <if test="cron != null">
+                #{cron},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="deleted != null">
+                #{deleted},
+            </if>
+            <if test="exe_class != null">
+                #{exe_class},
+            </if>
+            <if test="params != null">
+                #{params},
+            </if>
+            <if test="create_time != null">
+                #{create_time},
+            </if>
+            <if test="update_time != null">
+                #{update_time}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateScheduleTask">
+        update DoggyPets.schedule_task
+        <set>
+            <if test="desc_txt != null">
+                desc_txt =  #{desc_txt},
+            </if>
+            <if test="cron != null">
+                cron =   #{cron},
+            </if>
+            <if test="status != null">
+                status =   #{status},
+            </if>
+            <if test="deleted != null">
+                deleted =   #{deleted},
+            </if>
+            <if test="exe_class != null">
+                exe_class =     #{exe_class},
+            </if>
+            <if test="params != null">
+                params =    #{params},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteScheduleTask">
+        delete from DoggyPets.schedule_task where id = #{id}
+    </delete>
+
+    <select id="pageQueryScheduleTaskData" resultType="com.doggy.entity.ScheduleTask">
+        select * from DoggyPets.schedule_task
+        <where>
+            1=1
+            <if test="data.status !=null">
+                and status = #{data.status}
+            </if>
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(deleted,'')
+                , IFNULL(exe_class,'')
+                , IFNULL(params,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+        order by create_time desc
+        limit #{start},#{rows}
+    </select>
+    <select id="pageQueryScheduleTaskCount" resultType="java.lang.Integer">
+        select count(1) from DoggyPets.schedule_task
+        <where>
+            1=1
+            <if test="data.status !=null">
+                and status = #{data.status}
+            </if>
+            <if test="keyWord !=null">
+                and   concat(
+                IFNULL(deleted,'')
+                , IFNULL(exe_class,'')
+                , IFNULL(params,''))
+                like concat('%', #{keyWord}, '%')
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

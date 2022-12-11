@@ -12,6 +12,7 @@ import com.doggy.utils.HttpResult;
 import com.doggy.utils.JsonUtils;
 import com.doggy.utils.Page;
 import com.doggy.utils.UnicodeUtils;
+import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +117,13 @@ public class WebProductController {
             String[] imgList = param.get("imgList").toString().trim().split("\\n");
             int fid = Integer.parseInt(param.get("id").toString());
             param.put("type","goods");
+
+            List<String > tmp = new ArrayList<>();
+            tmp.add("title");
+//            tmp.add("description");
+            param = UnicodeUtils.DECODEUnicode(param,tmp);
+
+
             goodsService.updateGoods(param);
             goodsService.deleteImageRepo(fid);
             for(String s : imgList){
@@ -233,6 +241,10 @@ public class WebProductController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         try {
+            List<String > list = new ArrayList<>();
+            list.add("title");
+            list.add("description");
+            param = UnicodeUtils.DECODEUnicode(param,list);
             goodsService.updateCategory(param);
             return HttpResult.ok("更新成功");
         }catch (Exception e){

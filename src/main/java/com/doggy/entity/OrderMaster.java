@@ -28,7 +28,7 @@ public class OrderMaster {
     private String shipping_time; //发货时间
     private String pay_time; //支付时间
     private String receive_time;//收货时间
-    private int order_status; //订单状态 0未发货 1 已发货 2已完成
+    private int order_status; //订单状态 0未发货 1 已发货 2已完成 -1
 
     private int order_point; //订单积分
     private String invoice_time; //发票抬头

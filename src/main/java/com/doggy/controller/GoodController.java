@@ -55,10 +55,22 @@ public class GoodController {
             param.put("type","goods");
             List<ImageRepo> imageList = goodsService.queryAllImageList(param);
             goods.setImageList(imageList);
+            String content = EmojiParser.parseToUnicode( goods.getDescription());
+            String title = EmojiParser.parseToUnicode(goods.getTitle());
+            goods.setDescription(content);
+            goods.setTitle(title);
+
         }
         param = new HashMap<>();
         param.put("id",category_id);
         Category currentCategory = goodsService.querycurrentCategory(param);
+        String  content = EmojiParser.parseToUnicode( currentCategory.getDescription());
+        String title = EmojiParser.parseToUnicode(currentCategory.getTitle());
+        currentCategory.setDescription(content);
+        currentCategory.setTitle(title);
+
+
+
         param = new HashMap<>();
         param.put("currentCategory",currentCategory);
         param.put("currentCategorySub",goodsList);

@@ -6,13 +6,13 @@
     width: 150px;
   }
   .left{
-      width: 50%;
+      width: 100%;
       text-align: center;
   }
-  .right{
-      width: 50%;
-      text-align: center;
-  }
+  /*.right{*/
+  /*    width: 50%;*/
+  /*    text-align: center;*/
+  /*}*/
   .main{
       margin: 1rem 2rem;
       display: flex;
@@ -78,34 +78,98 @@
 <script>
   var customer_id = null;
   var type = null;
-  layui.use(['form','table'], function(){
+  layui.use(['form'], function(){
     var $ = layui.$
     ,form = layui.form
-    var table = layui.table;
     customer_id = getParam('customer_id');
-    type = getParam('type');
-    loadUserInfo(customer_id)
+    type = getParam('type'); // edit view
+    if(type === "edit"){
+        loadUserInfoEdit(customer_id)
+    }else{
+        loadUserInfo(customer_id)
 
+    }
 
-    form.on('submit(form-submit)', function(data){
-      var field = data.field;
-      var url = "/web/order/detail/update"
-      ajaxPost(url, JSON.stringify(field), function (data) {
+    form.on('submit(form-submit-edit)', function(data){
+        var field = data.field;
+        console.info(field)
+
+        ajaxPost(user_detail_update, JSON.stringify(field), function (data) {
           layer.msg(data.msg, {time: 3000, icon: 1});
       });
     });
 
     form.on('submit(form-submit-add)', function(data){
-      var field = data.field;
-      var url = "/web/order/detail/add"
-      ajaxPost(url, JSON.stringify(field), function (data) {
+        var field = data.field;
+        console.info(field)
+        field.id = customer_id
+        ajaxPost(user_detail_add, JSON.stringify(field), function (data) {
           layer.msg(data.msg, {time: 3000, icon: 1});
       });
-      console.info(field)
     });
 
   })
+  function loadUserInfoEdit(id){
+      var jsonData={}
+      jsonData.customer_id= id;
+      var params = JSON.stringify(jsonData);
+      ajaxPost(user_detail, params, function (data) {
+          var str = '';
+          var data = data.data
+          if( data===null ||data==="") return
+          str ='  <div class="left"> \n' +
+              '            <img src="'+data.avatarUrl+'" />  <hr>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">用户名</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <input required lay-verify="required" type="text" name="username"  value="'+data.username+'"   placeholder="openid" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">uuid</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <input readonly  type="text" name="uuid"  value="'+data.uuid+'"   placeholder="uuid" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">openid</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <input readonly type="text" name="openid"  value="'+data.openid+'"   placeholder="openid" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">积分</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <input  type="number" name="openid"  value="'+data.points+'"   placeholder="openid" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">电话</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <input  type="text" name="phone"  value="'+data.phone+'"  placeholder="phone" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">Token</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                     <textarea readonly name="Token" class="layui-textarea">'+data.token+'</textarea>\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">性别</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <input  required lay-verify="required" type="text" name="gender"  value="'+data.gender+'"    placeholder="gender" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                    <input type="button" lay-submit lay-filter="form-submit-edit" value="新增" class="layui-btn">\n' +
+              '            </div>\n' +
+              '        </div>'
+          $("#userInfo").html(str)
+      });
 
+
+  }
   function loadUserInfo(id){
       var jsonData={}
       jsonData.customer_id= id;
@@ -118,45 +182,50 @@
               '            <img src="'+data.avatarUrl+'" />  <hr>\n' +
               '            <div class="layui-form-item">\n' +
               '                <label class="layui-form-label">用户名</label>\n' +
-              '                <div class="layui-input-inline">\n' +
+              '                <div class="layui-input-block">\n' +
               '                    <input readonly type="text" name="username"  value="'+data.username+'"   placeholder="openid" autocomplete="off" class="layui-input">\n' +
               '                </div>\n' +
               '            </div>\n' +
               '            <div class="layui-form-item">\n' +
               '                <label class="layui-form-label">uuid</label>\n' +
-              '                <div class="layui-input-inline">\n' +
+              '                <div class="layui-input-block">\n' +
               '                    <input readonly type="text" name="uuid"  value="'+data.uuid+'"   placeholder="uuid" autocomplete="off" class="layui-input">\n' +
               '                </div>\n' +
               '            </div>\n' +
               '            <div class="layui-form-item">\n' +
               '                <label class="layui-form-label">openid</label>\n' +
-              '                <div class="layui-input-inline">\n' +
+              '                <div class="layui-input-block">\n' +
               '                    <input readonly type="text" name="openid"  value="'+data.openid+'"   placeholder="openid" autocomplete="off" class="layui-input">\n' +
               '                </div>\n' +
               '            </div>\n' +
-              '        </div>\n' +
-              '        <div class="right">\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">积分</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <input readonly  type="number" name="openid"  value="'+data.points+'"   placeholder="openid" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
               '            <div class="layui-form-item">\n' +
               '                <label class="layui-form-label">电话</label>\n' +
-              '                <div class="layui-input-inline">\n' +
+              '                <div class="layui-input-block">\n' +
               '                    <input  readonly type="text" name="phone"    value="'+data.phone+'"  placeholder="phone" autocomplete="off" class="layui-input">\n' +
               '                </div>\n' +
               '            </div>\n' +
               '            <div class="layui-form-item">\n' +
               '                <label class="layui-form-label">性别</label>\n' +
-              '                <div class="layui-input-inline">\n' +
+              '                <div class="layui-input-block">\n' +
               '                    <input  readonly type="text" name="gender"  value="'+data.gender+'"    placeholder="gender" autocomplete="off" class="layui-input">\n' +
               '                </div>\n' +
               '            </div>\n' +
               '            <div class="layui-form-item">\n' +
-              '                <label class="layui-form-label">最近登陆</label>\n' +
-              '                <div class="layui-input-inline">\n' +
-              '                    <input  readonly type="text" name="login_time"  value="'+data.login_time+'"    placeholder="create_time" autocomplete="off" class="layui-input">\n' +
+              '                <label class="layui-form-label">Token</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                     <textarea readonly name="Token" class="layui-textarea">'+data.token+'</textarea>\n' +
               '                </div>\n' +
               '            </div>\n' +
               '            <div class="layui-form-item">\n' +
-              '                <div class="layui-input-inline">\n' +
-              '                    <input type="button" lay-submit lay-filter="form-submit-add" value="新增" class="layui-btn">\n' +
+              '                <label class="layui-form-label">最近登陆</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <input  readonly type="text" name="login_time"  value="'+data.login_time+'"    placeholder="create_time" autocomplete="off" class="layui-input">\n' +
               '                </div>\n' +
               '            </div>\n' +
               '        </div>'

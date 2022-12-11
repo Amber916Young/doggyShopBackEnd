@@ -60,14 +60,22 @@ public class WxController {
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         CustomerInfo customer = JSONObject.parseObject(param.get("customer").toString(),CustomerInfo.class);
         String token =TokenUtils.refreshToken(customer);
-        customer.setToken(token);
+        customer.setPhone(token);
+        if(customer.getAvatarUrl()==null || customer.getAvatarUrl().length()==0
+                || customer.getAvatarUrl().trim().equals("") || !customer.getAvatarUrl().contains("data")){
+            customer.setAvatarUrl(null);
+        }
         CustomerInfo isExist = customerService.queryCustomerByid(customer.getId());
         if(isExist == null){
             customerService.insertCustomerInfo(customer);
+            return HttpResult.ok(customer);
+
         }else {
-            customerService.updateCustomerInfo(customer);
+            isExist.setToken(token);
+            isExist.setAvatarUrl(customer.getAvatarUrl());
+            customerService.updateCustomerInfo(isExist);
+            return HttpResult.ok(isExist);
         }
-        return HttpResult.ok(customer);
     }
 
     @SneakyThrows
@@ -110,6 +118,7 @@ public class WxController {
         customerInfo.setAvatarUrl(avatarUrl);
         String token =TokenUtils.genToken(customerInfo);
         customerInfo.setToken(token);
+        customerInfo.setPoints(-1);
         customerService.updateCustomerInfo(customerInfo);
         return HttpResult.ok(customerInfo);
     }

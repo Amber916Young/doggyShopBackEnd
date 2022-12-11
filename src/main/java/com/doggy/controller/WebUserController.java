@@ -73,6 +73,17 @@ public class WebUserController {
         CustomerInfo customer = customerService.queryCustomerByid(Integer.parseInt(customer_id));
         return HttpResult.ok("查询成功",customer);
     }
+
+
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/detail/update")
+    public HttpResult UserDetail_update(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        CustomerInfo customer  = JSONObject.parseObject(jsonData, CustomerInfo.class);
+        customerService.updateCustomerInfo(customer);
+        return HttpResult.ok("更新成功");
+    }
     @SneakyThrows
     @ResponseBody
     @PostMapping("/address/update/flag")

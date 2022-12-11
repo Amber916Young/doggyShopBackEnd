@@ -131,7 +131,7 @@ public class OrderController {
         CustomerInfo customerInfo = new CustomerInfo();
         customerInfo.setId(customer_id);
         customerInfo.setPoints(order_point);
-        customerService.updateCustomerInfo(customerInfo);
+        customerService.updateCustomerPoints(customerInfo);
         customerInfo = customerService.queryCustomerByid(customer_id);
         return HttpResult.ok("successfully",customerInfo);
     }

@@ -31,6 +31,10 @@ public class CustomerService {
     public void updateCustomerInfo(CustomerInfo customerInfo) {
         customerMapper.updateCustomerInfo(customerInfo);
     }
+    public void updateCustomerPoints(CustomerInfo customerInfo) {
+        customerMapper.updateCustomerPoints(customerInfo);
+
+    }
 
     public int insertCustomerInfo(CustomerInfo customerInfo) {
         return customerMapper.insertCustomerInfo(customerInfo);
@@ -56,4 +60,6 @@ public class CustomerService {
     public int pageQueryAddressCount(Page page) {
         return customerMapper.pageQueryAddressCount(page);
     }
+
+
 }
