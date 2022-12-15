@@ -37,14 +37,14 @@ public interface SysGoodsMapper {
     List<Category> pageQueryCategoryData(Page page);
 
 
-    @Select("select * from DoggyPets.Category where id = #{id}")
+    @Select("select * from DoggyPets.category where id = #{id}")
     Category queryCategoryById(int id);
 
     void updateCategory(HashMap<String, Object> param);
 
     void insertCategory(HashMap<String, Object> param);
 
-    @Delete("delete from DoggyPets.Category where id = #{id}")
+    @Delete("delete from DoggyPets.category where id = #{id}")
     void deleteCategory(HashMap<String, Object> param);
 
     void updateGoods(HashMap<String, Object> param);

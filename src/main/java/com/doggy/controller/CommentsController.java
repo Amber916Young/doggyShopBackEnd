@@ -2,17 +2,12 @@ package com.doggy.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.doggy.entity.Comment;
-import com.doggy.entity.CustomerInfo;
-import com.doggy.entity.ImageRepo;
+import com.doggy.entity.*;
 import com.doggy.service.CustomerService;
 import com.doggy.service.SysCommentService;
 import com.doggy.service.SysGoodsService;
 import com.doggy.service.SysOrderService;
-import com.doggy.utils.HttpResult;
-import com.doggy.utils.JsonUtils;
-import com.doggy.utils.Page;
-import com.doggy.utils.UnicodeUtils;
+import com.doggy.utils.*;
 import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.SneakyThrows;
@@ -20,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -41,6 +37,14 @@ public class CommentsController {
 
     @Autowired
     private SysOrderService orderService;
+
+
+
+
+
+
+
+
 
     private void queryComment(Comment comment,int good_id){
         List<Comment> commentList = commentService.queryAllCommentsDFS(comment.getComment_id(),good_id);
@@ -144,13 +148,56 @@ public class CommentsController {
     }
 
 
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/getAll/suggestion")
+    public HttpResult getAllSuggestion(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        Page page = new Page();
+        int limit = 20;
+        HashMap<String,Object> data = new HashMap<>();
+        int curr = Integer.parseInt(param.get("currNo").toString());
+        int customer_id = Integer.parseInt(param.get("customer_id").toString());
+        String  status = param.get("status").toString();
+        limit = Integer.parseInt(param.get("limit").toString());
+        page.setData(data);
+        page.setRows(limit);
+        page.setPage(curr);
+        int start = page.getStart();
+        page.setStart(start);
+        page.setId(customer_id);
+        data.put("status",status);
+        List<Suggestion> list = commentService.querySuggestionPage(page);
+        return HttpResult.ok("查询成功",list);
+    }
+
+
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/suggestion/add")
+    public HttpResult addSuggestion(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        String content = param.get("content").toString();
+        String suggest_id = NumberUtil.customFormatDate("yyyyMMddHHmmss");
+        param.put("suggest_id",suggest_id);
+        if (EmojiManager.containsEmoji(content)){
+            //parseToHtmlHexadecimal parseToUnicode
+             content = EmojiParser.parseToHtmlHexadecimal(content);
+            param.put("content",content);
+        }
+        commentService.insertSuggestion(param);
+        return HttpResult.ok("评价成功");
+    }
+
+
 
 
     @SneakyThrows
     @ResponseBody
     @PostMapping("/add")
     public HttpResult addComment(@RequestBody String jsonData) {
-//        jsonData = URLDecoder.decode(jsonData, "utf-8").replacexAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         // good_id
 //        List<Comment> commentList = commentService.queryAllComments(param);

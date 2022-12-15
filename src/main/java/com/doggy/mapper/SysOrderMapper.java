@@ -27,10 +27,10 @@ public interface SysOrderMapper {
 
     List<OrderCart> queryOrderCartList(HashMap<String, Object> param);
 
-    @Delete("delete from Order_Cart where (customer_id = #{customer_id}  and good_id = #{good_id} ) " +
+    @Delete("delete from order_cart where (customer_id = #{customer_id}  and good_id = #{good_id} ) " +
             "or cart_id = #{cart_id}")
     void deleteOrderCart(HashMap<String, Object> param);
-    @Delete("delete from Order_Cart where customer_id = #{customer_id}")
+    @Delete("delete from order_cart where customer_id = #{customer_id}")
     void deleteOrderCartAll(int customer_id);
 
     int pageQueryOrderCount(Page page);

@@ -105,7 +105,7 @@
             </script>
             <script type="text/html" id="toolbar">
                 <div class="layui-btn-container">
-                    <button class="layui-btn  layui-btn-sm  " onclick="CheckId()">请勾选商品，完成后点击此按钮</button>
+                    <button class="layui-btn  layui-btn-sm  " >请勾选商品</button>
                 </div>
             </script>
         </div>
@@ -163,6 +163,21 @@
       element.render();
       loadDate()
     form.on('submit(form-submit-add)', function(data){
+
+
+
+        var checkStatus = table.checkStatus('tableview')
+            , checkData = checkStatus.data;
+        jsonData = new Array()
+        if (checkData.length === 0) {
+            return layer.msg('请选择数据');
+        } else {
+            for (var i = 0; i < checkData.length; i++) {
+                jsonData.push(checkData[i].id);
+            }
+        }
+        layer.msg('您已选择完成');
+
       var field = data.field;
         field.type = type
         field.use_range = flag

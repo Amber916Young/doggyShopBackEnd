@@ -72,15 +72,16 @@
 
 <!--                          //优惠卷类型, 0-满减, 1-折扣 2—直减-->
                           <script type="text/html" id="typeLabel">
-                              {{#  if(d.status == 0){ }}
+                              {{#  if(d.type == 0){ }}
                               <span class="layui-badge layui-bg-orange">满减</span>
-                              {{#  } else if(d.status == 1){ }}
+                              {{#  } else if(d.type == 1){ }}
                               <span class="layui-badge layui-bg-blue">折扣</span>
                               {{#  } else { }}
                               <span class="layui-badge layui-bg-black">直减</span>
                               {{#  } }}
                           </script>
                           <script type="text/html" id="use_rangeLabel">
+
                               {{#  if(d.use_range == 0){ }}
                               <span class="layui-badge layui-bg-orange ">全场</span>
                               {{#  } else { }}

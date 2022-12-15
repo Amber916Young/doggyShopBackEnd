@@ -70,9 +70,6 @@
             <if test="avatarUrl != null">
                 avatarUrl = #{avatarUrl},
             </if>
-            <if test="points !=  -1">
-                points = points + #{points},
-            </if>
         </set>
         where openid = #{openid} or id = #{id}
     </update>
@@ -97,7 +94,7 @@
 
 
     <delete id="deleteAddress">
-        delete from DoggyPets.Customer_Address
+        delete from DoggyPets.customer_address
         <where>
             1=1
             <if test="customer_addr_id != null">
@@ -159,7 +156,7 @@
     </select>
 
     <select id="pageQueryAddressCount" resultType="java.lang.Integer">
-        select count(1) from DoggyPets.Customer_Address
+        select count(1) from DoggyPets.customer_address
         <where>
             1=1
             <if test="keyWord !=null">
@@ -174,7 +171,7 @@
         </where>
     </select>
     <select id="pageQueryAddressData" resultType="com.doggy.entity.CustomerAddress">
-        select * from DoggyPets.Customer_Address
+        select * from DoggyPets.customer_address
         <where>
             1=1
             <if test="keyWord !=null">

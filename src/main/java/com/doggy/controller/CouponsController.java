@@ -7,7 +7,6 @@ import com.doggy.service.SysGoodsService;
 import com.doggy.service.SysOrderService;
 import com.doggy.utils.HttpResult;
 import com.doggy.utils.Page;
-import com.sun.tools.corba.se.idl.constExpr.Or;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +42,27 @@ public class CouponsController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         Coupon_batch batch= couponService.queryCouponBatch(param);
-        List<OrderCart> cartList = orderService.queryOrderCartList(param);
+        String type = param.get("type").toString();
+        String[] ids = param.get("ids").toString().split(",");
+        List<OrderCart> cartList = new ArrayList<>();
+
+        if("cart".equals(type)){
+            HashMap<String, Object> map = new HashMap<>();
+            for(String id : ids){
+                if (!"".equals(id)) {
+                    map.put("cart_id",id);
+                    OrderCart cart = orderService.queryOrderCart(map);
+                    cartList.add(cart);
+                }
+            }
+        }else {
+            int id = Integer.parseInt(param.get("ids").toString());
+            OrderCart tmp = new OrderCart();
+            tmp.setGood_amount(1);
+            tmp.setGood_id(id);
+            cartList.add(tmp);
+        }
+
         param.put("rule_id",batch.getRule_id());
         Rule rule= couponService.queryRule(param);
         HashMap<String,Object> Map = new HashMap<>();
@@ -225,8 +244,28 @@ public class CouponsController {
     public HttpResult getAllCouponsWhichCanuseInCurrentOrder(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
-        List<OrderCart> orderCarts = orderService.queryOrderCartList(param);
         param.put("status",0);
+        String type = param.get("type").toString();
+        List<OrderCart> orderCarts = new ArrayList<>();
+        String[] ids = param.get("ids").toString().split(",");
+
+        if("cart".equals(type)){
+            HashMap<String, Object> map = new HashMap<>();
+            for(String id : ids){
+                if (!"".equals(id)) {
+                    map.put("cart_id",id);
+                    OrderCart cart = orderService.queryOrderCart(map);
+                    orderCarts.add(cart);
+                }
+            }
+        }else {
+            int id = Integer.parseInt(param.get("ids").toString());
+            OrderCart tmp = new OrderCart();
+            tmp.setGood_amount(1);
+            tmp.setGood_id(id);
+            orderCarts.add(tmp);
+        }
+
         List<Coupon> couponList = couponService.queryAllCouponCustomer(param);
         List<Coupon> res = new ArrayList<>();
         for(Coupon coupon : couponList){

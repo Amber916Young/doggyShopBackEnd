@@ -19,4 +19,5 @@ public class OrderCart {
     private String add_time;
     private String modified_time;
     private Goods goods;
+    private Boolean flag = true;
 }

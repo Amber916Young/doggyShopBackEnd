@@ -83,7 +83,7 @@
         </trim>
     </insert>
     <insert id="insertCouponBatch">
-        insert into DoggyPets.Coupon_Batch
+        insert into DoggyPets.coupon_batch
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="rule_id != null">
                 rule_id,
@@ -127,7 +127,7 @@
 
     </insert>
     <insert id="insertCoupon">
-        insert into DoggyPets.Coupon
+        insert into DoggyPets.coupon
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="customer_id != null">
                 customer_id,
@@ -175,7 +175,7 @@
     </insert>
 
     <delete id="deleteCoupons">
-       delete from DoggyPets.Coupon
+       delete from DoggyPets.coupon
         <where>
             1=1
             <if test="coupon_id !=null">
@@ -188,7 +188,7 @@
     </delete>
 
     <delete id="deleteCouponsBatch">
-        delete from DoggyPets.Coupon_Batch where batch_id = #{batch_id}
+        delete from DoggyPets.coupon_batch where batch_id = #{batch_id}
     </delete>
     <delete id="deleteRule">
         delete from DoggyPets.rule where rule_id = #{rule_id}
@@ -196,7 +196,7 @@
 
 
     <select id="pageQuerycCouponData" resultType="com.doggy.entity.Coupon">
-        select * from DoggyPets.Coupon
+        select * from DoggyPets.coupon
         <where>
             1=1
             <if test="data.status !=null">
@@ -214,7 +214,7 @@
         limit #{start},#{rows}
     </select>
     <select id="pageQueryCouponCount" resultType="java.lang.Integer">
-        select count(1) from DoggyPets.Coupon
+        select count(1) from DoggyPets.coupon
         <where>
             1=1
             <if test="data.status !=null">
@@ -234,7 +234,7 @@
 
 
     <select id="pageQueryCouponBatchData" resultType="com.doggy.entity.Coupon_batch">
-        select * from DoggyPets.Coupon_Batch
+        select * from DoggyPets.coupon_batch
         <where>
             1=1
             <if test="keyWord !=null">
@@ -251,7 +251,7 @@
         limit #{start},#{rows}
     </select>
     <select id="pageQueryCouponBatchCount" resultType="java.lang.Integer">
-        select count(1) from DoggyPets.Coupon_Batch
+        select count(1) from DoggyPets.coupon_batch
         <where>
             1=1
             <if test="keyWord !=null">
@@ -282,7 +282,7 @@
         where rule_id = #{rule_id}
     </update>
     <update id="updateCouponBatch">
-        update DoggyPets.Coupon_Batch
+        update DoggyPets.coupon_batch
         <set>
             <if test="rule_id != null">
                 rule_id = #{rule_id},
@@ -309,7 +309,7 @@
         where batch_id = #{batch_id}
     </update>
     <update id="updateCoupon">
-        update DoggyPets.Coupon
+        update DoggyPets.coupon
         <set>
             <if test="customer_id != null">
                 customer_id = #{customer_id},
@@ -338,7 +338,7 @@
 
 
     <select id="pageQueryRuleData" resultType="com.doggy.entity.Rule">
-        select * from DoggyPets.Rule
+        select * from DoggyPets.rule
         <where>
             1=1
             <if test="keyWord !=null">
@@ -352,7 +352,7 @@
         limit #{start},#{rows}
     </select>
     <select id="pageQueryRuleCount" resultType="java.lang.Integer">
-        select count(1) from DoggyPets.Rule
+        select count(1) from DoggyPets.rule
         <where>
             1=1
             <if test="keyWord !=null">
@@ -364,7 +364,7 @@
         </where>
     </select>
     <select id="queryCoupon" resultType="com.doggy.entity.Coupon">
-        select * from DoggyPets.Coupon
+        select * from DoggyPets.coupon
         <where>
             1=1
             <if test="coupon_id !=null">
@@ -379,7 +379,7 @@
         </where>
     </select>
     <select id="queryCouponBatch" resultType="com.doggy.entity.Coupon_batch">
-        select * from DoggyPets.Coupon_Batch
+        select * from DoggyPets.coupon_batch
         <where>
             1=1
             <if test="batch_id !=null">
@@ -425,7 +425,7 @@
     </select>
 
     <select id="queryCouponCustomerMap" resultType="com.doggy.entity.Coupon">
-        select * from DoggyPets.Coupon
+        select * from DoggyPets.coupon
         <where>
             1=1
             <if test="data.status !=null">
@@ -438,7 +438,7 @@
         limit #{start},#{rows}
     </select>
     <select id="querycCouponBatchMap" resultType="com.doggy.entity.Coupon_batch">
-        select * from DoggyPets.Coupon_Batch
+        select * from DoggyPets.coupon_batch
         <where>
             total_count &gt; assign_count and
             1=1
@@ -448,7 +448,7 @@
 
 
     <select id="queryAllCouponCustomer" resultType="com.doggy.entity.Coupon">
-        select * from DoggyPets.Coupon
+        select * from DoggyPets.coupon
         <where>
             1=1
             <if test="customer_id !=null">

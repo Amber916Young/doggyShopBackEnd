@@ -4,7 +4,7 @@
 <mapper namespace="com.doggy.mapper.SysGoodsMapper">
 
     <insert id="insertGoods" parameterType="Goods" useGeneratedKeys="true" keyProperty="id">
-        insert into DoggyPets.Goods
+        insert into DoggyPets.goods
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="title != null">
                 title,
@@ -77,7 +77,7 @@
 
 
     <update id="updateGoods">
-        update DoggyPets.Goods
+        update DoggyPets.goods
         <set>
             <if test="title != null">
                 title = #{title},
@@ -292,7 +292,7 @@
     </select>
 
     <select id="pageQueryCategoryCount" resultType="java.lang.Integer">
-        select count(1) from DoggyPets.Category
+        select count(1) from DoggyPets.category
         <where>
             1=1
             <if test="keyWord !=null">
@@ -304,7 +304,7 @@
         </where>
     </select>
     <select id="pageQueryCategoryData" resultType="com.doggy.entity.Category">
-        select * from DoggyPets.Category
+        select * from DoggyPets.category
         <where>
             1=1
             <if test="keyWord !=null">

@@ -2,6 +2,7 @@ package com.doggy.service;
 
 import com.doggy.entity.Comment;
 import com.doggy.entity.ImageRepo;
+import com.doggy.entity.Suggestion;
 import com.doggy.mapper.SysCommentMapper;
 import com.doggy.mapper.SysGoodsMapper;
 import com.doggy.utils.Page;
@@ -67,4 +68,17 @@ public class SysCommentService {
     public Comment queryCommentsbyId(int id) {
         return commentMapper.queryCommentsbyId(id);
     }
+
+    public void insertSuggestion(HashMap<String, Object> param) {
+         commentMapper.insertSuggestion(param);
+    }
+    public void updateSuggestion(HashMap<String, Object> param) {
+        commentMapper.updateSuggestion(param);
+    }
+
+    public List<Suggestion> querySuggestionPage(Page page) {
+        return commentMapper.querySuggestionPage(page);
+    }
 }
+
+

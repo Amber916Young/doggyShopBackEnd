@@ -2,6 +2,7 @@ package com.doggy.mapper;
 
 import com.doggy.entity.Comment;
 import com.doggy.entity.ImageRepo;
+import com.doggy.entity.Suggestion;
 import com.doggy.utils.Page;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
@@ -32,4 +33,12 @@ public interface SysCommentMapper {
 
     @Select("select from DoggyPets.comment where comment_id = #{id} ")
     Comment queryCommentsbyId(int id);
+
+    void insertSuggestion(HashMap<String, Object> param);
+
+
+    void updateSuggestion(HashMap<String, Object> param);
+
+
+    List<Suggestion> querySuggestionPage(Page page);
 }

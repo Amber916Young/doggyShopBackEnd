@@ -63,6 +63,32 @@
         </trim>
     </insert>
 
+    <insert id="insertSuggestion">
+        insert into DoggyPets.suggestion
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="content != null">
+                content,
+            </if>
+            <if test="customer_id != null">
+                customer_id,
+            </if>
+            <if test="suggest_id != null">
+                suggest_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="customer_id != null">
+                #{customer_id},
+            </if>
+            <if test="suggest_id != null">
+                #{suggest_id},
+            </if>
+        </trim>
+    </insert>
+
     <select id="queryAllComments" resultType="com.doggy.entity.Comment">
         select * from DoggyPets.comment
         <where>
@@ -146,6 +172,19 @@
     </select>
 
 
+    <select id="querySuggestionPage" resultType="com.doggy.entity.Suggestion">
+        select * from DoggyPets.suggestion
+        <where>
+            1=1
+            <if test="data.status !=null " >
+                and  status = #{data.status}
+            </if>
+        </where>
+        order by modified_time desc
+        limit #{start},#{rows}
+    </select>
+
+
     <update id="updateComment">
         update DoggyPets.comment
         <set>
@@ -154,8 +193,15 @@
         </set>
         where comment_id = #{comment_id}
     </update>
+    <update id="updateSuggestion">
+        update DoggyPets.suggestion
+        <set>
+            <if test="reply_content != null"> reply_content = #{reply_content}, </if>
+            <if test="status != null"> status = #{status}, </if>
+        </set>
+        where suggest_id = #{suggest_id}
 
-
+    </update>
 
 
 </mapper>

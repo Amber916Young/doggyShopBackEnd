@@ -21,6 +21,6 @@ public interface SysAddressMapper {
 
     CustomerAddress queryAddressByParam(HashMap<String, Object> param);
 
-    @Update(" update DoggyPets.Customer_Address set is_default=1 where customer_id = #{customer_id}")
+    @Update(" update DoggyPets.customer_address set is_default=1 where customer_id = #{customer_id}")
     void updateIsDefault(HashMap<String, Object> param);
 }
