@@ -1,14 +1,87 @@
+
+
+# 程序介绍 program intro
+
+本仓库是小程序以及商家页的后台管理，后端使用技术是Springboot + mybatis + 定时管理 + layui + nginx
+
+小程序端使用的技术是，uni-app+uni-cloud+VUE
+
+# 小程序介绍 app intro
+
+The main business of the mini-program is similar to an online shopping mall that sell man-made scrafs for pets dog or cats.
+
+Users can browse products without logging in, check if they are logged in when buying products, and automatically jump to the login page if they are not logged in.
+
+The user homepage contains address management, comment management, order management, personal information management, etc.
+
+
+
+小程序主要的业务是类似于网络商城,售卖手工的宠物围巾等商品。
+
+用户可以在不登陆的情况下浏览商品，购买商品时检查是否登陆，没有登陆会自动跳转至登陆页面
+
+用户主页包含地址管理，评论管理，订单管理，个人信息管理等。
+
+
+
+## Layout screenshots
+
+[<img src="https://s1.ax1x.com/2022/12/17/zHuqP0.png" alt="zHuqP0.png" style="zoom: 33%;" />](https:/hhome/imgse.com/i/zHuqP0)
+[<img src="https://s1.ax1x.com/2022/12/17/zHuLGV.png" alt="zHuLGV.png" style="zoom: 33%;" />](https://imgse.com/i/zHuLGV)
+[<img src="https://s1.ax1x.com/2022/12/17/zHuO2T.png" alt="zHuO2T.png" style="zoom: 33%;" />](https://imgse.com/i/zHuO2T)
+[<img src="https://s1.ax1x.com/2022/12/17/zHuH5q.png" alt="zHuH5q.png" style="zoom: 33%;" />](https://imgse.com/i/zHuH5q)
+[<img src="https://s1.ax1x.com/2022/12/17/zHu7an.png" alt="zHu7an.png" style="zoom:33%;" />](https://imgse.com/i/zHu7an)
+[<img src="https://s1.ax1x.com/2022/12/17/zHuXxU.png" alt="zHuXxU.png" style="zoom:33%;" />](https://imgse.com/i/zHuXxU)
+[<img src="https://s1.ax1x.com/2022/12/17/zHuvMF.png" alt="zHuvMF.png" style="zoom:33%;" />](https://imgse.com/i/zHuvMF)
+[<img src="https://s1.ax1x.com/2022/12/17/zHuxr4.png" alt="zHuxr4.png" style="zoom:33%;" />](https://imgse.com/i/zHuxr4)
+[<img src="https://s1.ax1x.com/2022/12/17/zHuzqJ.png" alt="zHuzqJ.png" style="zoom:33%;" />](https://imgse.com/i/zHuzqJ)
+[<img src="https://s1.ax1x.com/2022/12/17/zHKpZ9.png" alt="zHKpZ9.png" style="zoom: 33%;" />](https://imgse.com/i/zHKpZ9)
+
+
+
 # 文档说明
+
+### BUG 日记 16/12/2022
+
+### 🧰BUG 修复
+
+- 虚拟支付bug修复，未使用优惠券忽略优惠券改动
+- 页面重定向跟改为relunch
+- 界面全部修改
+
+### 🔗链接 参考
+
+https://ext.dcloud.net.cn/plugin?id=6992 【返回顶部-火箭动画】
+
+
+
+## BUG 日记 10/12/2022
+
+### 🧰BUG 修复
+
+- 修复计算金额bug
+- 后台用户信息修改，新增
+
+### 下一阶段
+
+- 退货信息
 
 ## BUG 日记 08/12/2022
 
 ### 🧰BUG 修复
 
 - 前端返回减少返回非必要信息
+- 更新页面
 
 ### 🔗链接 参考
 
 https://ext.dcloud.net.cn/plugin?id=8827【价格信息组件】
+
+https://ask.dcloud.net.cn/article/39888
+
+https://developers.weixin.qq.com/community/develop/article/doc/0002cc3805c5b853d4dcbfa8558413?highline=%E5%85%8D%E8%B4%B9%E5%BF%AB%E9%80%92【物流接口】
+
+https://mp.weixin.qq.com/wxopen/plugindevdoc?appid=wx6885acbedba59c14&token=1079118378&lang=zh_CN【物流插件】
 
 ## 【知识点】BigDecimal高精度计算
 
@@ -38,6 +111,7 @@ https://ext.dcloud.net.cn/plugin?id=8827【价格信息组件】
 ### 【code】Java 高精度计算总金额
 
 ```java
+
     synchronized public HashMap<String,Object> ReturnCartNumAndPrice( List<OrderCart> cartList, Rule rule) {
         int rule_type = rule.getType(); //优惠卷类型, 0-满减, 1-折扣 2 直减
         int use_range = rule.getUse_range(); //使用范围，0—全场，1—商品
