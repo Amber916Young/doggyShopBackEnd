@@ -65,6 +65,10 @@ var product_goods_detail = "/web/product/goods/detail"
 // comment index
 var comment_queryAll = "/web/comment/queryAll"
 var comment_delete = "/web/comment/deletes"
+var comment_form_view = "/view/comment/addform"
+var comment_reply= "/web/comment/replies"
+
+
 
 
 // coupon

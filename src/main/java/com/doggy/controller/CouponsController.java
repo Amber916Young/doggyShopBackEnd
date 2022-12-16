@@ -37,6 +37,41 @@ public class CouponsController {
 
     @SneakyThrows
     @ResponseBody
+    @PostMapping("/get/coupon/number")
+    synchronized public HttpResult getCouponNnumber(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        param.put("status",0);
+
+        List<Coupon> couponList = couponService.queryAllCouponCustomer(param);
+        int count = 0;
+        for(Coupon coupon : couponList){
+            HashMap<String, Object> data = new HashMap<>();
+            // 查询优惠券批次
+            data.put("batch_id",coupon.getBatch_id());
+            Coupon_batch batch= couponService.queryCouponBatch(data);
+            // 查询规则
+            data.put("rule_id",batch.getRule_id());
+            // 是否过期 TODO 定时任务
+            data.put("use_ended_at",new Date());
+            Rule rule= couponService.queryRule(data);
+            if(rule == null) {
+                //过期了 更新Coupon表 没有使用但是过期了
+                HashMap<String,Object> updateMap = new HashMap<>();
+                updateMap.put("coupon_id",coupon.getCoupon_id());
+                updateMap.put("status",2); // 更新已经过期
+                couponService.updateCoupon(updateMap);
+            }else {
+                count++;
+            }
+        }
+        return HttpResult.ok("优惠券数量查询成功",count);
+    }
+
+
+
+    @SneakyThrows
+    @ResponseBody
     @PostMapping("/get/unique")
     synchronized public HttpResult getUniqueCoupon(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");

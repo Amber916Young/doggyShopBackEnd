@@ -39,62 +39,6 @@ public class CommentsController {
     private SysOrderService orderService;
 
 
-
-
-
-
-
-
-
-    private void queryComment(Comment comment,int good_id){
-        List<Comment> commentList = commentService.queryAllCommentsDFS(comment.getComment_id(),good_id);
-        for (Comment tmp : commentList){
-            int customer_id = tmp.getCustomer_id();
-            CustomerInfo customer = customerService.queryCustomerByid(customer_id);
-            if( customer != null){
-                HashMap<String,Object> map = new HashMap<>();
-                map.put("type","comment");
-                map.put("fid",good_id);
-                map.put("customer_id",customer.getId());
-                List<ImageRepo> commentImage = goodsService.queryAllImageList(map);
-                customer.setToken(null);
-                customer.setLogin_time(null);
-                customer.setCreate_time(null);
-                customer.setPoints(0);
-                customer.setOpenid(null);
-                customer.setGender(null);
-                customer.setPhone(null);
-                customer.setUuid(null);
-                tmp.setCustomer(customer);
-                List<String> list = new ArrayList<>();
-                for (ImageRepo img :commentImage ) {
-                    list.add(img.getImg_url());
-                }
-                tmp.setCommentImage(list);
-            }
-            queryComment(tmp,good_id);
-        }
-        comment.setCommentList(commentList);
-    }
-
-    public List<Comment> getComments(int good_id){
-        Comment parent = new Comment();
-        parent.setComment_id(0);
-        queryComment(parent,good_id);
-        return parent.getCommentList();
-    }
-    @ResponseBody
-    @GetMapping("/get/test")
-    public HttpResult test() {
-        // good_id
-//        List<Comment> commentList = commentService.queryAllComments(param);
-        int good_id= 3;
-        List<Comment> commentList = getComments(good_id);
-
-        return HttpResult.ok("successfully", commentList);
-
-    }
-
     @SneakyThrows
     @ResponseBody
     @PostMapping("/get/all")
@@ -134,14 +78,14 @@ public class CommentsController {
         page.setData(map);
         List<Comment> lists = commentService.pageQueryCommentDataByid(page);
         for(Comment tmp : lists){
-            int id = tmp.getComment_id();
             // 还原表情
             String content = EmojiParser.parseToUnicode( tmp.getContent());
             tmp.setContent(content);
+            HashMap<String,Object> customer_info = new HashMap<>();
             CustomerInfo  customerInfo = customerService.queryCustomerByid(tmp.getCustomer_id());
-            Comment subComment = commentService.queryCommentsbyId(id);
-            tmp.setCustomer(customerInfo);
-            tmp.setSubComment(subComment);
+            customer_info.put("username",customerInfo.getUsername());
+            customer_info.put("avatarUrl",customerInfo.getAvatarUrl());
+            tmp.setCustomer_info(customer_info);
         }
         return HttpResult.ok("查询成功", lists);
 
@@ -206,10 +150,9 @@ public class CommentsController {
         int order_detail_id = Integer.parseInt(param.get("order_detail_id").toString());
         double rate  = Double.parseDouble(param.get("rate").toString());
         String content =param.get("content").toString();
-        if(EmojiManager.isEmoji(content)){
-            List<String > tmp = new ArrayList<>();
-            tmp.add("content");
-            param = UnicodeUtils.DECODEUnicode(param,tmp);
+        if(EmojiManager.containsEmoji(content)){
+            content = EmojiParser.parseToHtmlHexadecimal(content);
+            param.put("content",content);
         }
 
         List<String> imgMap = JsonUtils.jsonToPojo(param.get("imgMap").toString(),List.class);

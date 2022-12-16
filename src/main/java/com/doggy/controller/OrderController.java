@@ -38,6 +38,9 @@ public class OrderController {
     @Autowired
     CustomerService customerService;
 
+
+    @Autowired
+    private SysCouponService couponService;
     @SneakyThrows
     @ResponseBody
     @PostMapping("/clear/cart")
@@ -54,109 +57,148 @@ public class OrderController {
     @ResponseBody
     @PostMapping("/payment/cart")
     synchronized public HttpResult MockPayment(@RequestBody String jsonData) {
-            /***
-             * 'customer_id':myApp.customer.id,
-             * 'memo': myApp.memo,
-             * 'payment_method': myApp.payment_method,
-             * 'address':myApp.address ,
-             * 'priceList':myApp.priceList,
-             * 'amount_price':myApp.amount_price,
-             * 'amount_price_discount':myApp.amount_price_discount,
-             * 'discount':myApp.discount,
-             * 'coupon':myApp.coupon,
-             */
+        /***
+         * 'customer_id':myApp.customer.id,
+         * 'memo': myApp.memo,
+         * 'payment_method': myApp.payment_method,
+         * 'address':myApp.address ,
+         * 'cartList':myApp.cartList,
+         * 'amount_price':myApp.amount_price, //商品总价格
+         * 'amount_price_discount':myApp.amount_price_discount, //现价格
+         * 'discount':myApp.discount, //优惠金额
+         * 'couponId':myApp.couponId,
+         * 'out_trade':out_trade // 订单编号
+         */
 
-            jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
-            HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        OrderMaster master = new OrderMaster();
+        int customer_id = Integer.parseInt(param.get("customer_id").toString());
+        int payment_method = Integer.parseInt(param.get("payment_method").toString());
+        int batch_id= Integer.parseInt(param.get("batch_id").toString());
 
-            OrderMaster master = new OrderMaster();
+        String memo = param.get("memo").toString();
+        CustomerAddress address = JsonUtils.jsonToPojo(param.get("address").toString(), CustomerAddress.class);
+        master.setUsername(address.getUsername());
+        master.setProvince(address.getProvince());
+        master.setCity(address.getCity());
+        master.setAddress(address.getAddress());
+        master.setDistrict(address.getDistrict());
+        master.setPhone(address.getPhone());
 
-            int customer_id = Integer.parseInt(param.get("customer_id").toString());
-            int payment_method = Integer.parseInt(param.get("payment_method").toString());
-            String memo = param.get("memo").toString();
-            CustomerAddress address = JsonUtils.jsonToPojo(param.get("address").toString(), CustomerAddress.class);
-            master.setUsername(address.getUsername());
-            master.setProvince(address.getProvince());
-            master.setCity(address.getCity());
-            master.setAddress(address.getAddress());
-            master.setDistrict(address.getDistrict());
-            master.setPhone(address.getPhone());
+        List<HashMap> cartList = JsonUtils.jsonToList(param.get("cartList").toString(), HashMap.class);
 
-            // get all cart
-            List<OrderCart> cartList = orderService.queryOrderCartList(param);
-            if (cartList.size() == 0) {
-                return HttpResult.error("一些未知错误");
-            }
-
-            String order_sn = NumberUtil.customFormatDate("yyyyMMddHHmmssSSSSSSS");
-            master.setOrder_sn(order_sn);
-            master.setCustomer_id(customer_id);
-            master.setMemo(memo);
-            master.setPayment_method(payment_method);
-
-            double order_money = 0.0;  //订单金额
-            double district_money = 0.0; //优惠金额
-            double shipping_money = 0.0; //运费金额
-            int order_point = 0;
-            double payment_money = 0.0;
-            List<OrderDetail> addOrderDetail = new ArrayList<>();
-            for (OrderCart cart : cartList) {
-                OrderDetail detail = new OrderDetail();
-                int good_id = cart.getGood_id();
-                double price = cart.getPrice();
-                int amount = cart.getGood_amount();
-                order_point += amount * price;
-                order_money += (amount * 1.0) * price;
-                payment_money += (amount * 1.0) * price;
-                detail.setGood_id(good_id);
-                detail.setAverage_cost(price);
-                detail.setGood_price(price);
-                detail.setFee_money(district_money);
-                detail.setGood_amount(amount);
-                detail.setWeight(0);
-                addOrderDetail.add(detail);
-            }
-            master.setPayment_money(payment_money);
-            master.setOrder_money(order_money);
-            master.setDistrict_money(district_money);
-            // 物流信息
-            master.setShipping_money(shipping_money);
-            master.setShipping_comp_name("");
-            master.setShipping_sn("");
-            master.setOrder_status(0);
-            // 积分
-
-            master.setOrder_point(order_point);
-            //发票抬头
-            master.setInvoice_time("");
-            int id = orderService.insertOrderMaster(master);
-            for (OrderDetail detail : addOrderDetail) {
-                detail.setOrder_id(master.getOrder_id());
-                orderService.insertOrderDetail(detail);
-            }
-            HashMap<String, Object> map = new HashMap<>();
-            for (OrderDetail detail : addOrderDetail) {
-                map.put("customer_id", customer_id);
-                map.put("good_id", detail.getGood_id());
-                orderService.deleteOrderCart(map);
-            }
-
-
-
-
-            // TODO update userinfo
-            CustomerInfo customerInfo = new CustomerInfo();
-            customerInfo.setId(customer_id);
-            customerInfo.setPoints(order_point);
-            customerService.updateCustomerPoints(customerInfo);
-            customerInfo = customerService.queryCustomerByid(customer_id);
-
-
-            // TODO update coupon
-
-
-            return HttpResult.ok("successfully", customerInfo);
+        if (cartList.size() == 0) {
+            return HttpResult.error("一些未知错误");
         }
+
+//        String order_sn = NumberUtil.customFormatDate("yyyyMMddHHmmssSSSSSSS");
+        String order_sn = param.get("out_trade").toString();
+
+        master.setOrder_sn(order_sn);
+        master.setCustomer_id(customer_id);
+        master.setMemo(memo);
+        master.setPayment_method(payment_method);
+
+
+
+        /***
+         * 'customer_id':myApp.customer.id,
+         * 'memo': myApp.memo,
+         * 'payment_method': myApp.payment_method,
+         * 'address':myApp.address ,
+         * 'cartList':myApp.cartList,
+         * 'amount_price':myApp.amount_price, //商品总价格
+         * 'amount_price_discount':myApp.amount_price_discount, //现价格
+         * 'discount':myApp.discount, //总共优惠金额
+         * 'couponId':myApp.couponId,
+         * 'out_trade':out_trade // 订单编号
+         */
+        List<OrderDetail> addOrderDetail = new ArrayList<>();
+        BigDecimal amount_price_discount = new BigDecimal(param.get("amount_price_discount").toString());
+        BigDecimal district_money = new BigDecimal(param.get("discount").toString());
+        BigDecimal amount_price = new BigDecimal(param.get("amount_price").toString());
+        BigDecimal shipping_money = new BigDecimal(param.get("shipping_money").toString());
+
+        int order_point = (int) Math.floor(amount_price_discount.doubleValue());
+
+        for (HashMap cart : cartList) {
+            OrderDetail detail = new OrderDetail();
+            int good_id = Integer.parseInt(cart.get("good_id").toString());
+            BigDecimal good_price = new BigDecimal(cart.get("original_price").toString());
+            BigDecimal average_cost = new BigDecimal(cart.get("price").toString());
+            BigDecimal fee_money = good_price.divide(average_cost,2,BigDecimal.ROUND_HALF_UP);
+            int good_amount = Integer.parseInt(cart.get("good_amount").toString());
+            detail.setGood_id(good_id);
+            detail.setAverage_cost(average_cost.doubleValue());
+            detail.setGood_price(good_price.doubleValue());
+            detail.setFee_money(fee_money.doubleValue());
+            detail.setGood_amount(good_amount);
+            addOrderDetail.add(detail);
+        }
+        master.setPayment_money(amount_price_discount.doubleValue());
+        master.setOrder_money(amount_price.doubleValue());
+        master.setDistrict_money(district_money.doubleValue());
+        // 物流信息
+        master.setShipping_money(shipping_money.doubleValue());
+        master.setShipping_comp_name("");
+        master.setShipping_sn("");
+        master.setOrder_status(0);
+        // 积分
+
+        master.setOrder_point(order_point);
+        //发票抬头
+        master.setInvoice_time("");
+        int id = orderService.insertOrderMaster(master);
+        for (OrderDetail detail : addOrderDetail) {
+            detail.setOrder_id(master.getOrder_id());
+            orderService.insertOrderDetail(detail);
+        }
+        HashMap<String, Object> map = new HashMap<>();
+
+        // TODO Goods 总库存
+
+        for (OrderDetail detail : addOrderDetail) {
+            map.put("customer_id", customer_id);
+            map.put("good_id", detail.getGood_id());
+            orderService.deleteOrderCart(map);
+            Goods goods = goodsService.queryAllGoodsById(detail.getGood_id());
+            map.put("id", detail.getGood_id());
+            map.put("sale_number", goods.getSale_number() + detail.getGood_amount() );
+            goodsService.updateGoods(map);
+        }
+
+        // TODO update userinfo
+        CustomerInfo customerInfo = new CustomerInfo();
+        customerInfo.setId(customer_id);
+        customerInfo.setPoints(order_point);
+        customerService.updateCustomerPoints(customerInfo);
+        customerInfo = customerService.queryCustomerByid(customer_id);
+
+
+        // TODO update coupon
+        HashMap<String,Object> updateMap = new HashMap<>();
+        updateMap.put("batch_id",batch_id);
+        updateMap.put("order_id",order_sn);
+        updateMap.put("customer_id",customer_id);
+        updateMap.put("status",1); // 0-未使用,1-已使用,2-已过期,3-冻结
+        updateMap.put("used_time", new Date());
+        couponService.updateCouponPayment(updateMap);
+        // TODO update coupon_batch
+        updateMap = new HashMap<>();
+        updateMap.put("batch_id",batch_id);
+        updateMap.put("customer_id",customer_id);
+        Coupon_batch coupon_batch = couponService.queryCouponBatch(updateMap);
+        updateMap = new HashMap<>();
+        updateMap.put("batch_id",batch_id);
+        updateMap.put("customer_id",customer_id);
+        updateMap.put("used_count",coupon_batch.getUsed_count() +1);
+        couponService.updateCouponBatch(updateMap);
+
+
+
+        return HttpResult.ok("successfully", customerInfo);
+    }
 
 
 
@@ -167,13 +209,18 @@ public class OrderController {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         OrderMaster orderMaster = orderService.queryOrderMaster(param);
+        HashMap<String,Object> Map = new HashMap<>();
         List<OrderDetail> details = orderService.queryOrderDetailAll(orderMaster.getOrder_id());
         for(OrderDetail detail : details){
             Goods goods = goodsService.queryAllGoodsById(detail.getGood_id());
-            detail.setGoodObj(goods);
+            HashMap<String,Object> goodsMap = new HashMap<>();
+            goodsMap.put("title",goods.getTitle());
+            goodsMap.put("img_url",goods.getImg_url());
+            detail.setGoodMap(goodsMap);
         }
-        orderMaster.setOrderDetailList(details);
-        return  HttpResult.ok("successfully",orderMaster);
+        Map.put("orderMaster",orderMaster);
+        Map.put("orderDetailList",details);
+        return  HttpResult.ok("successfully",Map);
     }
 
     @SneakyThrows
@@ -257,6 +304,7 @@ public class OrderController {
         int start = page.getStart();
         page.setStart(start);
         page.setId(customer_id);
+
         List<OrderMaster> masters = orderService.pageQueryOrderData(page);
         List<HashMap<String, Object>> list = new ArrayList<>();
         for( OrderMaster item : masters){
@@ -269,13 +317,14 @@ public class OrderController {
                 Goods goodObj = goodsService.queryAllGoodsById(detail.getGood_id());
                 HashMap<String,Object> map = new HashMap<>();
                 map.put("order_detail_id",detail.getOrder_detail_id());
-                map.put("id",goodObj.getId());
                 map.put("title",goodObj.getTitle());
-                map.put("description",goodObj.getDescription());
                 map.put("original_price",detail.getGood_price());
+                map.put("id",goodObj.getId());
                 map.put("average_cost",detail.getAverage_cost());
                 map.put("good_amount",detail.getGood_amount());
                 map.put("img_url",goodObj.getImg_url());
+                map.put("pay_time",item.getPay_time());
+                map.put("order_sn",item.getOrder_sn());
                 list.add(map);
             }
         }

@@ -55,6 +55,13 @@ public class ViewController {
         return "/admin/comment/index";
     }
 
+
+
+    @GetMapping("/comment/addform")
+    synchronized public String comment_Batch() {
+        return "/admin/comment/addform";
+    }
+
     @GetMapping("/coupons")
     synchronized public String coupons_index() {
         return "/admin/coupons/index";

@@ -113,4 +113,8 @@ public class SysCouponService {
     public List<Coupon> queryAllCouponCustomer(HashMap<String, Object> param) {
         return couponMapper.queryAllCouponCustomer(param);
     }
+
+    public void updateCouponPayment(HashMap<String, Object> param) {
+         couponMapper.updateCouponPayment(param);
+    }
 }

@@ -76,7 +76,7 @@
 
               <script type="text/html" id="tableTool">
                   <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="reply">回复</a>
-<!--                  <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>-->
+                  <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
                   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
               </script>
 
@@ -159,7 +159,7 @@
 
     table.on('tool(tableview)', function(obj){
       var data = obj.data;
-      var id = data.comment_id
+      var id = data.order_id
       if(obj.event === 'del'){
         layer.prompt({
           formType: 1
@@ -179,15 +179,33 @@
             layer.close(index);
           });
         });
-      }else  if(obj.event === 'reply'){
+      }else  if(obj.event === 'edit'){
           layer.open({
               type: 2
-              ,area: ['30%', '40%']
+              ,area: ['50%', '80%']
+              ,title: '订单【'+data.order_sn+'】详情'
+              ,shade: 0.6 //遮罩透明度
+              ,maxmin: true //允许全屏最小化
+              ,anim: 0 //0-6的动画形式，-1不开启
+              ,content: order_master_form_view+'?order_id='+id+'&type=edit'
+              ,success: function(layero, index){
+              }
+              ,cancel: function(){
+                  layui.table.reload('tableview'); //重载表格
+              }
+              ,end : function(){
+              }
+          });
+
+      } else  if(obj.event === 'reply'){
+          layer.open({
+              type: 2
+              ,area: ['50%', '80%']
               ,title: '回复用户【'+data.customer_id+'】评论'
               ,shade: 0.6 //遮罩透明度
               ,maxmin: true //允许全屏最小化
               ,anim: 0 //0-6的动画形式，-1不开启
-              ,content: comment_form_view+'?comment_id='+id+'&type=reply'
+              ,content: order_master_form_view+'?order_id='+id+'&type=view'
           });
 
       }

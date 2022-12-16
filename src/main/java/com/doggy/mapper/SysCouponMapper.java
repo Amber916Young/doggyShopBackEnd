@@ -54,4 +54,6 @@ public interface SysCouponMapper {
     List<Coupon_batch> querycCouponBatchMap(Page page);
 
     List<Coupon> queryAllCouponCustomer(HashMap<String, Object> param);
+
+    void updateCouponPayment(HashMap<String, Object> param);
 }

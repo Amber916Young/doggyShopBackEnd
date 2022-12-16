@@ -1,0 +1,80 @@
+
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+  img{
+    height: 150px;
+    width: auto;
+  }
+
+  .center{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+  }
+
+  .layui-form-pane .layui-form-label{
+      width: 20%;
+  }
+  .layui-input, .layui-textarea{
+      width: 80%;
+  }
+
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form  layui-form-pane" style="padding: 20px 20px;">
+    <div id="Info">
+        <div class="layui-collapse">
+            <div class="layui-colla-item" >
+                <h2 class="layui-colla-title">回复</h2>
+                <div class="layui-colla-content layui-show" >
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                              <textarea placeholder="请输入回复内容"
+                                        lay-verify="required" name="reply_content"
+                                        class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="center">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="button" lay-submit lay-filter="form-submit-add" value="确认" class="layui-btn">
+            </div>
+        </div>
+    </div>
+
+
+    <br> <br> <br>
+</div>
+
+<script>
+  var comment_id = -1;
+  var type = null;
+  var  element
+  var form
+  var laydate
+
+  layui.use(['form','table','element','laydate'], function(){
+    var $ = layui.$
+      form = layui.form
+      laydate = layui.laydate;
+
+    element = layui.element;
+    comment_id = getParam('comment_id');
+    type = getParam('type');
+
+    form.on('submit(form-submit-add)', function(data){
+      var field = data.field;
+        field.comment_id = comment_id
+        ajaxPost(comment_reply, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+  })
+
+</script>

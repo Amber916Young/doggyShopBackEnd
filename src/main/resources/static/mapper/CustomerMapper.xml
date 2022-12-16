@@ -77,7 +77,7 @@
     <update id="updateCustomerPoints">
         update DoggyPets.customer
         <set>
-            <if test="points !=  -1">
+            <if test="points !=  null">
                 points = points + #{points},
             </if>
         </set>

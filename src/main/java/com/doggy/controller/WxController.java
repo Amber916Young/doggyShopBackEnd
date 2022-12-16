@@ -3,7 +3,9 @@ package com.doggy.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.domain.CardUserInfo;
 import com.doggy.entity.CustomerInfo;
+import com.doggy.entity.Wx_Info;
 import com.doggy.service.CustomerService;
+import com.doggy.service.WxService;
 import com.doggy.utils.FileUtils;
 import com.doggy.utils.HttpResult;
 import com.doggy.utils.NumberUtil;
@@ -44,14 +46,16 @@ public class WxController {
 
 
 
-    @Value("${WeChat.appid}")
-    private String APP_ID ;
-    @Value("${WeChat.appSecret}")
-    private String SECRET ;
+//    @Value("${WeChat.appid}")
+//    private String APP_ID ;
+//    @Value("${WeChat.appSecret}")
+//    private String SECRET ;
 
     @Autowired
     CustomerService customerService;
 
+    @Autowired
+    WxService wxService;
 
     @SneakyThrows
     @ResponseBody
@@ -84,9 +88,13 @@ public class WxController {
     public HttpResult WxLogin(@RequestBody String jsonData){
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         String code = param.get("code").toString();
-        String onlinePeople = getOnlinePeople(code);
+        String appid =param.get("appid").toString();
+
+        String onlinePeople = getOnlinePeople(code,appid);
         JSONObject object= JSONObject.parseObject(onlinePeople);
         String openid = object.getString("openid");
+
+
         String session_key = object.getString("session_key");
         String encryptedData = param.get("encryptedData").toString();
         String signature = param.get("signature").toString();
@@ -122,10 +130,13 @@ public class WxController {
         return HttpResult.ok(customerInfo);
     }
 
-    public  String getOnlinePeople(String code) {
+    public  String getOnlinePeople(String code,String appid) {
         try {
-            String baseUrl = code2Session.replace("APPID",APP_ID)
-                    .replace("SECRET",SECRET).replace("JSCODE",code);
+            HashMap<String,Object> map = new HashMap<>();
+            map.put("appid",appid);
+            Wx_Info wx_info = wxService.queryWxInfo(map);
+            String baseUrl = code2Session.replace("APPID",wx_info.getAppid())
+                    .replace("SECRET",wx_info.getAppSecret()).replace("JSCODE",code);
             String temp = FileUtils.getUrlContent(baseUrl);
             System.out.println("拿到GET结果" + temp.toString());
             return temp;

@@ -302,9 +302,6 @@
             <if test="coupon_name != null">
                 coupon_name = #{coupon_name},
             </if>
-            <if test="used_time != null">
-                used_time = #{used_time},
-            </if>
         </set>
         where batch_id = #{batch_id}
     </update>
@@ -326,9 +323,6 @@
             <if test="received_time != null">
                 received_time = #{received_time},
             </if>
-            <if test="validate_time != null and validate_time != 'null'">
-                validate_time = #{validate_time},
-            </if>
             <if test="used_time != null and used_time != 'null'">
                 used_time = #{used_time},
             </if>
@@ -336,6 +330,24 @@
         where coupon_id = #{coupon_id}
     </update>
 
+
+
+
+    <update id="updateCouponPayment">
+        update DoggyPets.coupon
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="order_id != null">
+                order_id = #{order_id},
+            </if>
+            <if test="used_time != null">
+                used_time = #{used_time},
+            </if>
+        </set>
+        where customer_id = #{customer_id} and    batch_id = #{batch_id}
+    </update>
 
     <select id="pageQueryRuleData" resultType="com.doggy.entity.Rule">
         select * from DoggyPets.rule

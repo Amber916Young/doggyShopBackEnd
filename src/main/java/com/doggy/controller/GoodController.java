@@ -40,18 +40,10 @@ public class GoodController {
     public HttpResult GetCurrentGood(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
-        int customer_id = Integer.parseInt(param.get("customer_id").toString());
         int category_id = Integer.parseInt(param.get("category_id").toString());
         List<Goods> goodsList = goodsService.queryAllGoods(param);
         for (Goods goods : goodsList) {
             param.put("pid", goods.getId());
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("customer_id", customer_id);
-            map.put("good_id", goods.getId());
-            OrderCart orderCart = orderService.queryOrderCart(map);
-            if(orderCart != null){
-                goods.setAmount(orderCart.getGood_amount());
-            }
             param.put("type","goods");
             List<ImageRepo> imageList = goodsService.queryAllImageList(param);
             goods.setImageList(imageList);
@@ -90,7 +82,6 @@ public class GoodController {
         public HttpResult GetAllGood(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
-        int customer_id = Integer.parseInt(param.get("customer_id").toString());
         int index = Integer.parseInt(param.get("index").toString());
         List<Category> categoryList = goodsService.queryAllCategory(param);
 
@@ -116,16 +107,16 @@ public class GoodController {
         List<Goods> goodsList = goodsService.queryAllGoods(param);
         List<HashMap<String,Object>> res =new ArrayList<>();
         for (Goods goods : goodsList) {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("customer_id", customer_id);
-            map.put("good_id", goods.getId());
-            OrderCart orderCart = orderService.queryOrderCart(map);
-
+//            HashMap<String, Object> map = new HashMap<>();
+//            map.put("customer_id", customer_id);
+//            map.put("good_id", goods.getId());
+//            OrderCart orderCart = orderService.queryOrderCart(map);
+//
             HashMap<String,Object> objectHashMap = new HashMap<>();
-            objectHashMap.put("amount", 0);
-            if(orderCart != null){
-                objectHashMap.put("amount", orderCart.getGood_amount());
-            }
+//            objectHashMap.put("amount", 0);
+//            if(orderCart != null){
+//                objectHashMap.put("amount", orderCart.getGood_amount());
+//            }
             String content = EmojiParser.parseToUnicode( goods.getDescription());
             String title = EmojiParser.parseToUnicode(goods.getTitle());
             objectHashMap.put("id", goods.getId());
@@ -148,26 +139,17 @@ public class GoodController {
     public HttpResult GoodsDetail(@RequestBody String jsonData){
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
-        int customer_id = Integer.parseInt(param.get("customer_id").toString());
         int id = Integer.parseInt(param.get("id").toString());
         Goods goods = goodsService.queryAllGoodsById(id);
-
         String  content = EmojiParser.parseToUnicode( goods.getDescription());
         String title = EmojiParser.parseToUnicode(goods.getTitle());
         goods.setDescription(content);
         goods.setTitle(title);
 
-
         param = new HashMap<>();
         param.put("fid",goods.getId());
         param.put("good_id",goods.getId());
-        param.put("customer_id",customer_id);
-        OrderCart orderCart = orderService.queryOrderCart(param);
-        if(orderCart != null){
-            goods.setAmount(orderCart.getGood_amount());
-        }
         param.put("type","goods");
-        param.remove("customer_id");
         List<ImageRepo> imageList = goodsService.queryAllImageList(param);
         goods.setImageList(imageList);
         return HttpResult.ok("successfully",goods);

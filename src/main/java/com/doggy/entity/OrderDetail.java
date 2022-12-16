@@ -2,6 +2,8 @@ package com.doggy.entity;
 
 import lombok.Data;
 
+import java.util.HashMap;
+
 /**
  * @ClassName:OrderDetail
  * @Auther: yyj
@@ -22,5 +24,7 @@ public class OrderDetail {
     private double fee_money; //优惠分摊金额
     private String modified_time;
     private Goods goodObj; // 备注
+    private HashMap<String,Object> goodMap = new HashMap<>(); // 备注
+
 
 }

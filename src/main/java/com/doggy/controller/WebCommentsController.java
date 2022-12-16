@@ -122,14 +122,10 @@ public class WebCommentsController {
     @PostMapping("/replies")
     public HttpResult replyComment(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
-        JSONObject json = JSONObject.parseObject(jsonData);
-        String fid = json.getString("fid");
-        String content = json.getString("content");
-        Comment comment = new Comment();
-        comment.setFid(Integer.parseInt(fid));
-        comment.setContent(content);
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        param.put("status",1);
         try{
-            commentService.insertComments(comment);
+            commentService.updateComment(param);
             return HttpResult.ok("successfully");
         }catch (Exception e){
             return HttpResult.error(e.getMessage());
