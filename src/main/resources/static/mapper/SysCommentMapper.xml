@@ -171,6 +171,9 @@
             <if test="data.status !=null " >
                 and  status = #{data.status}
             </if>
+            <if test="id !=null " >
+                and  customer_id = #{id}
+            </if>
         </where>
         order by modified_time desc
         limit #{start},#{rows}

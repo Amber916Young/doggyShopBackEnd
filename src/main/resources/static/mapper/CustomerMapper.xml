@@ -110,7 +110,11 @@
             <if test="openid != null">
                 and  openid=#{openid}
             </if>
+            <if test="uuid != null">
+                and  uuid=#{uuid}
+            </if>
         </where>
+
     </select>
     <select id="queryCustomerByid" resultType="com.doggy.entity.CustomerInfo">
         select * from DoggyPets.customer

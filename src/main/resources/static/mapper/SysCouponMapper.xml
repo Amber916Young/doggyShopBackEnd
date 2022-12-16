@@ -466,6 +466,9 @@
             <if test="customer_id !=null">
                 and  customer_id =  #{customer_id}
             </if>
+            <if test="status !=null">
+                and  status =  #{status}
+            </if>
         </where>
     </select>
 

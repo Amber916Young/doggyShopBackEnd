@@ -83,8 +83,13 @@ public class CommentsController {
             tmp.setContent(content);
             HashMap<String,Object> customer_info = new HashMap<>();
             CustomerInfo  customerInfo = customerService.queryCustomerByid(tmp.getCustomer_id());
-            customer_info.put("username",customerInfo.getUsername());
-            customer_info.put("avatarUrl",customerInfo.getAvatarUrl());
+            if(customerInfo == null){
+                customer_info.put("username","匿名用户");
+            }else {
+                customer_info.put("username",customerInfo.getUsername());
+                customer_info.put("avatarUrl",customerInfo.getAvatarUrl());
+            }
+
             tmp.setCustomer_info(customer_info);
         }
         return HttpResult.ok("查询成功", lists);

@@ -476,8 +476,7 @@ public class CouponsController {
         List<Coupon_batch> batches =  couponService.querycCouponBatchMap(page);
         HashMap<String,Object> data = new HashMap<>();
         // O(n) 复杂度
-        List<Coupon_batch> res = new ArrayList<>();
-
+        List<HashMap<String,Object>> res = new ArrayList<>();
         for(Coupon_batch coupon_batch : batches){
             data.put("rule_id",coupon_batch.getRule_id());
             data.put("receive_ended_at",new Date());
@@ -486,19 +485,32 @@ public class CouponsController {
                 data = new HashMap<>();
                 // 查询用户是否已经领取 不管是否过期
                 data.put("batch_id",coupon_batch.getBatch_id());
+                data.put("customer_id",customer_id);
                 Coupon coupon = couponService.queryCoupon(data);
                 if(coupon == null){
                     String  use_started_at = rule.getUse_started_at().substring(0,10);
                     String  use_ended_at = rule.getUse_ended_at().substring(0,10);
-                    rule.setUse_ended_at(use_ended_at);
-                    rule.setUse_started_at(use_started_at);
                     DecimalFormat format = new DecimalFormat("#.00");
                     String str = format.format(rule.getAmount());
                     String str2 = format.format(rule.getDiscount());
                     rule.setAmount(Double.parseDouble(str));
                     rule.setDiscount(Double.parseDouble(str2));
-                    coupon_batch.setRule(rule);
-                    res.add(coupon_batch);
+
+                    HashMap<String,Object> Map = new HashMap<>();
+                    Map.put("discount",rule.getDiscount());
+                    Map.put("threshold",rule.getThreshold());
+                    Map.put("amount",rule.getAmount());
+                    Map.put("type",rule.getType());
+                    Map.put("use_range",rule.getUse_range());
+                    Map.put("use_started_at",use_started_at);
+                    Map.put("use_ended_at",use_ended_at);
+
+                    HashMap<String,Object> batchMap = new HashMap<>();
+                    batchMap.put("batch_id",coupon_batch.getBatch_id());
+                    batchMap.put("coupon_name",coupon_batch.getCoupon_name());
+                    batchMap.put("rule_id",coupon_batch.getRule_id());
+                    batchMap.put("rule",Map);
+                    res.add(batchMap);
                 }
             }
         }
@@ -535,15 +547,15 @@ public class CouponsController {
 
         List<Coupon> couponList = couponService.queryCouponCustomerMap(page);
         // 查询已经领取过并且可用的优惠券
-        List<Coupon> res = new ArrayList<>();
+        List<HashMap<String,Object>> res = new ArrayList<>();
 
         for(Coupon coupon : couponList){
             data = new HashMap<>();
             // 查询优惠券批次
             data.put("batch_id",coupon.getBatch_id());
-            Coupon_batch batch= couponService.queryCouponBatch(data);
+            Coupon_batch coupon_batch= couponService.queryCouponBatch(data);
             // 查询规则
-            data.put("rule_id",batch.getRule_id());
+            data.put("rule_id",coupon_batch.getRule_id());
             // 是否过期 TODO 定时任务
             data.put("use_ended_at",new Date());
             Rule rule= couponService.queryRule(data);
@@ -557,18 +569,29 @@ public class CouponsController {
 
                 String  use_started_at = rule.getUse_started_at().substring(0,10);
                 String  use_ended_at = rule.getUse_ended_at().substring(0,10);
-                rule.setUse_ended_at(use_ended_at);
-                rule.setUse_started_at(use_started_at);
-
                 DecimalFormat format = new DecimalFormat("#.00");
                 String str = format.format(rule.getAmount());
                 String str2 = format.format(rule.getDiscount());
                 rule.setAmount(Double.parseDouble(str));
                 rule.setDiscount(Double.parseDouble(str2));
-                coupon.setRule(rule);
-                coupon.setCoupon_batch(batch);
 
-                res.add(coupon);
+
+                HashMap<String,Object> Map = new HashMap<>();
+                Map.put("discount",rule.getDiscount());
+                Map.put("threshold",rule.getThreshold());
+                Map.put("amount",rule.getAmount());
+                Map.put("type",rule.getType());
+                Map.put("use_range",rule.getUse_range());
+                Map.put("use_started_at",use_started_at);
+                Map.put("use_ended_at",use_ended_at);
+
+
+                HashMap<String,Object> batchMap = new HashMap<>();
+                batchMap.put("batch_id",coupon_batch.getBatch_id());
+                batchMap.put("coupon_name",coupon_batch.getCoupon_name());
+                batchMap.put("rule_id",coupon_batch.getRule_id());
+                batchMap.put("rule",Map);
+                res.add(batchMap);
             }
         }
 

@@ -322,8 +322,11 @@ SELECT order_id FROM order_master WHERE order_status = 4
             <if test="data.order_status !=null">
                 and order_status = #{data.order_status}
             </if>
-            <if test="data.payment_method !=null">
-                and payment_method = #{data.payment_method}
+            <if test="data.order_status !=null">
+                and order_status = #{data.order_status}
+            </if>
+            <if test="id !=null">
+                and customer_id = #{id}
             </if>
             <if test="keyWord !=null">
                 and   concat(

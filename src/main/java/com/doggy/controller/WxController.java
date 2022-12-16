@@ -6,10 +6,7 @@ import com.doggy.entity.CustomerInfo;
 import com.doggy.entity.Wx_Info;
 import com.doggy.service.CustomerService;
 import com.doggy.service.WxService;
-import com.doggy.utils.FileUtils;
-import com.doggy.utils.HttpResult;
-import com.doggy.utils.NumberUtil;
-import com.doggy.utils.TokenUtils;
+import com.doggy.utils.*;
 import com.fasterxml.uuid.Generators;
 import lombok.SneakyThrows;
 import java.net.HttpURLConnection;
@@ -69,11 +66,15 @@ public class WxController {
                 || customer.getAvatarUrl().trim().equals("") || !customer.getAvatarUrl().contains("data")){
             customer.setAvatarUrl(null);
         }
-        CustomerInfo isExist = customerService.queryCustomerByid(customer.getId());
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("openid",customer.getOpenid());
+        CustomerInfo isExist = customerService.queryCustomerInfo(map);
         if(isExist == null){
             customerService.insertCustomerInfo(customer);
+            TimeParse timeParse = new TimeParse();
+            String create_time = timeParse.convertDate2String(new Date(),"yyyy-MM-dd HH:mm:ss");
+            customer.setCreate_time(create_time);
             return HttpResult.ok(customer);
-
         }else {
             isExist.setToken(token);
             isExist.setAvatarUrl(customer.getAvatarUrl());
@@ -107,22 +108,35 @@ public class WxController {
         // 自动登录
         HashMap<String,Object> map = new HashMap<>();
         map.put("openid",openid);
+        if(openid == null)   {
+            return HttpResult.error("获取openid失败");
+        }
+
         CustomerInfo customerInfo = customerService.queryCustomerInfo(map);
-        if(customerInfo == null){
+        if(customerInfo == null) {
             customerInfo = new CustomerInfo();
             customerInfo.setAvatarUrl(avatarUrl);
+            customerInfo.setOpenid(openid);
+
             CustomerInfo tmp = null;
-            while (tmp == null){
-                String uuid =  NumberUtil.customUserUID();
+
+            while (tmp == null) {
+                String uuid = NumberUtil.customUserUID();
                 map = new HashMap<>();
-                map.put("uuid",uuid);
+                map.put("uuid", uuid);
                 customerInfo.setUuid(uuid);
                 tmp = customerService.queryCustomerInfo(map);
-                if(tmp == null) break;
+                if (tmp == null) {
+                    break;
+                }
             }
-            customerInfo.setOpenid(openid);
+
             int id = customerService.insertCustomerInfo(customerInfo);
+            TimeParse timeParse = new TimeParse();
+            String create_time = timeParse.convertDate2String(new Date(),"yyyy-MM-dd HH:mm:ss");
+            customerInfo.setCreate_time(create_time);
         }
+        customerInfo.setOpenid(openid);
         customerInfo.setAvatarUrl(avatarUrl);
         String token =TokenUtils.genToken(customerInfo);
         customerInfo.setToken(token);

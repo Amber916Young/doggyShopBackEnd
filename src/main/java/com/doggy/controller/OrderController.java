@@ -75,7 +75,6 @@ public class OrderController {
         OrderMaster master = new OrderMaster();
         int customer_id = Integer.parseInt(param.get("customer_id").toString());
         int payment_method = Integer.parseInt(param.get("payment_method").toString());
-        int batch_id= Integer.parseInt(param.get("batch_id").toString());
 
         String memo = param.get("memo").toString();
         CustomerAddress address = JsonUtils.jsonToPojo(param.get("address").toString(), CustomerAddress.class);
@@ -175,28 +174,27 @@ public class OrderController {
         customerService.updateCustomerPoints(customerInfo);
         customerInfo = customerService.queryCustomerByid(customer_id);
 
-
-        // TODO update coupon
-        HashMap<String,Object> updateMap = new HashMap<>();
-        updateMap.put("batch_id",batch_id);
-        updateMap.put("order_id",order_sn);
-        updateMap.put("customer_id",customer_id);
-        updateMap.put("status",1); // 0-未使用,1-已使用,2-已过期,3-冻结
-        updateMap.put("used_time", new Date());
-        couponService.updateCouponPayment(updateMap);
-        // TODO update coupon_batch
-        updateMap = new HashMap<>();
-        updateMap.put("batch_id",batch_id);
-        updateMap.put("customer_id",customer_id);
-        Coupon_batch coupon_batch = couponService.queryCouponBatch(updateMap);
-        updateMap = new HashMap<>();
-        updateMap.put("batch_id",batch_id);
-        updateMap.put("customer_id",customer_id);
-        updateMap.put("used_count",coupon_batch.getUsed_count() +1);
-        couponService.updateCouponBatch(updateMap);
-
-
-
+        int batch_id= Integer.parseInt(param.get("batch_id").toString());
+        if(batch_id != -1 && batch_id != -2){
+            // TODO update coupon
+            HashMap<String,Object> updateMap = new HashMap<>();
+            updateMap.put("batch_id",batch_id);
+            updateMap.put("order_id",order_sn);
+            updateMap.put("customer_id",customer_id);
+            updateMap.put("status",1); // 0-未使用,1-已使用,2-已过期,3-冻结
+            updateMap.put("used_time", new Date());
+            couponService.updateCouponPayment(updateMap);
+            // TODO update coupon_batch
+            updateMap = new HashMap<>();
+            updateMap.put("batch_id",batch_id);
+            updateMap.put("customer_id",customer_id);
+            Coupon_batch coupon_batch = couponService.queryCouponBatch(updateMap);
+            updateMap = new HashMap<>();
+            updateMap.put("batch_id",batch_id);
+            updateMap.put("customer_id",customer_id);
+            updateMap.put("used_count",coupon_batch.getUsed_count() +1);
+            couponService.updateCouponBatch(updateMap);
+        }
         return HttpResult.ok("successfully", customerInfo);
     }
 
