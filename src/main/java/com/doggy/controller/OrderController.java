@@ -333,13 +333,13 @@ public class OrderController {
 
 
     public HashMap<String,Object> ReturnCartNumAndPrice( List<OrderCart> cartList, int type){
-        BigDecimal amount_price = new BigDecimal("0");
+//        BigDecimal amount_price = new BigDecimal("0");
         for( OrderCart orderCart : cartList){
             int id = orderCart.getGood_id();
             Goods goods =  getGoodsAmountImages(id,orderCart);
-            BigDecimal Original_price = new BigDecimal(Double.toString(goods.getOriginal_price()));
-            BigDecimal count = new BigDecimal(goods.getAmount());
-            BigDecimal decimal = Original_price.multiply(count);
+//            BigDecimal Original_price = new BigDecimal(Double.toString(goods.getOriginal_price()));
+//            BigDecimal count = new BigDecimal(goods.getAmount());
+//            BigDecimal decimal = Original_price.multiply(count);
             if(type == 1){
                 String  content = EmojiParser.parseToUnicode( goods.getDescription());
                 String title = EmojiParser.parseToUnicode(goods.getTitle());
@@ -347,7 +347,7 @@ public class OrderController {
                 goods.setTitle(title);
                 orderCart.setGoods(goods);
             }
-            amount_price = amount_price.add(decimal);
+//            amount_price = amount_price.add(decimal);
         }
         HashMap<String, Object>  param = new HashMap<>();
         if(type == 1){
@@ -358,7 +358,7 @@ public class OrderController {
                 objectHashMap.put("good_id",orderCart.getGood_id());
                 objectHashMap.put("cart_id",orderCart.getCart_id());
                 objectHashMap.put("good_amount",orderCart.getGood_amount());
-                objectHashMap.put("price",goods.getPrice());
+//                objectHashMap.put("price",goods.getPrice());
                 objectHashMap.put("original_price",goods.getOriginal_price());
                 objectHashMap.put("title",goods.getTitle());
                 objectHashMap.put("img_url",goods.getImg_url());
@@ -366,15 +366,17 @@ public class OrderController {
 //                if(goods.getTitle().length()>15){
 //                    objectHashMap.put("title",goods.getTitle().substring(0,15)+"...");
 //                }
-                objectHashMap.put("specification",goods.getSpecification().substring(0,25)+"...");
+
+                objectHashMap.put("specification", UnicodeUtils.getTextFromHtml(goods.getSpecification()).substring(0,25)+"...");
                 res.add(objectHashMap);
             }
             param.put("cartList",res);
         }
         if(type == 0){
             param.put("size",cartList.size());
+        }else {
+//            param.put("amount_price",new DecimalFormat("0.00").format(amount_price));
         }
-        param.put("amount_price",new DecimalFormat("0.00").format(amount_price));
         return param;
     }
 
@@ -406,7 +408,7 @@ public class OrderController {
 //                if(goods.getTitle().length()>15){
 //                    objectHashMap.put("title",goods.getTitle().substring(0,15)+"...");
 //                }
-            objectHashMap.put("specification", goods.getSpecification().substring(0, 25) + "...");
+            objectHashMap.put("specification", UnicodeUtils.getTextFromHtml(goods.getSpecification()).substring(0, 25) + "...");
             res.add(objectHashMap);
         }
         param.put("cartList", res);
@@ -484,7 +486,7 @@ public class OrderController {
         objectHashMap.put("title",goods.getTitle());
         objectHashMap.put("img_url",goods.getImg_url());
         objectHashMap.put("flag",true);
-        objectHashMap.put("specification",goods.getSpecification().substring(0,25)+"...");
+        objectHashMap.put("specification",UnicodeUtils.getTextFromHtml(goods.getSpecification()).substring(0,25)+"...");
         res.add(objectHashMap);
         param.put("cartList",res);
         param.put("amount_price",new DecimalFormat("0.00").format(Original_price));

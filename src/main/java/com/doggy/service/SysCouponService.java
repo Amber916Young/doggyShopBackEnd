@@ -117,4 +117,8 @@ public class SysCouponService {
     public void updateCouponPayment(HashMap<String, Object> param) {
          couponMapper.updateCouponPayment(param);
     }
+
+    public Rule queryRuleOutDate(HashMap<String, Object> data) {
+        return couponMapper.queryRuleOutDate(data);
+    }
 }

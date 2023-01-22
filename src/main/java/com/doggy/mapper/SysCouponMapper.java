@@ -56,4 +56,6 @@ public interface SysCouponMapper {
     List<Coupon> queryAllCouponCustomer(HashMap<String, Object> param);
 
     void updateCouponPayment(HashMap<String, Object> param);
+
+    Rule queryRuleOutDate(HashMap<String, Object> data);
 }

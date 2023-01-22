@@ -1,7 +1,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.doggy.mapper.SysCouponMapper">
+<mapper namespace="com.doggy.mapper.SysAttrSpecMapper">
 
     <insert id="insertRule">
         insert into DoggyPets.rule
@@ -124,55 +124,29 @@
                 #{coupon_name},
             </if>
         </trim>
-
     </insert>
-    <insert id="insertCoupon">
-        insert into DoggyPets.coupon
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="customer_id != null">
-                customer_id,
-            </if>
-            <if test="batch_id != null">
-                batch_id,
-            </if>
-            <if test="status != null">
-                status,
-            </if>
-            <if test="order_id != null">
-                order_id,
-            </if>
-            <if test="received_time != null">
-                received_time,
-            </if>
 
-            <if test="used_time != null">
-                used_time,
+
+    <insert id="insertAssociatedAtrrGroup">
+        insert into DoggyPets.pms_attr_attrgroup_relation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="attr_id != null">
+                attr_id,
+            </if>
+            <if test="attr_group_id != null">
+                attr_group_id,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="customer_id != null">
-                #{customer_id},
+            <if test="attr_id != null">
+                #{attr_id},
             </if>
-            <if test="batch_id != null">
-                #{batch_id},
-            </if>
-            <if test="status != null">
-                #{status},
-            </if>
-            <if test="order_id != null">
-                #{order_id},
-            </if>
-            <if test="received_time != null">
-                #{received_time},
-            </if>
-
-            <if test="used_time != null">
-                #{used_time},
+            <if test="attr_group_id != null">
+                #{attr_group_id},
             </if>
         </trim>
-
-
     </insert>
+
 
     <delete id="deleteCoupons">
        delete from DoggyPets.coupon
@@ -375,56 +349,7 @@
             </if>
         </where>
     </select>
-    <select id="queryCoupon" resultType="com.doggy.entity.Coupon">
-        select * from DoggyPets.coupon
-        <where>
-            1=1
-            <if test="coupon_id !=null">
-                and  coupon_id=#{coupon_id}
-            </if>
-            <if test="batch_id !=null">
-                and  batch_id=#{batch_id}
-            </if>
-            <if test="customer_id !=null">
-                and  customer_id=#{customer_id}
-            </if>
-        </where>
-    </select>
-    <select id="queryCouponBatch" resultType="com.doggy.entity.Coupon_batch">
-        select * from DoggyPets.coupon_batch
-        <where>
-            1=1
-            <if test="batch_id !=null">
-                and  batch_id=#{batch_id}
-            </if>
-            <if test="rule_id !=null">
-                and  rule_id=#{rule_id}
-            </if>
 
-            <if test="coupon_name !=null">
-                and  coupon_name=#{coupon_name}
-            </if>
-        </where>
-    </select>
-    <select id="queryRule" resultType="com.doggy.entity.Rule">
-        select * from DoggyPets.rule
-        <where>
-            1=1
-            <if test="rule_id !=null">
-                and  rule_id=#{rule_id}
-            </if>
-            <if test="name !=null">
-                and  name=#{name}
-            </if>
-            <if test="receive_ended_at !=null">
-                and  receive_ended_at &gt;=  #{receive_ended_at}
-            </if>
-            <if test="use_ended_at !=null">
-                and  use_ended_at &gt;=  #{use_ended_at}
-            </if>
-        </where>
-
-    </select>
     <select id="queryRuleAll" resultType="com.doggy.entity.Rule">
         select * from DoggyPets.rule
         <where>
@@ -436,59 +361,31 @@
         </where>
     </select>
 
-    <select id="queryCouponCustomerMap" resultType="com.doggy.entity.Coupon">
-        select * from DoggyPets.coupon
-        <where>
-            1=1
-            <if test="data.status !=null">
-                and  status =  #{data.status}
-            </if>
-            <if test="id !=null">
-                and  customer_id =  #{id}
-            </if>
-        </where>
+    <select id="queryPms_attr_group" resultType="com.doggy.entity.EManage.Pms_attr_group">
+        select * from DoggyPets.pms_attr_group
         limit #{start},#{rows}
     </select>
-    <select id="querycCouponBatchMap" resultType="com.doggy.entity.Coupon_batch">
-        select * from DoggyPets.coupon_batch
-        <where>
-            total_count &gt; assign_count and
-            1=1
-        </where>
-        limit #{start},#{rows}
+    <select id="pageQueryPms_attr_groupCount"  resultType="java.lang.Integer">
+        select count(1) from DoggyPets.pms_attr_group
     </select>
 
 
-    <select id="queryAllCouponCustomer" resultType="com.doggy.entity.Coupon">
-        select * from DoggyPets.coupon
-        <where>
-            1=1
-            <if test="customer_id !=null">
-                and  customer_id =  #{customer_id}
-            </if>
-            <if test="status !=null">
-                and  status =  #{status}
-            </if>
-        </where>
+
+
+    <select id="queryPms_attr" resultType="com.doggy.entity.EManage.Pms_attr">
+        select * from DoggyPets.pms_attr
+
+          limit #{start},#{rows}
     </select>
-    <select id="queryRuleOutDate" resultType="com.doggy.entity.Rule">
-
-        select * from DoggyPets.rule
-        <where>
-            1=1
-            <if test="rule_id !=null">
-                and  rule_id=#{rule_id}
-            </if>
-            <if test="name !=null">
-                and  name=#{name}
-            </if>
-
-            <if test="use_ended_at !=null">
-                and  use_ended_at &lt;=  #{use_ended_at}
-            </if>
-        </where>
-
+    <select id="pageQueryPms_attr_Count"  resultType="java.lang.Integer">
+        select count(1) from DoggyPets.pms_attr
     </select>
-
+    <select id="queryPms_attrByids" resultType="com.doggy.entity.EManage.Pms_attr">
+        select * from DoggyPets.pms_attr
+        where attr_id in
+        <foreach collection="list" item="id" index="index"  open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 
 </mapper>

@@ -7,6 +7,7 @@ import com.doggy.service.SysGoodsService;
 import com.doggy.service.SysOrderService;
 import com.doggy.utils.HttpResult;
 import com.doggy.utils.Page;
+import com.doggy.utils.TimeParse;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,9 @@ public class CouponsController {
             // 查询规则
             data.put("rule_id",batch.getRule_id());
             // 是否过期 TODO 定时任务
-            data.put("use_ended_at",new Date());
+
+            String current = TimeParse.getDate();
+            data.put("use_ended_at",current);
             Rule rule= couponService.queryRule(data);
             if(rule == null) {
                 //过期了 更新Coupon表 没有使用但是过期了
@@ -312,7 +315,9 @@ public class CouponsController {
             // 查询规则
             data.put("rule_id",batch.getRule_id());
             // 是否过期 TODO 定时任务
-            data.put("use_ended_at",new Date());
+            String current = TimeParse.getDate();
+
+            data.put("use_ended_at",current);
             Rule rule= couponService.queryRule(data);
             if(rule == null) {
                 //过期了 更新Coupon表 没有使用但是过期了
@@ -398,7 +403,8 @@ public class CouponsController {
             // 查询规则
             data.put("rule_id",batch.getRule_id());
             // 是否过期 TODO 定时任务
-            data.put("use_ended_at",new Date());
+            String current = TimeParse.getDate();
+            data.put("use_ended_at",current);
             Rule rule= couponService.queryRule(data);
             if(rule == null) {
                 //过期了 更新Coupon表 没有使用但是过期了
@@ -467,19 +473,26 @@ public class CouponsController {
         int limit = 20;
         int curr = Integer.parseInt(param.get("currNo").toString());
         int customer_id = Integer.parseInt(param.get("customer_id").toString());
+        int status = Integer.parseInt(param.get("status").toString());
         limit = Integer.parseInt(param.get("limit").toString());
         page.setRows(limit);
         page.setPage(curr);
         int start = page.getStart();
         page.setStart(start);
+//        HashMap<String, Object> search = new HashMap<>();
+//        search.put("status",status);
+//        page.setData(search);
+
         //status 0-未使用,1-已使用,2-已过期,3-冻结
         List<Coupon_batch> batches =  couponService.querycCouponBatchMap(page);
         HashMap<String,Object> data = new HashMap<>();
         // O(n) 复杂度
         List<HashMap<String,Object>> res = new ArrayList<>();
+        String current = TimeParse.getDate();
         for(Coupon_batch coupon_batch : batches){
             data.put("rule_id",coupon_batch.getRule_id());
-            data.put("receive_ended_at",new Date());
+            data.put("receive_ended_at",current);
+            data.put("use_ended_at", current);
             Rule rule= couponService.queryRule(data);
             if(rule != null){
                 data = new HashMap<>();
@@ -532,10 +545,13 @@ public class CouponsController {
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
         Page page = new Page();
         int limit = 20;
-        HashMap<String,Object> data = new HashMap<>();
+        HashMap<String, Object> data = new HashMap<>();
         int curr = Integer.parseInt(param.get("currNo").toString());
         int customer_id = Integer.parseInt(param.get("customer_id").toString());
+        int status = Integer.parseInt(param.get("status").toString());
         limit = Integer.parseInt(param.get("limit").toString());
+
+        data.put("status", status);
         page.setData(data);
         page.setRows(limit);
         page.setPage(curr);
@@ -543,30 +559,91 @@ public class CouponsController {
         page.setStart(start);
         page.setId(customer_id);
         //status 0-未使用,1-已使用,2-已过期,3-冻结
-        data.put("status",0);
-
         List<Coupon> couponList = couponService.queryCouponCustomerMap(page);
         // 查询已经领取过并且可用的优惠券
-        List<HashMap<String,Object>> res = new ArrayList<>();
-
-        for(Coupon coupon : couponList){
+        List<HashMap<String, Object>> res = new ArrayList<>();
+        for (Coupon coupon : couponList) {
             data = new HashMap<>();
             // 查询优惠券批次
-            data.put("batch_id",coupon.getBatch_id());
-            Coupon_batch coupon_batch= couponService.queryCouponBatch(data);
+            data.put("batch_id", coupon.getBatch_id());
+            Coupon_batch coupon_batch = couponService.queryCouponBatch(data);
             // 查询规则
-            data.put("rule_id",coupon_batch.getRule_id());
+            data.put("rule_id", coupon_batch.getRule_id());
             // 是否过期 TODO 定时任务
-            data.put("use_ended_at",new Date());
-            Rule rule= couponService.queryRule(data);
-            if(rule == null) {
+            if (status == 0) {
+                String current = TimeParse.getDate();
+                data.put("use_ended_at", current);
+            }
+            Rule rule = couponService.queryRule(data);
+            if (rule == null) {
                 //过期了 更新Coupon表 没有使用但是过期了
-                HashMap<String,Object> updateMap = new HashMap<>();
-                updateMap.put("coupon_id",coupon.getCoupon_id());
-                updateMap.put("status",2); // 更新已经过期
+                HashMap<String, Object> updateMap = new HashMap<>();
+                updateMap.put("coupon_id", coupon.getCoupon_id());
+                updateMap.put("status", 2); // 更新已经过期
                 couponService.updateCoupon(updateMap);
-            }else {
+            } else {
+                String use_started_at = rule.getUse_started_at().substring(0, 10);
+                String use_ended_at = rule.getUse_ended_at().substring(0, 10);
+                DecimalFormat format = new DecimalFormat("#.00");
+                String str = format.format(rule.getAmount());
+                String str2 = format.format(rule.getDiscount());
+                rule.setAmount(Double.parseDouble(str));
+                rule.setDiscount(Double.parseDouble(str2));
+                HashMap<String, Object> Map = new HashMap<>();
+                Map.put("discount", rule.getDiscount());
+                Map.put("threshold", rule.getThreshold());
+                Map.put("amount", rule.getAmount());
+                Map.put("type", rule.getType());
+                Map.put("use_range", rule.getUse_range());
+                Map.put("use_started_at", use_started_at);
+                Map.put("use_ended_at", use_ended_at);
+                HashMap<String, Object> batchMap = new HashMap<>();
+                batchMap.put("batch_id", coupon_batch.getBatch_id());
+                batchMap.put("coupon_name", coupon_batch.getCoupon_name());
+                batchMap.put("rule_id", coupon_batch.getRule_id());
+                batchMap.put("rule", Map);
+                res.add(batchMap);
+            }
+        }
 
+        return HttpResult.ok("查询成功", res);
+    }
+
+
+    /**
+     * 查询可以过期的优惠券
+     * 只显示领取开始时间 receive_started_at 到 领取结束时间 receive_ended_at
+     * @param jsonData
+     * @return
+     */
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/getAll/collection/outdate")
+    public HttpResult getAllCouponsCanCollectionOutdate(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=", "");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        Page page = new Page();
+        int limit = 20;
+        int curr = Integer.parseInt(param.get("currNo").toString());
+        int customer_id = Integer.parseInt(param.get("customer_id").toString());
+        limit = Integer.parseInt(param.get("limit").toString());
+        page.setRows(limit);
+        page.setPage(curr);
+        int start = page.getStart();
+        page.setStart(start);
+
+
+        //status 0-未使用,1-已使用,2-已过期,3-冻结
+        List<Coupon_batch> batches =  couponService.querycCouponBatchMap(page);
+        HashMap<String,Object> data = new HashMap<>();
+        // O(n) 复杂度
+        List<HashMap<String,Object>> res = new ArrayList<>();
+        for(Coupon_batch coupon_batch : batches){
+            data.put("rule_id",coupon_batch.getRule_id());
+            String current = TimeParse.getDate();
+            data.put("use_ended_at", current);
+            Rule rule= couponService.queryRuleOutDate(data);
+            if(rule != null){
                 String  use_started_at = rule.getUse_started_at().substring(0,10);
                 String  use_ended_at = rule.getUse_ended_at().substring(0,10);
                 DecimalFormat format = new DecimalFormat("#.00");
@@ -574,8 +651,6 @@ public class CouponsController {
                 String str2 = format.format(rule.getDiscount());
                 rule.setAmount(Double.parseDouble(str));
                 rule.setDiscount(Double.parseDouble(str2));
-
-
                 HashMap<String,Object> Map = new HashMap<>();
                 Map.put("discount",rule.getDiscount());
                 Map.put("threshold",rule.getThreshold());
@@ -584,8 +659,6 @@ public class CouponsController {
                 Map.put("use_range",rule.getUse_range());
                 Map.put("use_started_at",use_started_at);
                 Map.put("use_ended_at",use_ended_at);
-
-
                 HashMap<String,Object> batchMap = new HashMap<>();
                 batchMap.put("batch_id",coupon_batch.getBatch_id());
                 batchMap.put("coupon_name",coupon_batch.getCoupon_name());
@@ -594,8 +667,6 @@ public class CouponsController {
                 res.add(batchMap);
             }
         }
-
         return HttpResult.ok("查询成功",res);
     }
-
 }

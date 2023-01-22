@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/headerPage :: headerPage"></div>
+<title>类别管理</title>
+<style>
+  img{
+    height: 100px;
+    width: auto;
+  }
+</style>
+<body >
+<div >
+  <div >
+    <div th:replace="fragments/headerSide :: headerSide"></div>
+  </div>
+  <div class="col col-lg-2">
+    <div th:replace="fragments/sidebarPage :: sidebarPage"></div>
+  </div>
+  <div class="col col-lg-10">
+    <div class="layui-card">
+      <div class="layui-card-header">
+        <div class="layui-breadcrumb" lay-filter="breadcrumb">
+          <a lay-href="">类别规格管理</a>
+          <a><cite>类别主页</cite></a>
+        </div>
+      </div>
+      <div class="layui-card-body">
+          <div class="layui-tab layui-tab-brief">
+              <ul class="layui-tab-title">
+                  <li class="layui-this">Basic info</li>
+                  <li>specification</li>
+                  <li>sale attribute</li>
+                  <li>SKU info</li>
+                  <li>save</li>
+              </ul>
+              <div class="layui-tab-content" >
+                  <div class="layui-tab-item layui-show" lay-id="1">
+                      <form class="layui-form" action="">
+                          <div class="layui-form-item">
+                              <label class="layui-form-label">name</label>
+                              <div class="layui-input-block">
+                                  <input type="text" name="title" required  lay-verify="required" placeholder="name" autocomplete="off" class="layui-input">
+                              </div>
+                          </div>
+
+                          <div class="layui-form-item">
+                              <label class="layui-form-label">weight</label>
+                              <div class="layui-input-block">
+                                  <input type="number" name="weight" required  lay-verify="required" placeholder="weight" autocomplete="off" class="layui-input">
+                              </div>
+                          </div>
+
+                          <div class="layui-form-item layui-form-text">
+                              <label class="layui-form-label">description</label>
+                              <div class="layui-input-block">
+                                  <textarea name="desc" placeholder="description" class="layui-textarea"></textarea>
+                              </div>
+                          </div>
+
+                          <div class="layui-form-item">
+                              <label class="layui-form-label">category</label>
+                              <div class="layui-input-block" style="display: flex">
+                                  <select name="c1" lay-verify="required">
+                                      <option value="0">Home</option>
+                                  </select>
+                                  <select name="c2" lay-verify="required">
+                                      <option value="0">Mattress</option>
+                                  </select>
+                                  <select name="c3" lay-verify="required">
+                                      <option value="0">Memory Foam</option>
+                                      <option value="1">Hybird</option>
+                                  </select>
+                              </div>
+                          </div>
+
+
+                          <div class="layui-form-item">
+                              <div class="layui-input-block">
+<!--                                  <button class="layui-btn" onclick="Next(2)">next</button>-->
+                                  <button type="reset" class="layui-btn layui-btn-primary">reset</button>
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+                  <div class="layui-tab-item" lay-id="2">
+                      <div class="layui-form" id="specification_div" ></div>
+                  </div>
+                  <div class="layui-tab-item" lay-id="3">
+                      <div class="layui-collapse">
+                          <div class="layui-colla-item">
+                              <h2 class="layui-colla-title">Please select sales attributes</h2>
+                              <div class="layui-colla-content layui-show">
+
+
+                              </div>
+                          </div>
+
+                      </div>
+
+                  </div>
+                  <div class="layui-tab-item" lay-id="4">4</div>
+                  <div class="layui-tab-item" lay-id="5">5</div>
+                  <div class="layui-tab-item" lay-id="6">6</div>
+              </div>
+          </div>
+
+
+      </div>
+
+    </div>
+  </div>
+
+
+
+  </div>
+</div>
+
+
+</body>
+<div th:replace="fragments/footerPage :: footerPage"></div>
+
+<script type="text/javascript">
+  var ItemId = "Item6_1";
+
+  var element
+  function Next(id){
+      element.on('tab(test1)', function(){
+          console.info(id)
+          location.hash = 'test1='+ id;
+      });
+  }
+
+  /*<![CDATA[*/
+  layui.use(['layer','table','element' ,'form'], function(){
+      var form = layui.form;
+      var table = layui.table;
+      element = layui.element;
+
+      function getSpecification(){
+          ajaxGet("/web/attr/load/attr/1", {}, function (data) {
+              console.info(data)
+              var item = data.data
+
+              let breadDiv='<div class="layui-collapse" lay-filter="collapse"  lay-accordion>';
+              for(var i = 0;i<item.length;i++){
+                  let v0 = '';
+
+                  var attr_group_name  =item[i].attr_group_name;
+                  var attr_group_id  =item[i].attr_group_id;
+                  var itemList = item[i].attrs;
+                  breadDiv +=
+                      '           <div class="layui-colla-item">\n' +
+                      '               <h2 class="layui-colla-title">'+attr_group_name+'</h2>\n' +
+                      '               <div class="layui-colla-content">'
+                  for(var j = 0;j<itemList.length;j++){
+                      var value_type = itemList[j].value_type;
+                      var attr_name  =itemList[j].attr_name;
+                      var value_list  =itemList[j].value_list;
+                      var attr_id  =itemList[j].attr_id;
+
+                      if(value_type === 0){
+                          let options = '  <option value="-1">unselect</option>\n'
+                          for(var k = 0;k<value_list.length;k++){
+                              options += ' <option value="'+attr_id+'">'+value_list[k]+'</option>\n'
+                          }
+                          v0 +='<div class="layui-form-item">\n' +
+                              '     <label class="layui-form-label">'+attr_name+'</label>\n' +
+                              '      <div class="layui-input-block">\n' +
+                              '         <select name="'+attr_name+'" lay-verify="required">' + options  +'</select>\n' +
+                              '   </div>\n' +
+                              '</div>'
+                      }else {
+                          let options = ' '
+                          for(var k = 0;k<value_list.length;k++){
+                              options += ' <input type="checkbox" name="'+attr_id+'" title="'+value_list[k]+'">'
+                          }
+                          v0 +='<div class="layui-form-item">\n' +
+                              '     <label class="layui-form-label">'+attr_name+'</label>\n' +
+                              '      <div class="layui-input-block">\n' +options +
+                              '   </div>\n' +
+                              '</div>'
+                      }
+                  }
+                  breadDiv += v0+' </div>\n' +
+                      '           </div>\n'
+              }
+              breadDiv +=   ' </div>'
+
+              $("#specification_div").html(breadDiv);
+              element.render("collapse", "collapse");
+              form.render();
+          });
+      }
+      getSpecification();
+
+
+
+
+
+  })
+  /*]]>*/
+
+
+</script>
+</html>

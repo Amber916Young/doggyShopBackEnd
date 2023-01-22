@@ -8,7 +8,7 @@ import lombok.Data;
 public class HttpResult {
 
     private int code = 200;
-    private String msg;
+    private String msg = "success";
     private Object data;
     private int count;
 

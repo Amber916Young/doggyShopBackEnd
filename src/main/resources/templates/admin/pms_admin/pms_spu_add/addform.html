@@ -1,0 +1,108 @@
+
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+  img{
+    height: 150px;
+    width: auto;
+  }
+
+  .center{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+  }
+
+  .layui-form-pane .layui-form-label{
+      width: 20%;
+  }
+  .layui-input, .layui-textarea{
+      width: 80%;
+  }
+
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form  layui-form-pane" style="padding: 20px 20px;">
+    <div id="Info">
+        <div class="layui-collapse">
+            <div class="layui-colla-item" >
+                <table id="tableview" lay-filter="tableview"></table>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="center">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="button" lay-submit lay-filter="form-submit-add" value="confirm" class="layui-btn">
+            </div>
+        </div>
+    </div>
+
+
+    <br> <br> <br>
+</div>
+
+<script>
+    var attr_group_id = -1;
+  var type = null;
+  layui.use(['form','table','element'], function(){
+    var $ = layui.$
+      form = layui.form
+      table = layui.table
+      attr_group_id = getParam('attr_group_id');
+      type = getParam('type');
+      loadTable()
+
+    form.on('submit(form-submit-add)', function(data){
+
+
+        var checkStatus = table.checkStatus('tableview')
+            , checkData = checkStatus.data;
+        jsonData = new Array()
+        if (checkData.length === 0) {
+            return layer.msg('Please select data');
+        } else {
+            for (var i = 0; i < checkData.length; i++) {
+                jsonData.push(checkData[i].attr_id);
+            }
+        }
+        layer.msg('You have selected Complete');
+      var field = data.field;
+        field.attr_group_id = attr_group_id
+        field.attr_ids = JSON.stringify(jsonData)
+        console.info(field)
+        ajaxPost("/web/attr/attr/group/associated", JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+
+      function loadTable(){
+          table.render({
+              elem: '#tableview'
+              ,url: "/web/attr/load/attr/" //模拟接口
+              ,toolbar: '#toolbar' //开启头部工具栏，并为其绑定左侧模板
+              ,defaultToolbar: ['filter', 'exports', 'print']
+              ,title: 'd'
+              ,cols: [
+                  [
+                      {type: 'checkbox', fixed: 'left'}
+                      ,{field: 'attr_id', width: 100, title: 'id',  align: 'center', sort: true}
+                      ,{field: 'attr_name', title: 'group name', align: 'center',  minWidth: 130}
+                      ,{field: 'catelog_id', title: 'cid',  align: 'center', minWidth: 200, sort: true}
+                      ,{field: 'value_type', title: 'value_type',  align: 'center', minWidth: 200, sort: true}
+                      ,{field: 'value_select', title: 'values',  align: 'center', minWidth: 200, sort: true}
+                      ,{field: 'attr_type', title: 'attr_type',  align: 'center', minWidth: 200, sort: true}
+                      ,{field: 'show_desc', title: 'show_desc',  align: 'center', minWidth: 200, sort: true}
+                  ]
+              ]
+              ,page: true
+              ,limit: 30
+              ,limits: [10, 20, 30, 50, 100,150,200]
+              ,text: '暂无数据'
+          });
+      }
+
+  })
+
+</script>

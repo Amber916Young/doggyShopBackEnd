@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class TimeParse {
     public static void main(String[] args){
@@ -15,6 +16,11 @@ public class TimeParse {
 
     }
 
+    public static String getDate(){
+        Date date = new Date();// 转换为标准时间对象
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);// 输出北京时间
+        return sdf.format(date);
+    }
     /*
      * 将时间戳转换为时间
      */
