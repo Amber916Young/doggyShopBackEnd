@@ -16,6 +16,8 @@ import java.util.List;
 public class Pms_attr_group {
     int attr_group_id;
     String attr_group_name;
+    String icon;
+    String descript;
     int catelog_id;
     List<Pms_attr> attrs = new ArrayList<>();
 }

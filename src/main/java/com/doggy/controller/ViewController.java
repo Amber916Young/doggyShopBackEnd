@@ -176,6 +176,33 @@ public class ViewController {
     }
 
     @SneakyThrows
+    @GetMapping("/pms/pms_attr_group/addform")
+    synchronized public String pms_attr_group_addform() {
+        return "/admin/pms_admin/pms_attr_group/addform";
+    }
+
+
+
+
+
+
+    @SneakyThrows
+    @GetMapping("/pms/pms_attr_group/relation")
+    synchronized public String pms_attr_group_relation() {
+        return "/admin/pms_admin/pms_attr_group_relation/index";
+    }
+
+
+    @SneakyThrows
+    @GetMapping("/pms/pms_category")
+    synchronized public String pms_category() {
+        return "/admin/pms_admin/pms_category/index";
+    }
+
+
+
+
+    @SneakyThrows
     @GetMapping("/pms/attr/group/addform")
     synchronized public String form_pms_attr_group() {
         return "/admin/pms_admin/pms_attr_group/addform";

@@ -15,61 +15,35 @@
 <!--    <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>-->
 
     <script>
-        function LogOut(){
-            var url="/permission/web/logout"
-            ajaxPost(url, {}, function (data) {
-                if (data.code == 0) {
-                    layer.msg(data.msg, {time: 3000, icon: 1});
-                    setTimeout(() => {
-                        window.location.href="/index/login";
-                    }, 3000);
-                } else {
-                    layer.msg(data.msg, {time: 3000, icon: 5});
-                    return;
-                }
-            });
-        }
+
         $(function () {
+            layui.use('element', function(){
+                var element = layui.element;
+                element.on('nav(backend_menu)', function(elem){
+                  console.log(elem); //得到当前点击的DOM对象
+                });
 
-            $('#menu').metisMenu();
-            //根据页面传进来的ItemId设置菜单状态
-            // var url = window.location;
-            //获取Id对应的菜单
-            console.log("ItemId=" + ItemId);
-            if(ItemId==null){
-                return;
-            }
-            var element = $('#' + ItemId);
 
-            console.log(element.html());
 
-            if (element.is(':empty')) {
-                return;
-            }
+                 //根据页面传进来的ItemId设置菜单状态
+                    // var url = window.location;
+                    //获取Id对应的菜单
+                    console.log("ItemId=" + ItemId);
+                    if(ItemId==null){
+                        return;
+                    }
+                    var element = $('#' + ItemId);
+                    var n_list = ItemId.substring(0,ItemId.indexOf("_")+1);
+                    n_list += '0'
+                    var father = $('#' + n_list);
+                    if (element.is(':empty')) {
+                        return;
+                    }else{
+                        element.addClass('layui-this');
+                        father.addClass('layui-nav-itemed');
+                    }
+              });
 
-            //如果以0结尾，对应菜单项标题菜单
-            if (ItemId.charAt(ItemId.length - 1) == '0') {
-                element.addClass('menuItemColor');
-                element.css('color', 'white');
-                //展开菜单
-                element.parent().addClass("mm-active");
-                element.next().addClass("mm-show");
-                return;
-            }
-            //处理非第一个节点
-            //获取<a></a>当前菜单项对应的父元素
-            var currentItemLi = element.parent();
-            //设置li的样式,高亮当前选项
-            currentItemLi.addClass('active');
-            //获取上一级ul元素
-            var parentItemUl = currentItemLi.parent();
-            //展开菜单
-            parentItemUl.addClass("mm-show");
-            var parentItemLi = parentItemUl.parent();
-            // console.log("元素的html内容:"+parentItemLi.html());
-            //设置父菜单项为active 状态
-            parentItemLi.addClass("mm-active");
         });
-        //根据
     </script>
 </footer>

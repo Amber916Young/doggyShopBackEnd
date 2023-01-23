@@ -10,6 +10,7 @@ import com.doggy.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -64,5 +65,13 @@ public class SysAttrSpecService {
 
     public List<Pms_attr> queryPms_attrByids(List<Integer> list) {
         return sysAttrSpecMapper.queryPms_attrByids(list);
+    }
+
+    public void insertAttrGroup(HashMap<String, Object> param) {
+        sysAttrSpecMapper.insertAttrGroup(param);
+    }
+
+    public void updateAttrGroup(HashMap<String, Object> param) {
+        sysAttrSpecMapper.updateAttrGroup(param);
     }
 }

@@ -57,12 +57,48 @@ public class WebAttrSpecController {
     @GetMapping("/load/attr/group")
     public HttpResult groupAttrGroup(Page page, @RequestParam("limit") int limit, HttpServletRequest request) {
         String keyword = request.getParameter("keyword");
+        int catelog_id = Integer.parseInt(request.getParameter("catelog_id"));
         page.setRows(limit);
         page.setKeyWord(keyword);
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("catelog_id",catelog_id);
+        page.setData(data);
         List<Pms_attr_group> lists = sysAttrSpecService.queryPms_attr_group(page);
         int totals=sysAttrSpecService.pageQueryPms_attr_groupCount(page);
         return HttpResult.ok(0,"查询成功", lists,totals);
     }
+
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/attr/group/detail")
+    public HttpResult detailAttrGroup(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        sysAttrSpecService.insertAttrGroup(param);
+        return HttpResult.ok();
+    }
+
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/attr/group/add")
+    public HttpResult addAttrGroup(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        sysAttrSpecService.insertAttrGroup(param);
+        return HttpResult.ok();
+    }
+
+    @SneakyThrows
+    @ResponseBody
+    @PostMapping("/attr/group/edit")
+    public HttpResult editAttrGroup(@RequestBody String jsonData) {
+        jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
+        HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
+        // cascade update 5 tables at the same time
+        sysAttrSpecService.updateAttrGroup(param);
+        return HttpResult.ok();
+    }
+
 
     @SneakyThrows
     @ResponseBody
@@ -122,16 +158,16 @@ public class WebAttrSpecController {
     }
 
 
-    @SneakyThrows
-    @ResponseBody
-    @GetMapping("/load/sku/attr")
-    public HttpResult getSKU_sale_attr() {
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("")
-        List<Pms_attr> lists = sysAttrSpecService。
-
-
-    }
+//    @SneakyThrows
+//    @ResponseBody
+//    @GetMapping("/load/sku/attr")
+//    public HttpResult getSKU_sale_attr() {
+//        HashMap<String,Object> map = new HashMap<>();
+//        map.put("")
+//        List<Pms_attr> lists = sysAttrSpecService。
+//
+//
+//    }
 
 
 

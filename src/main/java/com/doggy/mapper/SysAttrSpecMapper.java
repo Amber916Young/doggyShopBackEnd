@@ -8,6 +8,7 @@ import com.doggy.utils.Page;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface SysAttrSpecMapper {
@@ -37,4 +38,8 @@ public interface SysAttrSpecMapper {
     Pms_attr_group queryPms_attr_groupById(int id);
 
     List<Pms_attr> queryPms_attrByids(List<Integer> list);
+
+    void insertAttrGroup(HashMap<String, Object> param);
+
+    void updateAttrGroup(HashMap<String, Object> param);
 }

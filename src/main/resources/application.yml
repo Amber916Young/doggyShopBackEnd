@@ -15,6 +15,14 @@ spring:
   web:
     resources:
       static-locations: classpath:/templates/,classpath:/static/image/,classpath:/static/,classpath:/mapper/
+  thymeleaf:
+    cache: false
+  devtools:
+      restart:
+        enabled: true
+        additional-paths: src/java/main
+        exclude: static/**,public/**,WEB-INF/**
+
 
 mybatis:
   mapper-locations: classpath:static/mapper/*.xml # The path where the configuration mapper file is located

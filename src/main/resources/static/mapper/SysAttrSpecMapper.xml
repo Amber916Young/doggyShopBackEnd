@@ -3,129 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.doggy.mapper.SysAttrSpecMapper">
 
-    <insert id="insertRule">
-        insert into DoggyPets.rule
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="name != null">
-                name,
-            </if>
-            <if test="type != null">
-                type,
-            </if>
-            <if test="receive_started_at != null">
-                receive_started_at,
-            </if>
-            <if test="receive_ended_at != null">
-                receive_ended_at,
-            </if>
-            <if test="use_started_at != null">
-                use_started_at,
-            </if>
-            <if test="use_ended_at != null">
-                use_ended_at,
-            </if>
-            <if test="amount != null">
-                amount,
-            </if>
-            <if test="threshold != null">
-                threshold,
-            </if>
-            <if test="receive_count != null">
-                receive_count,
-            </if>
-            <if test="use_range != null">
-                use_range,
-            </if>
-            <if test="goods_list != null">
-                goods_list,
-            </if>
-            <if test="discount != null">
-                discount,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="name != null">
-                #{name},
-            </if>
-            <if test="type != null">
-                #{type},
-            </if>
-            <if test="receive_started_at != null">
-                #{receive_started_at},
-            </if>
-            <if test="receive_ended_at != null">
-                #{receive_ended_at},
-            </if>
-            <if test="use_started_at != null">
-                #{use_started_at},
-            </if>
-            <if test="use_ended_at != null">
-                #{use_ended_at},
-            </if>
-            <if test="amount != null">
-                #{amount},
-            </if>
-            <if test="threshold != null">
-                #{threshold},
-            </if>
-            <if test="receive_count != null">
-                #{receive_count},
-            </if>
-            <if test="use_range != null">
-                #{use_range},
-            </if>
-            <if test="goods_list != null">
-                #{goods_list},
-            </if>
-            <if test="discount != null">
-                #{discount},
-            </if>
-        </trim>
-    </insert>
-    <insert id="insertCouponBatch">
-        insert into DoggyPets.coupon_batch
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="rule_id != null">
-                rule_id,
-            </if>
-            <if test="total_count != null">
-                total_count,
-            </if>
-            <if test="assign_count != null">
-                assign_count,
-            </if>
-            <if test="used_count != null">
-                used_count,
-            </if>
-            <if test="batch_name != null">
-                batch_name,
-            </if>
-            <if test="coupon_name != null">
-                coupon_name,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="rule_id != null">
-                #{rule_id},
-            </if>
-            <if test="total_count != null">
-                #{total_count},
-            </if>
-            <if test="assign_count != null">
-                #{assign_count},
-            </if>
-            <if test="used_count != null">
-                #{used_count},
-            </if>
-            <if test="batch_name != null">
-                #{batch_name},
-            </if>
-            <if test="coupon_name != null">
-                #{coupon_name},
-            </if>
-        </trim>
-    </insert>
-
 
     <insert id="insertAssociatedAtrrGroup">
         insert into DoggyPets.pms_attr_attrgroup_relation
@@ -146,6 +23,37 @@
             </if>
         </trim>
     </insert>
+    <insert id="insertAttrGroup">
+        insert into DoggyPets.pms_attr_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="attr_group_name != null">
+                attr_group_name,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="descript != null">
+                descript,
+            </if>
+            <if test="catelog_id != null">
+                catelog_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="attr_group_name != null">
+                #{attr_group_name},
+            </if>
+            <if test="icon != null">
+                #{icon},
+            </if>
+            <if test="attr_group_name != null">
+                #{attr_group_name},
+            </if>
+            <if test="catelog_id != null">
+                #{catelog_id},
+            </if>
+        </trim>
+    </insert>
 
 
     <delete id="deleteCoupons">
@@ -161,124 +69,7 @@
         </where>
     </delete>
 
-    <delete id="deleteCouponsBatch">
-        delete from DoggyPets.coupon_batch where batch_id = #{batch_id}
-    </delete>
-    <delete id="deleteRule">
-        delete from DoggyPets.rule where rule_id = #{rule_id}
-    </delete>
 
-
-    <select id="pageQuerycCouponData" resultType="com.doggy.entity.Coupon">
-        select * from DoggyPets.coupon
-        <where>
-            1=1
-            <if test="data.status !=null">
-                and status = #{data.status}
-            </if>
-            <if test="keyWord !=null">
-                and   concat(
-                IFNULL(customer_id,'')
-                , IFNULL(status,'')
-                , IFNULL(order_id,'') )
-                like concat('%', #{keyWord}, '%')
-            </if>
-        </where>
-        order by validate_time asc
-        limit #{start},#{rows}
-    </select>
-    <select id="pageQueryCouponCount" resultType="java.lang.Integer">
-        select count(1) from DoggyPets.coupon
-        <where>
-            1=1
-            <if test="data.status !=null">
-                and status = #{data.status}
-            </if>
-            <if test="keyWord !=null">
-                and   concat(
-                IFNULL(customer_id,'')
-                 , IFNULL(status,'')
-                , IFNULL(order_id,''))
-                like concat('%', #{keyWord}, '%')
-            </if>
-        </where>
-    </select>
-
-
-
-
-    <select id="pageQueryCouponBatchData" resultType="com.doggy.entity.Coupon_batch">
-        select * from DoggyPets.coupon_batch
-        <where>
-            1=1
-            <if test="keyWord !=null">
-                and   concat(
-                IFNULL(batch_name,'')
-                , IFNULL(coupon_name,'')
-                , IFNULL(total_count,'')
-                , IFNULL(total_count,'')
-                , IFNULL(assign_count,'') )
-                like concat('%', #{keyWord}, '%')
-            </if>
-        </where>
-        order by create_time desc
-        limit #{start},#{rows}
-    </select>
-    <select id="pageQueryCouponBatchCount" resultType="java.lang.Integer">
-        select count(1) from DoggyPets.coupon_batch
-        <where>
-            1=1
-            <if test="keyWord !=null">
-                and   concat(
-                IFNULL(batch_name,'')
-                , IFNULL(coupon_name,'')
-                , IFNULL(total_count,'')
-                , IFNULL(total_count,'')
-                , IFNULL(assign_count,'') )
-                like concat('%', #{keyWord}, '%')
-            </if>
-        </where>
-    </select>
-
-    <update id="updateRule">
-        update DoggyPets.rule
-        <set>
-            <if test="name != null">
-                name = #{name},
-            </if>
-            <if test="type != null">
-                type = #{type},
-            </if>
-            <if test="rule_content != null">
-                rule_content = #{rule_content},
-            </if>
-        </set>
-        where rule_id = #{rule_id}
-    </update>
-    <update id="updateCouponBatch">
-        update DoggyPets.coupon_batch
-        <set>
-            <if test="rule_id != null">
-                rule_id = #{rule_id},
-            </if>
-            <if test="total_count != null">
-                total_count = #{total_count},
-            </if>
-            <if test="assign_count != null">
-                assign_count = #{assign_count},
-            </if>
-            <if test="used_count != null">
-                used_count = #{used_count},
-            </if>
-            <if test="batch_name != null">
-                batch_name = #{batch_name},
-            </if>
-            <if test="coupon_name != null">
-                coupon_name = #{coupon_name},
-            </if>
-        </set>
-        where batch_id = #{batch_id}
-    </update>
     <update id="updateCoupon">
         update DoggyPets.coupon
         <set>
@@ -307,21 +98,25 @@
 
 
 
-    <update id="updateCouponPayment">
-        update DoggyPets.coupon
+    <update id="updateAttrGroup">
+        update DoggyPets.pms_attr_group
         <set>
-            <if test="status != null">
-                status = #{status},
+            <if test="attr_group_name != null">
+                attr_group_name = #{attr_group_name},
             </if>
-            <if test="order_id != null">
-                order_id = #{order_id},
+            <if test="icon != null">
+                icon = #{icon},
             </if>
-            <if test="used_time != null">
-                used_time = #{used_time},
+            <if test="descript != null">
+                descript = #{descript},
+            </if>
+            <if test="catelog_id != null">
+                catelog_id = #{catelog_id},
             </if>
         </set>
-        where customer_id = #{customer_id} and    batch_id = #{batch_id}
+        where attr_group_id = #{attr_group_id}
     </update>
+
 
     <select id="pageQueryRuleData" resultType="com.doggy.entity.Rule">
         select * from DoggyPets.rule
@@ -363,10 +158,22 @@
 
     <select id="queryPms_attr_group" resultType="com.doggy.entity.EManage.Pms_attr_group">
         select * from DoggyPets.pms_attr_group
+        <where>
+            1=1
+            <if test="data.catelog_id !=null">
+                and  catelog_id = #{data.catelog_id}
+            </if>
+        </where>
         limit #{start},#{rows}
     </select>
     <select id="pageQueryPms_attr_groupCount"  resultType="java.lang.Integer">
         select count(1) from DoggyPets.pms_attr_group
+        <where>
+            1=1
+            <if test="data.catelog_id !=null">
+                and  catelog_id = #{data.catelog_id}
+            </if>
+        </where>
     </select>
 
 
