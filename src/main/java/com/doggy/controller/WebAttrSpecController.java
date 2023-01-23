@@ -74,8 +74,8 @@ public class WebAttrSpecController {
     public HttpResult detailAttrGroup(@RequestBody String jsonData) {
         jsonData = URLDecoder.decode(jsonData, "utf-8").replaceAll("=","");
         HashMap<String, Object> param = JSONObject.parseObject(jsonData, HashMap.class);
-        sysAttrSpecService.insertAttrGroup(param);
-        return HttpResult.ok();
+        int attr_group_id = Integer.parseInt(param.get("attr_group_id").toString());
+        return HttpResult.ok(sysAttrSpecService.queryPms_attr_groupById(attr_group_id));
     }
 
     @SneakyThrows

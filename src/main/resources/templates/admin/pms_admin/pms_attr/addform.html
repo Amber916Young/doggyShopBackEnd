@@ -1,0 +1,214 @@
+
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+  img{
+    height: 150px;
+    width: auto;
+  }
+
+  .center{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+  }
+  .layui-input, .layui-textarea {
+  }
+
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form  layui-form-pane" style="padding: 20px 20px;">
+    <div id="Info">
+        <div class="layui-collapse">
+            <div class="layui-colla-item" >
+                <h2 class="layui-colla-title">用户优惠券信息</h2>
+                <div class="layui-colla-content layui-show" id="coupon_show">
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">批次ID</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input type="text" name="coupon_id"  value="'+data.coupon_id+'"   placeholder="openid" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">用户ID</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input type="text" name="customer_id"  placeholder="用户ID" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">使用状态</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <select name="status"  lay-filter="status_select">-->
+<!--                                <option value="0" >未使用</option>-->
+<!--                                <option value="1">已使用</option>-->
+<!--                                <option value="2">已过期</option>-->
+<!--                                <option value="3">冻结</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">对应订单ID</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input type="text" name="order_id"  placeholder="下单人ID" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">领取时间</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input readonly type="text" name="received_time"  placeholder="领取时间" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">有效日期</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input  readonly type="text" name="validate_time"  placeholder="有效日期" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">使用时间</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input  readonly type="text" name="used_time"  placeholder="使用时间" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">最新修改时间</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input readonly type="text" name="modified_time"  placeholder="最新修改时间" autocomplete="off" class="layui-input">-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+
+<!--                    <div class="layui-form-item">-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input type="button" lay-submit lay-filter="form-submit-add" value="修改用户优惠券信息" class="layui-btn">-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <br> <br> <br>
+</div>
+
+<script>
+  var coupon_id = null;
+  var type = null;
+  var  element
+  var form
+  layui.use(['form','table','element'], function(){
+    var $ = layui.$
+      form = layui.form
+
+    element = layui.element;
+    coupon_id = getParam('coupon_id');
+    type = getParam('type');
+    if(type === "edit")
+        loadData(coupon_id)
+
+    form.on('submit(form-submit-edit)', function(data){
+      var field = data.field;
+        field.coupon_id = coupon_id
+        ajaxPost(coupon_form_update, JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+  })
+
+
+
+  function loadData(id){
+      var jsonData={}
+      jsonData.coupon_id= id;
+      var params = JSON.stringify(jsonData);
+      ajaxPost(coupon_detail, params, function (data) {
+          var str = '';
+          var coupon = data.data
+
+          var status = coupon.status
+          console.info(status)
+          str = '   <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">批次ID</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="coupon_id"  value="'+coupon.coupon_id+'"   placeholder="openid" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">用户ID</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="customer_id"  value="'+coupon.customer_id+'"   placeholder="用户ID" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">使用状态</label>\n' +
+              '                        <div class="layui-input-block" id="status_select">\n' +
+              '                            <select name="status"  lay-filter="status_select">\n'
+                                                  if (status === 0){
+                                                      str          +=' <option value="0" selected >未使用</option>\n'
+                                                      + '  <option value="1" >已使用</option>\n'
+                                                      +' <option value="2">已过期</option>\n'
+                                                      +  ' <option value="3">冻结</option>\n'
+                                                  }else if (status === 1){
+                                                      str +=' <option value="0" >未使用</option>\n'
+                                                      + '  <option value="1" selected>已使用</option>\n'
+                                                      +' <option value="2">已过期</option>\n'
+                                                      +  ' <option value="3">冻结</option>\n'
+                                                  }else if (status === 2){
+                                                      str +=' <option value="0" >未使用</option>\n'
+                                                      + '  <option value="1" >已使用</option>\n'
+                                                      +' <option value="2" selected>已过期</option>\n'
+                                                      +  ' <option value="3">冻结</option>\n'
+                                                  }else if (status === 3){
+                                                      str  +=' <option value="0" >未使用</option>\n'
+                                                     + '  <option value="1" >已使用</option>\n'
+                                                      +' <option value="2">已过期</option>\n'
+                                                    +  ' <option value="3" selected>冻结</option>\n'
+                                                  }
+
+
+                 str  += '                            </select>\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">对应订单ID</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="text" name="order_id" value="'+coupon.order_id+'"   placeholder="下单人ID" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">领取时间</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input readonly type="text" name="received_time"  value="'+coupon.received_time+'"    placeholder="领取时间" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">有效日期</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input  readonly type="text" name="validate_time"   value="'+coupon.validate_time+'" placeholder="有效日期" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">使用时间</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input  readonly type="text" name="used_time"  value="'+coupon.used_time+'  " placeholder="使用时间" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <label class="layui-form-label">最新修改时间</label>\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input readonly type="text" name="modified_time"  value="'+coupon.modified_time+' " placeholder="最新修改时间" autocomplete="off" class="layui-input">\n' +
+              '                        </div>\n' +
+              '                    </div>\n' +
+              '                    <div class="layui-form-item">\n' +
+              '                        <div class="layui-input-block">\n' +
+              '                            <input type="button" lay-submit lay-filter="form-submit-edit" value="修改用户优惠券信息" class="layui-btn">\n' +
+              '                        </div>\n' +
+              '                    </div>'
+          $("#coupon_show").html(str)
+          element.render();
+          form.render("select");
+
+      });
+  }
+</script>

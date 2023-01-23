@@ -1,0 +1,133 @@
+
+<div th:replace="fragments/basePage :: basePage"></div>
+<style>
+  img{
+    height: 150px;
+    width: auto;
+  }
+
+  .center{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+  }
+  .layui-input, .layui-textarea {
+  }
+
+</style>
+<div  xmlns:th="http://www.thymeleaf.org" class="layui-form  layui-form-pane" style="padding: 20px 20px;">
+    <div id="Info" >
+        <div id="div_show">
+
+        </div>
+    </div>
+
+    <br> <br> <br>
+</div>
+
+<script>
+    var catelog_id = null;
+    var attr_group_id = null;
+  var type = null;
+  var  element
+  var form
+  layui.use(['form','table','element'], function(){
+    var $ = layui.$
+      form = layui.form
+
+    element = layui.element;
+      catelog_id = getParam('catelog_id');
+      attr_group_id = getParam('attr_group_id');
+    type = getParam('type');
+    if(type === "edit")
+        loadData()
+      else{
+        loadDiv()
+    }
+
+    form.on('submit(form-submit-edit)', function(data){
+      var field = data.field;
+        field.attr_group_id = attr_group_id
+        ajaxPost('/web/attr/group/edit', JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+
+    form.on('submit(form-submit-add)', function(data){
+      var field = data.field;
+        field.catelog_id = catelog_id
+        ajaxPost('/web/attr/group/add', JSON.stringify(field), function (data) {
+          layer.msg(data.msg, {time: 3000, icon: 1});
+      });
+    });
+
+  })
+
+  function loadDiv(){
+      var str = '<div class="layui-form-item">\n' +
+          '                <label class="layui-form-label">group name</label>\n' +
+          '                <div class="layui-input-block">\n' +
+          '                    <input type="text" name="attr_group_name"     placeholder="group name" autocomplete="off" class="layui-input">\n' +
+          '                </div>\n' +
+          '            </div>\n' +
+          '            <div class="layui-form-item">\n' +
+          '                <label class="layui-form-label">icon</label>\n' +
+          '                <div class="layui-input-block">\n' +
+          '                    <input type="text" name="icon"    placeholder="icon" autocomplete="off" class="layui-input">\n' +
+          '                </div>\n' +
+          '            </div>\n' +
+          '            <div class="layui-form-item">\n' +
+          '                <label class="layui-form-label">description</label>\n' +
+          '                <div class="layui-input-block">\n' +
+          '                    <textarea placeholder="description" class="layui-textarea"></textarea>\n' +
+          '                </div>\n' +
+          '            </div>\n' +
+          '            <div class="layui-form-item">\n' +
+          '                <div class="layui-input-block">\n' +
+          '                    <input type="button" lay-submit lay-filter="form-submit-add" value="add" class="layui-btn">\n' +
+          '                </div>\n' +
+          '            </div>';
+
+
+      $("#div_show").html(str)
+      form.render("select");
+  }
+
+
+  function loadData(){
+      var jsonData={}
+      jsonData.attr_group_id= id;
+      var params = JSON.stringify(jsonData);
+      ajaxPost("/web/attr/group/detail", params, function (data) {
+          var item = data.data
+
+          var str = '<div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">group name</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <input type="text" name="attr_group_name" value="'+item.attr_group_name+'"    placeholder="group name" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">icon</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <input type="text" name="icon"   value="'+item.icon+'"   placeholder="icon" autocomplete="off" class="layui-input">\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <label class="layui-form-label">description</label>\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <textarea placeholder="description" name="descript"  class="layui-textarea">'+item.descript+'</textarea>\n' +
+              '                </div>\n' +
+              '            </div>\n' +
+              '            <div class="layui-form-item">\n' +
+              '                <div class="layui-input-block">\n' +
+              '                    <input type="button" lay-submit lay-filter="form-submit-eidt" value="edit" class="layui-btn">\n' +
+              '                </div>\n' +
+              '            </div>';
+          $("#div_show").html(str)
+          form.render("select");
+
+      });
+  }
+</script>

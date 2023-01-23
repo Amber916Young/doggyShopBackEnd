@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/headerPage :: headerPage"></div>
+<title>Attribute</title>
+<style>
+  img{
+    height: 100px;
+    width: auto;
+  }
+</style>
+<body >
+<div >
+    <div >
+        <div th:replace="fragments/headerSide :: headerSide"></div>
+    </div>
+    <div class="col col-lg-2" style="background:  #393d4a; padding:0">
+        <div th:replace="fragments/sidebarPage :: sidebarPage"></div>
+    </div>
+    <div class="col col-lg-10">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <div class="layui-breadcrumb" lay-filter="breadcrumb">
+                    <a lay-href="">Attribute Management</a>
+                    <a><cite>Category Tree</cite></a>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-fluid">
+                    <div id="category_tree"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+</div>
+
+
+</body>
+<div th:replace="fragments/footerPage :: footerPage"></div>
+
+<script type="text/javascript">
+  var ItemId = "Item5_2";
+
+  var table
+  var form
+  /*<![CDATA[*/
+  layui.use(['table','layer','element','tree'], function(){
+      table = layui.table;
+      form = layui.form;
+      var element = layui.element;
+      var tree = layui.tree;
+
+      loadTree()
+      function loadTree(){
+        ajaxGet("/web/attr/load/tree", "", function (data) {
+            layer.msg(data.msg, {time: 3000, icon: 1});
+
+           tree.render({
+                elem: '#category_tree'
+                ,data: data.data
+                ,showCheckbox: true
+                ,edit: ['add', 'update', 'del']
+                ,click: function(obj){
+                      layer.msg(JSON.stringify(obj.data));
+                 }
+           });
+        });
+      }
+
+
+
+
+  })
+  /*]]>*/
+
+
+</script>
+</html>

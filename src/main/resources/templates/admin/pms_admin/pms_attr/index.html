@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/headerPage :: headerPage"></div>
+<title>Attribute</title>
+<style>
+  img{
+    height: 100px;
+    width: auto;
+  }
+</style>
+<body >
+<div >
+  <div >
+    <div th:replace="fragments/headerSide :: headerSide"></div>
+  </div>
+  <div class="col col-lg-2" style="background:  #393d4a; padding:0">
+    <div th:replace="fragments/sidebarPage :: sidebarPage"></div>
+  </div>
+  <div class="col col-lg-10">
+    <div class="layui-card">
+      <div class="layui-card-header">
+        <div class="layui-breadcrumb" lay-filter="breadcrumb">
+          <a lay-href="">Attribute Class</a>
+          <a><cite>Attribute Management</cite></a>
+        </div>
+      </div>
+      <div class="layui-card-body">
+          <div class="layui-tab layui-tab-brief" >
+              <ul class="layui-tab-title">
+                  <li  onClick="window.location.href='/view/pms/pms_attr_group'" >Pms_attr_group</li>
+                  <li class="layui-this">Pms_attr</li>
+                  <li onClick="window.location.href='/view/pms/pms_attr_group/relation'" > Pms_attr_attrgroup_relation </li>
+              </ul>
+              <div class="layui-tab-content">
+                  <div class="layui-tab-item layui-show">
+                      <div class="layui-fluid">
+                          <div class="layui-form    layuiadmin-card-header-auto">
+                              <div class="layui-form-item">
+                                  <div class="layui-inline">
+                                      <input type="text" name="keyword" placeholder="模糊查询" autocomplete="off" class="layui-input">
+                                  </div>
+                                  <div class="layui-inline">
+                                      <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="searchBtn">
+                                          <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                                      </button>
+                                  </div>
+                              </div>
+                          </div>
+                          <table id="tableview" lay-filter="tableview"></table>
+                          <script type="text/html" id="toolbar">
+                              <div class="layui-btn-container">
+                                  <button class="layui-btn btn-batch layui-btn-danger layui-btn-sm " data-type="batchdel">deletes</button>
+                                  <button class="layui-btn btn-batch layui-btn-sm" data-type="add">add</button>
+                              </div>
+                          </script>
+
+                          <script type="text/html" id="tableTool">
+                              <a class="layui-btn layui-btn-xs" lay-event="edit">edit</a>
+                              <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">delete</a>
+                          </script>
+
+
+<!--                          <script type="text/html" id="search_typeLabel">-->
+<!--                              {{#  if(d.search_type== 0){ }}-->
+<!--                              <span class="layui-badge">single choice</span>-->
+<!--                              {{#  } else { }}-->
+<!--                              <span class="layui-badge layui-bg-black">multiple choice</span>-->
+<!--                              {{#  } }}-->
+<!--                          </script>-->
+
+
+
+                          <script type="text/html" id="enableLabel">
+                              {{#  if(d.enable== 0){ }}
+                              <span class="layui-badge layui-bg-black">disable</span>
+                              {{#  } else { }}
+                              <span class="layui-badge">enable</span>
+                              {{#  } }}
+                          </script>
+
+
+
+
+                          <script type="text/html" id="value_typeLabel">
+                              {{#  if(d.search_type== 0){ }}
+                              <span class="layui-badge">single choice</span>
+                              {{#  } else { }}
+                              <span class="layui-badge layui-bg-black">multiple choice</span>
+                              {{#  } }}
+                          </script>
+
+
+
+
+
+                          <script type="text/html" id="attr_typeLabel">
+                              {{#  if(d.enable== 0){ }}
+                              <span class="layui-badge layui-bg-black">Sales attributes</span>
+                              {{#  } else { }}
+                              <span class="layui-badge">basic attributes</span>
+                              {{#  } }}
+                          </script>
+
+                          <script type="text/html" id="show_descLabel">
+                              {{#  if(d.enable== 0){ }}
+                              <span class="layui-badge layui-bg-black">hidden</span>
+                              {{#  } else { }}
+                              <span class="layui-badge">display</span>
+                              {{#  } }}
+                          </script>
+
+
+
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+
+      </div>
+
+    </div>
+  </div>
+
+
+
+  </div>
+</div>
+
+
+</body>
+<div th:replace="fragments/footerPage :: footerPage"></div>
+
+<script type="text/javascript">
+  var ItemId = "Item5_1";
+
+  var table
+  var form
+  /*<![CDATA[*/
+  layui.use(['table','layer','element'], function(){
+      table = layui.table;
+      form = layui.form;
+      var element = layui.element;
+      form.on('submit(searchBtn)', function(data){
+          var field = data.field;
+          table.reload('tableview', {
+            page:1
+            ,where: field
+          });
+    });
+
+
+
+
+      table.render({
+           elem: '#tableview'
+          ,url: '/web/attr/load/attr'
+          ,toolbar: '#toolbar'
+          ,defaultToolbar: ['filter', 'exports', 'print']
+          ,title: 'Pms_attr_group'
+          ,cols: [
+            [
+                 {type: 'checkbox', fixed: 'left'}
+                ,{field: 'attr_id', width: 100, title: 'id',  align: 'center', sort: true}
+                ,{field: 'attr_name', title: 'name', align: 'center', width:130}
+                ,{field: 'catelog_id', title: 'catelog id',  align: 'center', minWidth: 130, sort: true,templet: '#checkCategory'}
+                ,{field: 'enable', title: 'enable',  align: 'center', minWidth: 130, sort: true, templet: '#enableLabel'}
+                ,{field: 'value_type', title: 'value type',  align: 'center', minWidth: 130, sort: true, templet: '#value_typeLabel'}
+                ,{field: 'value_select', title: 'value select',  align: 'center', minWidth: 130, sort: true}
+                ,{field: 'attr_type', title: 'attr type',  align: 'center', minWidth: 130, sort: true, templet: '#attr_typeLabel'}
+                ,{field: 'show_desc', title: 'is show',  align: 'center', minWidth: 130, sort: true, templet: '#show_descLabel'}
+                ,{title: 'operation', minWidth: 200, align: 'center', fixed: 'right', toolbar: '#tableTool'}
+            ]
+          ]
+          ,page: true
+          ,limit: 30
+          ,limits: [10, 20, 30, 50, 100,150,200]
+          ,text: 'No data'
+    });
+
+
+
+
+    table.on('tool(tableview)', function(obj){
+      var data = obj.data;
+      var id = data.coupon_id
+      if(obj.event === 'del'){
+        layer.prompt({
+          formType: 1
+          ,title: '敏感操作，请验证密码'
+        }, function(value, index){
+          layer.close(index);
+          layer.confirm('确定删除?', function(index){
+            var ids=new Array(),jsonData={};
+            ids.push(id);
+            jsonData["ids"] = ids;
+            jsonData["code"] = value;
+            var params = JSON.stringify(jsonData);
+            ajaxPost(coupon_delete, params, function (data) {
+                layer.msg(data.msg, {time: 3000, icon: 1});
+                layui.table.reload('tableview'); //重载表格
+            });
+            layer.close(index);
+          });
+        });
+      }else  if(obj.event === 'edit'){
+          layer.open({
+              type: 2
+              ,area: ['50%', '80%']
+              ,title: '优惠券【'+id+'】详情'
+              ,shade: 0.6 //遮罩透明度
+              ,maxmin: true //允许全屏最小化
+              ,anim: 0 //0-6的动画形式，-1不开启
+              ,content: coupon_form_view+'?coupon_id='+id+'&type=edit'
+              ,success: function(layero, index){
+              }
+              ,cancel: function(){
+                  layui.table.reload('tableview'); //重载表格
+              }
+              ,end : function(){
+              }
+          });
+      }
+    });
+
+
+    var active = {
+        add: function () {
+            layer.open({
+                type: 2
+                ,area: ['500px', '400px']
+                ,title: '新增商品大类信息'
+                ,shade: 0.6 //遮罩透明度
+                ,maxmin: true //允许全屏最小化
+                ,anim: 0 //0-6的动画形式，-1不开启
+                ,content: coupon_form_view+'?coupon_id=-1&type=view'
+                ,success: function(layero, index){
+                }
+                ,cancel: function(){
+                    layui.table.reload('tableview'); //重载表格
+                }
+                ,end : function(){
+                }
+            });
+        },
+      batchdel: function () {
+        var checkStatus = table.checkStatus('tableview')
+                , checkData = checkStatus.data;
+        var ids = new Array(), jsonData = {};
+        if (checkData.length === 0) {
+          return layer.msg('Please select data');
+        } else {
+          for (var i = 0; i < checkData.length; i++) {
+            ids.push(checkData[i].coupon_id);
+          }
+          jsonData["ids"] = ids;
+        }
+        layer.prompt({
+          formType: 1
+          ,title: '敏感操作，请验证密码'
+        }, function (value, index) {
+          layer.close(index);
+          layer.confirm('确定删除?', function(index){
+            layer.close(index);
+            jsonData["code"] = value;
+            var params = JSON.stringify(jsonData);
+            ajaxPost(coupon_delete, params, function (data) {
+                layer.msg(data.msg, {time: 3000, icon: 1});
+                layui.table.reload('tableview'); //重载表格
+            });
+          });
+        });
+      }
+    }
+
+    $('.layui-btn.btn-batch').on('click', function(){
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+    });
+  })
+  /*]]>*/
+
+
+</script>
+</html>
